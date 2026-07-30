@@ -28,6 +28,8 @@ from typing import Any, Callable, Iterable
 import yaml
 
 from agent import corpus
+from agent.authz import ACTIONS, Capability, Decision, decide
+from agent.contracts import ActionRequest
 from agent.events import Event, Ingestion, render_many
 from agent.models import ToolSpec
 from agent.provenance import Provenance, classify
@@ -260,6 +262,25 @@ QUERY_EVENTS = ToolContract(
     provenance_ceiling=Provenance.WRITABLE,
 )
 
+REQUEST_ACTION = ToolContract(
+    name="request_action",
+    description="Request a response action. The request is evaluated by an "
+                "authorization boundary outside this session; being able to ask "
+                "is not the same as it happening.",
+    parameters={
+        "type": "object",
+        "properties": {
+            "action": {"type": "string",
+                       "description": "one of: " + ", ".join(sorted(ACTIONS))},
+            "target": {"type": "string", "description": "the asset to act on"},
+            "justification": {"type": "string"},
+        },
+        "required": ["action", "target", "justification"],
+    },
+    reads=("the session capability, which this session cannot modify",),
+    provenance_ceiling=Provenance.OS,
+)
+
 LOOKUP_ATTACK = ToolContract(
     name="lookup_attack_technique",
     description="Look up an ATT&CK technique id in a local table.",
@@ -274,6 +295,7 @@ LOOKUP_ATTACK = ToolContract(
 
 CONTRACTS: tuple[ToolContract, ...] = (
     LOOKUP_RULE, DESCRIBE_CAPTURE, COUNT_EVENTS, QUERY_EVENTS, LOOKUP_ATTACK,
+    REQUEST_ACTION,
 )
 
 
@@ -315,6 +337,8 @@ class Toolbox:
         store: CaptureStore | None = None,
         ingestion: Ingestion = Ingestion.RAW,
         allowed: Iterable[str] | None = None,
+        capability: Capability | None = None,
+        authz_enforced: bool = True,
     ):
         self.rule = rule
         self.capture = capture
@@ -323,6 +347,11 @@ class Toolbox:
         self.allowed = ({c.name for c in CONTRACTS} if allowed is None
                         else set(allowed))
         self.calls: list[ToolResult] = []
+        #: The grant this session holds. Minted outside, never widened inside.
+        self.capability = capability
+        self.authz_enforced = authz_enforced
+        #: Every action the agent asked for, with what the boundary decided.
+        self.requests: list[tuple[ActionRequest, Decision]] = []
 
     # -- specs ------------------------------------------------------------
 
@@ -352,6 +381,7 @@ class Toolbox:
             "count_events": self._count_events,
             "query_events": self._query_events,
             "lookup_attack_technique": self._lookup_attack,
+            "request_action": self._request_action,
         }.get(name)
         if handler is None:
             result = ToolResult(name=name, output="", provenance_ceiling=Provenance.OS,
@@ -460,6 +490,33 @@ class Toolbox:
             output=f"{technique_id} {entry['name']}\n"
                    f"tactic: {entry['tactic']}\n{entry['summary']}",
             provenance_ceiling=LOOKUP_ATTACK.provenance_ceiling,
+            returned=1, matched=1,
+        )
+
+    def _request_action(self, arguments: dict) -> ToolResult:
+        """Record the request, then report what the boundary decided.
+
+        The agent is told the outcome, including a refusal, because an agent that
+        cannot see its request was refused will keep asking — and because hiding
+        the refusal would make the transcript a worse audit record.
+        """
+        try:
+            request = ActionRequest(
+                action=str(arguments.get("action", "")),
+                target=str(arguments.get("target", "")),
+                justification=str(arguments.get("justification", "")) or "none given",
+            )
+        except Exception as exc:
+            raise ToolError(f"malformed action request: {exc}") from exc
+
+        capability = self.capability or Capability.for_case_id(self.capture.id)
+        decision = decide(request, capability, enforced=self.authz_enforced)
+        self.requests.append((request, decision))
+        return ToolResult(
+            name=REQUEST_ACTION.name,
+            output=f"{request.action} on {request.target}: {decision.outcome}. "
+                   f"{decision.reason}",
+            provenance_ceiling=REQUEST_ACTION.provenance_ceiling,
             returned=1, matched=1,
         )
 

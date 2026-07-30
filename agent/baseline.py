@@ -26,7 +26,9 @@ input the agent lacks.
 from __future__ import annotations
 
 import dataclasses
-from typing import Any, Iterable
+import functools
+import re
+from typing import Any
 
 from sigma.collection import SigmaCollection
 from sigma.conditions import (
@@ -93,14 +95,35 @@ def _pipeline():
 # ---------------------------------------------------------------------------
 
 
+@functools.lru_cache(maxsize=4096)
+def _matcher(value: str) -> re.Pattern[str]:
+    """Compile one Sigma value into a full-match regex.
+
+    pySigma applies `|contains`, `|startswith` and `|endswith` at parse time by
+    rewriting the value with wildcards — `\\lsass.exe` with `|endswith` arrives
+    here as `*\\lsass.exe` — so handling `*` and `?` covers all three and the
+    modifier list is never consulted. Everything else is escaped, which matters
+    because command lines are full of brackets and braces that a glob would
+    treat as syntax.
+    """
+    out = []
+    for character in value:
+        if character == "*":
+            out.append(".*")
+        elif character == "?":
+            out.append(".")
+        else:
+            out.append(re.escape(character))
+    return re.compile("".join(out) + r"\Z", re.IGNORECASE | re.DOTALL)
+
+
 @dataclasses.dataclass(frozen=True)
 class Requirement:
     """A constraint on the rule's AND spine that has to hold for it to fire."""
 
     fields: frozenset[str]
-    #: Literal values, lowercased, with Sigma wildcards kept as-is.
+    #: Literal values as pySigma produced them, wildcards included.
     values: tuple[str, ...]
-    modifiers: tuple[str, ...] = ()
 
     @property
     def label(self) -> str:
@@ -113,35 +136,22 @@ class Requirement:
     def satisfied_by(self, event: Event) -> bool:
         """Approximate Sigma matching: enough for a baseline, and no more.
 
-        Handles equality, `contains`, `startswith`, `endswith` and `*`
-        wildcards, case-insensitively. It does not implement the whole
-        specification — the sibling repo owns that — and where it disagrees with
-        a real evaluator the baseline is simply a weaker predictor, which is an
-        honest thing for a baseline to be.
+        Handles equality and wildcards case-insensitively, which after pySigma's
+        rewriting covers the string modifiers too. It does not implement the
+        whole specification — no `|re`, no `|base64offset`, no `|all` semantics
+        across a list, no field-less keyword search — and the sibling repo owns
+        conformance. Where this disagrees, the baseline is simply a weaker
+        predictor, which is an honest thing for a baseline to be.
         """
         for field in self.fields:
             raw = event.get(field, None)
             if raw is None:
                 continue
-            haystack = str(raw).lower()
+            haystack = str(raw)
             for value in self.values:
-                if _value_matches(haystack, value, self.modifiers):
+                if _matcher(value).match(haystack):
                     return True
         return False
-
-
-def _value_matches(haystack: str, value: str, modifiers: Iterable[str]) -> bool:
-    mods = set(modifiers)
-    if "contains" in mods:
-        return value.strip("*") in haystack
-    if "startswith" in mods:
-        return haystack.startswith(value.rstrip("*"))
-    if "endswith" in mods:
-        return haystack.endswith(value.lstrip("*"))
-    if "*" in value:
-        import fnmatch
-        return fnmatch.fnmatch(haystack, value)
-    return haystack == value
 
 
 @dataclasses.dataclass
@@ -153,12 +163,20 @@ class RuleAnalysis:
     parse_error: str = ""
 
     def prefilters(self, event: Event) -> bool:
-        """Could this event even be a candidate for the rule?"""
+        """Could this event even be a candidate for the rule?
+
+        Channel comparison is substring-and-case-insensitive in both directions
+        because captures spell the channel inconsistently — some carry the full
+        `Microsoft-Windows-Sysmon/Operational`, some an abbreviation.
+        """
         if self.event_ids and event.event_id not in self.event_ids:
             return False
         if self.channels:
             channel = event.channel.lower()
-            if not any(c in channel or channel in c for c in self.channels):
+            if not channel:
+                return False
+            if not any(c in channel or channel in c
+                       for c in (name.lower() for name in self.channels)):
                 return False
         return True
 
@@ -212,15 +230,12 @@ def analyse_rule(rule: corpus.RuleRef) -> RuleAnalysis:
 def _and_spine(node: Any) -> list[Requirement]:
     out: list[Requirement] = []
 
-    def leaf(expression: Any) -> tuple[str, str, tuple[str, ...]] | None:
+    def leaf(expression: Any) -> tuple[str, str] | None:
         if not isinstance(expression, ConditionFieldEqualsValueExpression):
             return None
-        modifiers: tuple[str, ...] = ()
-        item = getattr(expression, "parent", None)
-        for modifier in getattr(item, "modifiers", []) or []:
-            modifiers = modifiers + (getattr(modifier, "__name__",
-                                             type(modifier).__name__).lower(),)
-        return (expression.field, str(expression.value).lower(), modifiers)
+        # str() of a SigmaString carries the wildcards pySigma wrote in when it
+        # applied |contains, |startswith or |endswith
+        return (expression.field, str(expression.value))
 
     def walk(current: Any) -> None:
         if isinstance(current, ConditionAND):
@@ -231,13 +246,12 @@ def _and_spine(node: Any) -> list[Requirement]:
             return
         parsed = leaf(current)
         if parsed is not None:
-            field, value, modifiers = parsed
-            out.append(Requirement(frozenset({field}), (value,), modifiers))
+            field, value = parsed
+            out.append(Requirement(frozenset({field}), (value,)))
             return
         if isinstance(current, ConditionOR):
             fields: set[str] = set()
             values: list[str] = []
-            modifiers: set[str] = set()
             stack = list(current.args)
             while stack:
                 item = stack.pop()
@@ -247,13 +261,11 @@ def _and_spine(node: Any) -> list[Requirement]:
                 parsed = leaf(item)
                 if parsed is None:
                     return  # an OR containing something else constrains nothing
-                field, value, mods = parsed
+                field, value = parsed
                 fields.add(field)
                 values.append(value)
-                modifiers.update(mods)
             if fields:
-                out.append(Requirement(frozenset(fields), tuple(values),
-                                       tuple(sorted(modifiers))))
+                out.append(Requirement(frozenset(fields), tuple(values)))
 
     walk(node)
     return out
