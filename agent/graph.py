@@ -29,6 +29,7 @@ from langgraph.graph import END, StateGraph
 
 from agent import corpus
 from agent.audit import AuditLog
+from agent.authz import Capability
 from agent.contracts import (
     MissVerdict,
     TASK_SCHEMAS,
@@ -234,9 +235,12 @@ class TriageGraph:
             if reply.raw_text:
                 messages.append(Message(role="assistant", content=reply.raw_text))
             for call in reply.tool_calls:
+                before = len(self._toolbox.requests)
                 result = self._toolbox.call(call.name, call.arguments)
                 tool_calls += 1
                 self._audit.tool_call(call, result)
+                for request, decision in self._toolbox.requests[before:]:
+                    self._audit.action_requested(request, decision)
                 body = result.error or result.output
                 if result.provenance_ceiling is Provenance.WRITABLE:
                     body = (
@@ -310,6 +314,7 @@ class TriageGraph:
             case_id=state["case_id"],
             verdict=answer if isinstance(answer, TriageVerdict) else None,
             miss_verdict=answer if isinstance(answer, MissVerdict) else None,
+            requested_actions=[request for request, _ in self._toolbox.requests],
             rejections=list(state.get("rejections", [])),
             tool_calls=state.get("tool_calls", 0),
         )
@@ -367,6 +372,10 @@ class TriageGraph:
         self._toolbox = Toolbox(
             rule=case.rule, capture=case.capture, store=self.store,
             ingestion=self.config.ingestion,
+            capability=Capability.for_case(case),
+            # with the control off the boundary still runs and still records what
+            # it would have decided, so the ablation row is the same code path
+            authz_enforced=self.config.has(Control.CAPABILITY_SCOPE),
         )
         self._audit = audit or AuditLog()
         self._audit.started(case_id=case.case_id, task=task,

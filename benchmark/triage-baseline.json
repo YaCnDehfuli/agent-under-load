@@ -6,7 +6,7 @@
  "controls": [],
  "cases": 80,
  "limited": false,
- "seconds": 69.4,
+ "seconds": 68.2,
  "report": {
   "task": "triage",
   "predictor": "heuristic-triage",

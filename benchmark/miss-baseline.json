@@ -6,7 +6,7 @@
  "controls": [],
  "cases": 581,
  "limited": false,
- "seconds": 131.1,
+ "seconds": 94.1,
  "report": {
   "task": "miss",
   "predictor": "heuristic-missclass",
