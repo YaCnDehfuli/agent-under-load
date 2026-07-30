@@ -1,0 +1,151 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # the pins do not move, but the toolchain resolves fresh, so this catches a
+    # pySigma or langgraph release breaking the harness
+    - cron: "0 7 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    # the unit suite touches no corpus and needs no API key, so it runs on every
+    # push. corpus- and model-marked tests skip themselves.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: what is being run
+        # a drift failure is only diagnosable if the log says which toolchain
+        # produced it
+        run: |
+          echo "commit: $(git rev-parse HEAD)"
+          pip list 2>/dev/null | grep -iE "^(pysigma|langgraph|pydantic|anthropic)" || true
+      - run: python -m pytest tests -q
+      - name: the unit suite must not depend on the corpus
+        # a test that quietly needs data is a test that fails for the wrong
+        # reason on someone else's machine
+        run: CHAIN_UNDER_LOAD=/nonexistent python -m pytest tests -q
+
+  sast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install bandit semgrep
+      - name: bandit
+        # B101 (assert) is excluded in tests only: pytest is built on assert.
+        run: |
+          bandit -r agent attack score -f txt
+          bandit -r tests -f txt --skip B101
+      - name: semgrep
+        run: semgrep --config p/python --config p/security-audit --error --quiet
+
+  dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install pip-audit
+      - name: pip-audit
+        # Advisories against the pinned versions, since the pins are what a
+        # reader would install. One advisory is ignored with a reason:
+        #
+        #   PYSEC-2026-2447 / CVE-2025-69872 — diskcache <=5.6.3 deserialises
+        #   cache entries with pickle, so an attacker who can write the cache
+        #   directory gets code execution. diskcache arrives transitively via
+        #   pySigma and there is no fixed version published, so it cannot be
+        #   pinned away. Exploitation needs local write access to the cache
+        #   directory, which in this repo is a developer's own machine or an
+        #   ephemeral CI runner. Reassessed whenever a fix ships; see the README.
+        #
+        # Everything else still fails the build, so a new advisory is not
+        # silently absorbed by this exception.
+        run: |
+          pip-audit -r requirements.txt --strict \
+            --ignore-vuln PYSEC-2026-2447
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  filesystem-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scanners: vuln,secret,misconfig
+          severity: HIGH,CRITICAL
+          exit-code: "1"
+
+  scored-run:
+    # The baseline is reproducible with no API key, so CI can re-derive the
+    # committed numbers and fail if they drift. The agent and attack runs need a
+    # model and are not run here.
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    if: github.event_name != 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: fetch the sibling repo, which holds the ground truth
+        run: git clone --depth 1 https://github.com/YaCnDehfuli/chain-under-load ../chain-under-load
+      - name: cache corpus
+        uses: actions/cache@v4
+        with:
+          path: corpus
+          key: corpus-${{ hashFiles('../chain-under-load/benchmark/manifest.yml') }}
+      - name: fetch and verify the pinned corpus
+        run: python -m agent.corpus --fetch
+      - run: python -m agent.corpus --list
+      - name: the corpus-backed tests
+        run: python -m pytest tests -q -m corpus
+      - name: re-derive the committed baseline numbers
+        run: |
+          python -m score.run --task triage --predictor baseline --out runs/triage.json
+          python -m score.run --task miss    --predictor baseline --out runs/miss.json
+      - name: committed results must match a fresh run
+        # if the sibling repo reruns and its labels move, this fails and the
+        # numbers in docs/ are stale — which is the point
+        run: |
+          python - <<'PY'
+          import json, sys
+          bad = []
+          for name, fresh in (("triage", "runs/triage.json"), ("miss", "runs/miss.json")):
+              committed = json.load(open(f"benchmark/{name}-baseline.json"))["report"]
+              current = json.load(open(fresh))["report"]
+              for key in ("per_class", "total", "unanswered"):
+                  if committed[key] != current[key]:
+                      bad.append(f"{name}: {key} drifted")
+          print("\n".join(bad) if bad else "committed results match")
+          sys.exit(1 if bad else 0)
+          PY
