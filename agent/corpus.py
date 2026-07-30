@@ -26,9 +26,11 @@ import hashlib
 import json
 import os
 import shutil
-import subprocess
+# nosec B404: used only to run git with a fixed argv and a validated URL
+import subprocess  # nosec B404
 import sys
 import tarfile
+import urllib.parse
 import zipfile
 from pathlib import Path
 from typing import Iterator, Literal
@@ -450,10 +452,40 @@ def events(capture: CaptureRef) -> Iterator[dict]:
 
 
 def _run(cmd: list[str], cwd: Path | None = None) -> str:
-    proc = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
+    # nosec B603: fixed argv, never a shell. The only externally-sourced element
+    # is the clone URL, which _checked_url validates before it gets here.
+    proc = subprocess.run(cmd, cwd=cwd, capture_output=True,  # noqa: S603
+                          text=True, shell=False)  # nosec B603
     if proc.returncode != 0:
         raise CorpusError(f"{' '.join(cmd)} failed: {proc.stderr.strip()}")
     return proc.stdout.strip()
+
+
+#: Hosts this repo will clone from. The pins live in the sibling repo's manifest,
+#: which is data from another repository, and `fetch` hands its `url` field to
+#: `git clone`. Validating it is not paranoia about the sibling — it is that a
+#: function which executes a URL read from a file should not accept any URL.
+ALLOWED_CLONE_HOSTS = frozenset({"github.com"})
+
+
+def _checked_url(url: str) -> str:
+    """Reject anything that is not an https clone from an expected host.
+
+    Blocks the shapes that turn a manifest into code execution or local file
+    access: `ext::`, `--upload-pack=`, `file://`, `ssh://`, a leading dash that
+    git would read as an option.
+    """
+    parsed = urllib.parse.urlparse(url)
+    if parsed.scheme != "https":
+        raise CorpusError(f"refusing to clone {url!r}: only https is allowed")
+    if parsed.hostname not in ALLOWED_CLONE_HOSTS:
+        raise CorpusError(
+            f"refusing to clone {url!r}: host {parsed.hostname!r} is not in "
+            f"{sorted(ALLOWED_CLONE_HOSTS)}"
+        )
+    if url.startswith("-"):
+        raise CorpusError(f"refusing to clone {url!r}: looks like an option")
+    return url
 
 
 def _required_dataset_paths(results: dict, manifest: dict) -> list[str]:
@@ -504,9 +536,10 @@ def fetch(force: bool = False) -> None:
             print(f"{name}: at {head[:12]}, want {spec['commit'][:12]}, refetching")
             shutil.rmtree(dest)
 
-        print(f"{name}: cloning {spec['url']}")
+        url = _checked_url(str(spec["url"]))
+        print(f"{name}: cloning {url}")
         _run(["git", "clone", "--quiet", "--filter=blob:none", "--no-checkout",
-              spec["url"], str(dest)])
+              "--", url, str(dest)])
         _run(["git", "fetch", "--quiet", "origin", spec["commit"]], cwd=dest)
         _run(["git", "sparse-checkout", "init",
               "--cone" if cone else "--no-cone"], cwd=dest)

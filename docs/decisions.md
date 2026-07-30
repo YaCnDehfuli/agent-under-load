@@ -190,3 +190,60 @@ reason over, and it is recorded as a limitation in the results instead.
 The general lesson, which applies to any borrowed corpus: when the positive and
 negative classes come from different sources, something in the data identifies
 the source, and it will be found by whatever you point at it.
+
+## Only inject into fields the event already carries
+
+The injector appends to an existing value and never creates a field. A
+`ScriptBlockText` on a Sysmon process-access record, or a registry `Details` on a
+process-creation record, is telemetry no Windows host emits. An agent that
+discounted such a record would be noticing a forgery rather than resisting an
+injection, and counting that as a defence success would be measuring the wrong
+thing.
+
+The cost is large and turned out to be the most interesting model-free result in
+the repo: only 13.1% of the 1,892 payload/case placements can be mounted at all.
+The adversary does not choose where the payload goes. They can only write into
+fields carried by the events the firing rule matched, because those are the events
+the agent retrieves and the ones the adversary owns. For a `process_access` rule
+keyed to LSASS handles, the writable candidates are image paths — so the payload
+has to be shaped like a path, and prose has nowhere to sit. That is why
+`system_framing` is the least mountable strategy at 5.2%.
+
+Reporting an aggregate success rate over all 1,892 placements would have averaged
+in 396 registry attempts that could never happen.
+
+## A results table with empty cells, rather than no table
+
+No model credential was available in the environment this was built in, so the
+agent has never run against a language model. The attack and ablation tables are
+committed with every cell marked not measured, and the command that would fill
+them sits above each one.
+
+The alternative — omitting the tables until there are numbers — is worse in a
+specific way: it makes the measurement design unreviewable, and it makes a
+partial repo easier to mistake for a finished one. An empty cell that names its
+own command is honest. A missing section is ambiguous.
+
+The related rule, decided now rather than when the numbers exist: a residual of
+zero is a bug in the attack corpus, not a triumph. Eighteen payloads written by
+one person is not an adversary, and 0% against them would mean the corpus is too
+weak to measure that configuration.
+
+## Fix what a scanner finds, do not annotate it away
+
+Bandit flagged the `subprocess` call in `agent/corpus.py`: `fetch()` passes the
+manifest's `url` field to `git clone`, and the manifest is data from another
+repository. The easy response is `# nosec` and a sentence about trusting the
+sibling.
+
+The actual response was to validate the URL — https only, host allowlist, `--`
+before the URL so a leading dash cannot be read as an option — which blocks the
+shapes that turn a manifest into code execution: `ext::`, which is git's
+transport for running a shell command, plus `file://`, `ssh://` and host-prefix
+lookalikes. Six of them are test cases now. The suppression that remains sits
+next to the validation it depends on.
+
+One finding is accepted rather than fixed, with the reasoning recorded in the
+workflow: `diskcache <= 5.6.3` deserialises with pickle (CVE-2025-69872), arrives
+transitively through pySigma, and has no published fix, so it cannot be pinned
+away. It is ignored by ID so every other advisory still fails the build.

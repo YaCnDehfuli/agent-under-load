@@ -71,3 +71,29 @@ def test_events_stream_as_flattened_dicts(evaluation):
     first = next(stream)
     assert isinstance(first, dict)
     assert "EventID" in first
+
+
+# -- fetch hardening ------------------------------------------------------
+#
+# `fetch` hands the manifest's `url` field to `git clone`. The manifest is data
+# from another repository, so a function that executes a URL read from a file
+# should not accept any URL. Prompted by a bandit B603 finding; see the README.
+
+
+@pytest.mark.parametrize("url", [
+    "http://github.com/x/y.git",                 # not https
+    "ssh://git@github.com/x/y.git",              # not https
+    "file:///etc/passwd",                        # local file access
+    "ext::sh -c whoami",                         # git's ext transport: RCE
+    "https://evil.example/x/y.git",              # unexpected host
+    "https://github.com.evil.example/x/y.git",   # host-prefix lookalike
+])
+def test_a_clone_url_that_is_not_plainly_github_over_https_is_refused(url):
+    with pytest.raises(corpus.CorpusError):
+        corpus._checked_url(url)
+
+
+def test_the_pinned_urls_pass():
+    for url in ("https://github.com/OTRF/Security-Datasets.git",
+                "https://github.com/SigmaHQ/sigma.git"):
+        assert corpus._checked_url(url) == url
