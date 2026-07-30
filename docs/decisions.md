@@ -142,3 +142,51 @@ Every table in `docs/` is either populated from a committed run artefact or
 marked as not yet measured, with the command that would populate it. There is
 no third state. The baseline numbers were produced without a model and are
 real; the agent and attack numbers require a configured model.
+
+## The triage set was confounded by the lab it came from, and had to be fixed
+
+Found while building the baseline, and worth recording as a failure rather than
+a feature.
+
+The two triage classes come from two different labs. Every true-positive capture
+is a host in `pandalab.com`; every false-positive capture is in `theshire.local`,
+`mordor.local`, `shire.com` or a bare workstation name. The domain suffix
+separates the labels perfectly, and it lives in `Hostname` — an os-generated
+field, so no amount of provenance tagging keeps it away from the model.
+
+Left alone, a predictor that noticed the suffix would have scored 100% on triage
+while knowing nothing about credential theft, and the number would have looked
+like a result. Two smaller versions of the same problem were sitting next to it:
+the capture id itself (`LSASS_campaign_01` versus
+`credential_access/empire_over_pth_patch_lsass`), and an event count the sibling
+publishes per campaign but not per benign capture, so the field was an integer
+on every true positive and null on every false positive.
+
+The fixes:
+
+- Host short names, DNS domains and NetBIOS domain names are pseudonymised per
+  capture, at the single point where a capture becomes readable, so rendering,
+  filtering and citation checking all see the same text.
+- Capture ids become opaque handles.
+- The event count is no longer in the case inputs at all. `describe_capture`
+  reports it for either side on request.
+
+What is deliberately preserved: whether two events name the *same* host. That is
+real evidence in an investigation, and destroying it would damage the task
+instead of de-confounding it. Built-in Windows principals are also left alone —
+`NT AUTHORITY\SYSTEM` names the operating system, not the lab, and "SYSTEM
+opened a handle to LSASS" reads very differently from "CORP\SYSTEM did".
+
+Three tests now guard this: inputs must have an identical *shape* under both
+labels (which is what caught the null event count), capture handles must not
+contain the corpus name, and no lab identifier may survive into tool output.
+
+The residual is stated rather than assumed away. Account names are not
+pseudonymised: `pedro.gustavo` belongs to one lab and `pgustavo` to another, so
+a model that had memorised these public datasets could still tell them apart.
+The correlation is partial, fixing it means rewriting fields analysts legitimately
+reason over, and it is recorded as a limitation in the results instead.
+
+The general lesson, which applies to any borrowed corpus: when the positive and
+negative classes come from different sources, something in the data identifies
+the source, and it will be found by whatever you point at it.

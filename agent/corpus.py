@@ -35,6 +35,8 @@ from typing import Iterator, Literal
 
 import yaml
 
+from agent.pseudonymise import capture_handle
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 CORPUS_ROOT = REPO_ROOT / "corpus"
 SECURITY_DATASETS = CORPUS_ROOT / "security-datasets"
@@ -147,10 +149,13 @@ class TriageCase:
                 "level": self.rule.level,
                 "source": self.rule.source,
             },
-            "capture": {
-                "id": self.capture.id,
-                "host_events": self.capture.events,
-            },
+            # an opaque handle: "LSASS_campaign_01" versus
+            # "credential_access/empire_over_pth_patch_lsass" announces the
+            # label before a single event is read. The event count is left out
+            # for the same reason: the sibling publishes it per campaign and not
+            # per benign capture, so present-versus-absent would track the
+            # label. describe_capture reports it for either side.
+            "capture": {"id": capture_handle(self.capture.id)},
             "fire_count": self.fire_count,
         }
 
@@ -177,10 +182,7 @@ class MissCase:
                 # SigmaHQ's hktl_ prefix is a real signal in it
                 "filename": self.rule.path.name,
             },
-            "capture": {
-                "id": self.capture.id,
-                "host_events": self.capture.events,
-            },
+            "capture": {"id": capture_handle(self.capture.id)},
         }
 
 

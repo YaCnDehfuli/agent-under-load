@@ -31,6 +31,7 @@ from agent import corpus
 from agent.events import Event, Ingestion, render_many
 from agent.models import ToolSpec
 from agent.provenance import Provenance, classify
+from agent.pseudonymise import Pseudonymiser, capture_handle
 
 #: Captures held in memory at once. Each is tens of thousands of dicts, so this
 #: is a memory ceiling rather than a performance knob.
@@ -142,22 +143,39 @@ class CaptureStore:
 
     Indices are stable and are the citation handle: `event_index` in an evidence
     citation refers to a position in this list.
+
+    Pseudonymisation happens here, at the single point where a capture becomes
+    readable, so that everything downstream — rendering, filtering, citation
+    checking — sees the same text. A citation quoting `HOST1` must verify
+    against the record the agent was actually shown.
     """
 
-    def __init__(self, cache_size: int = CACHE_SIZE):
+    def __init__(self, cache_size: int = CACHE_SIZE, pseudonymise: bool = True):
         self._cache: OrderedDict[str, list[Event]] = OrderedDict()
         self._cache_size = cache_size
+        self._pseudonymise = pseudonymise
+        self._tables: dict[str, Pseudonymiser] = {}
 
     def load(self, capture: corpus.CaptureRef) -> list[Event]:
         if capture.id in self._cache:
             self._cache.move_to_end(capture.id)
             return self._cache[capture.id]
-        events = [Event(raw, index)
-                  for index, raw in enumerate(corpus.events(capture))]
+
+        raws = list(corpus.events(capture))
+        if self._pseudonymise:
+            table = Pseudonymiser(raws)
+            self._tables[capture.id] = table
+            raws = [table.event(raw) for raw in raws]
+        events = [Event(raw, index) for index, raw in enumerate(raws)]
+
         self._cache[capture.id] = events
         while len(self._cache) > self._cache_size:
             self._cache.popitem(last=False)
         return events
+
+    def table(self, capture_id: str) -> Pseudonymiser | None:
+        """The substitution table used for a capture, for the audit trail."""
+        return self._tables.get(capture_id)
 
 
 # ---------------------------------------------------------------------------
@@ -371,7 +389,7 @@ class Toolbox:
         histogram = Counter(e.event_id for e in events)
         fields = [str(f) for f in (arguments.get("fields") or [])]
 
-        lines = [f"capture {self.capture.id}: {len(events)} events",
+        lines = [f"capture {capture_handle(self.capture.id)}: {len(events)} events",
                  "events by event id:"]
         for event_id, count in sorted(histogram.items(),
                                       key=lambda kv: (-kv[1], kv[0] or -1)):
