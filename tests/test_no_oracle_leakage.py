@@ -10,6 +10,7 @@ dict or a reformatted number would slip past an attribute check.
 from __future__ import annotations
 
 import json
+import re
 
 import pytest
 
@@ -89,3 +90,86 @@ def test_truth_is_reachable_on_the_case_but_not_in_inputs(
 def test_every_real_case_has_clean_inputs(evaluation):
     for case in (*evaluation.triage, *evaluation.miss):
         _assert_clean(case.inputs(), case.case_id)
+
+
+def _shape(obj) -> object:
+    """The structure of a case's inputs, with values replaced by their type.
+
+    Presence and absence are part of the shape, so a field populated for one
+    label and null for the other shows up as a difference.
+    """
+    if isinstance(obj, dict):
+        return {k: _shape(v) for k, v in sorted(obj.items())}
+    if isinstance(obj, list):
+        return ["…"] if obj else []
+    return type(obj).__name__
+
+
+@pytest.mark.corpus
+def test_the_two_triage_labels_have_identically_shaped_inputs(evaluation):
+    """A field present for one label and absent for the other is a shortcut.
+
+    This caught a real one: the sibling publishes an event count per campaign
+    capture but not per benign capture, so `host_events` was an integer on every
+    true positive and null on every false positive. That is a perfect classifier
+    requiring no telemetry at all.
+    """
+    shapes: dict[str, set[str]] = {}
+    for case in evaluation.triage:
+        shapes.setdefault(case.truth, set()).add(json.dumps(_shape(case.inputs())))
+
+    assert set(shapes) == {"true_positive", "false_positive"}
+    for truth, seen in shapes.items():
+        assert len(seen) == 1, f"{truth} inputs vary in shape: {seen}"
+    assert shapes["true_positive"] == shapes["false_positive"]
+
+
+@pytest.mark.corpus
+def test_the_capture_handle_hides_which_corpus_a_case_came_from(evaluation):
+    """Capture names announce the label: LSASS_campaign_01 versus tactic/name."""
+    for case in evaluation.triage:
+        handle = case.inputs()["capture"]["id"]
+        assert handle.startswith("capture-")
+        assert "LSASS" not in handle and "campaign" not in handle
+        assert case.capture.id not in handle
+    # and distinct captures stay distinguishable
+    handles = {c.inputs()["capture"]["id"] for c in evaluation.triage}
+    captures = {c.capture.id for c in evaluation.triage}
+    assert len(handles) == len(captures)
+
+
+@pytest.mark.corpus
+def test_lab_identifiers_do_not_reach_the_agent(evaluation):
+    """The domain suffix separated the two classes perfectly. It must not survive.
+
+    All seven true-positive captures are hosts in pandalab.com; every
+    false-positive capture is in theshire.local, mordor.local or shire.com. That
+    lives in Hostname, an os-generated field, so provenance tagging cannot help.
+    """
+    from agent.events import Ingestion
+    from agent.tools import CaptureStore, Toolbox
+
+    lab = re.compile(r"pandalab|theshire|mordor|shire\.com", re.IGNORECASE)
+    store = CaptureStore()
+    seen_labels = set()
+    for case in evaluation.triage:
+        if case.truth in seen_labels:
+            continue
+        seen_labels.add(case.truth)
+        box = Toolbox(case.rule, case.capture, store=store,
+                      ingestion=Ingestion.STRUCTURED)
+        output = box.call("query_events", {"limit": 20}).output
+        assert not lab.search(output), f"{case.case_id}: lab identifier survived"
+
+
+def test_well_known_principals_are_not_pseudonymised():
+    """NT AUTHORITY\\SYSTEM names the OS, not the lab, and it is evidence."""
+    from agent.pseudonymise import Pseudonymiser
+
+    events = [{"Hostname": "MKT01.pandalab.com", "TargetUser": "NT AUTHORITY\\SYSTEM",
+               "SourceUser": "PANDALAB\\pedro"}]
+    table = Pseudonymiser(events)
+    rewritten = table.event(events[0])
+    assert rewritten["TargetUser"] == "NT AUTHORITY\\SYSTEM"
+    assert rewritten["SourceUser"] == "CORP\\pedro"
+    assert rewritten["Hostname"] == "HOST1.corp.example"
