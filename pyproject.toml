@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent-under-load"
+version = "0.1.0"
+description = "A security triage agent scored against exact ground truth, then attacked through the telemetry it reads."
+requires-python = ">=3.11"
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+[tool.setuptools]
+packages = ["agent", "attack", "score"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# corpus-backed tests are opt-in: the unit suite must pass with no corpus on disk
+markers = [
+    "corpus: needs the fetched corpus (python -m agent.corpus --fetch)",
+    "model: needs a configured LLM (AGENT_MODEL + credentials)",
+]
+addopts = "-q --strict-markers"

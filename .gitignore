@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+.ruff_cache/
+
+# fetched corpus, rebuilt by agent.corpus from the sibling repo's pinned manifest
+corpus/
+
+# run artefacts. committed results live in benchmark/, not here
+runs/
