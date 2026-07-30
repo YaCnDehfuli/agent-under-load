@@ -1,0 +1,144 @@
+# Decisions
+
+Choices that shaped this repo, with the reasoning I had at the time. Newest
+last.
+
+## What the agent must beat, and why this task has ground truth
+
+Most agent projects cannot say whether the agent is any good, because they have
+no ground truth. They show a transcript that reads well and stop. Most AI
+red-team projects have the mirror problem: they attack a target built to be
+attacked, so the attack succeeding says nothing.
+
+This repo avoids both by borrowing a labelled corpus. The sibling repo
+[`chain-under-load`](https://github.com/YaCnDehfuli/chain-under-load) runs 83
+detection rules against recorded Windows telemetry and labels every
+rule/capture pair with a deterministic classifier. That gives two scored tasks
+with exact answers:
+
+| Task | Ground truth | Size |
+|---|---|---|
+| **Triage verdict** — a rule fired on a capture; is it a true positive? | A fire in an attack capture is a TP, a fire in a capture benign for that technique is an FP | 44 TP fires, 36 FP fires |
+| **Miss classification** — a rule did not fire; why? | The four-way label from the sibling's `classify.py` | 581 rule/capture pairs |
+
+Both are deployment-shaped questions. The first is the one an analyst is paid
+to answer, and the one the attack in Phase C targets. The second is where the
+statistical heft is.
+
+## A no-LLM baseline is built first, and published either way
+
+Before the agent is scored, a heuristic with no model in it is scored on the
+same cases. If the agent does not beat it, that is the finding and it gets
+published. An unbeaten baseline reported honestly is worth more than a hidden
+one, and a project that cannot fail cannot demonstrate anything.
+
+## Per-class metrics only. Bare accuracy is banned in the scorer's output
+
+The miss-classification set is heavily imbalanced:
+
+| class | count | share |
+|---|---|---|
+| out-of-scope | 273 | 47.0% |
+| miss-logic | 207 | 35.6% |
+| miss-telemetry | 57 | 9.8% |
+| detected | 44 | 7.6% |
+
+A predictor that answers `out-of-scope` every time scores 47% accuracy and
+knows nothing. So the scorer refuses to emit a bare accuracy figure at all —
+it reports precision, recall, F1 and support per class, plus a confusion
+matrix. This is enforced by a test with a deliberately degenerate predictor,
+not by discipline.
+
+## The agent and the baseline see identical inputs, and never the oracle
+
+This is the decision that makes the numbers mean anything, and it took some
+thought.
+
+The sibling's labels are not human judgement. They are a deterministic function
+of five observable quantities: how many events matched, how many events passed
+the rule's channel and event-id prefilter, whether each required field was
+present, whether each required constraint was satisfiable, and whether the rule
+is named after one hacktool. Anything that sees those five things can
+reimplement `classify.py` and score close to 100% while understanding nothing.
+
+That has two consequences.
+
+A baseline handed those diagnostics is not a baseline, it is the oracle wearing
+a hat. And an agent handed them is not doing triage, it is doing arithmetic.
+
+So the case a predictor receives contains the rule, the capture identity, and
+access to the capture's events through tools. It does not contain the label,
+the classifier's `reason` string, the candidate count, or the per-group
+presence and satisfaction counts. Both the agent and the baseline have to
+derive what they need from the rule text and the telemetry, which is the actual
+task. `tests/test_no_oracle_leakage.py` asserts that no serialised case
+contains any oracle-derived field.
+
+The cost is honest: the baseline is weaker than it could be, and so is the
+agent. The alternative is a benchmark that measures whether I remembered to
+pass a field.
+
+## Untrusted text is a first-class type, not a warning in a docstring
+
+The agent reads command lines, filenames, script blocks, service names and
+registry values. An adversary *writes* those. Every field the agent can see
+therefore carries a provenance tag, and the tag survives all the way into the
+prompt.
+
+Three classes, not two, because the middle one matters:
+
+- **adversary-writable** — free text the adversary chooses outright:
+  `CommandLine`, `Image`, `TargetFilename`, `ScriptBlockText`, `ServiceName`,
+  registry `Details`, PE `Product` / `Description` / `Company`.
+- **adversary-influenced** — the value reflects adversary behaviour but is
+  drawn from a space the OS controls, so it cannot carry a sentence:
+  `GrantedAccess`, `CallTrace`, `IntegrityLevel`.
+- **os-generated** — the adversary cannot touch it without already owning the
+  logging pipeline: `EventID`, `Channel`, `ProviderGuid`, `ProcessGuid`,
+  timestamps, `Hostname`.
+
+Injections may only be placed in the first class. That is enforced by
+`tests/test_injection_targets.py`, because a threat model maintained by
+discipline is a threat model that drifts. Injecting into `GrantedAccess` would
+inflate attack success with an attack no adversary can actually mount.
+
+Sysmon's rendered `Message` field is a concatenation of the other fields, so it
+inherits the strongest provenance of any field it contains. An injector that
+writes `CommandLine` and leaves `Message` describing the old value has produced
+telemetry no host would emit, and the inconsistency, not the payload, is what
+the agent would be reacting to.
+
+## LangGraph, for auditability rather than ergonomics
+
+A `while` loop around a chat completion would run this agent. LangGraph is here
+because the graph makes the state explicit and the transitions enumerable: what
+the agent knew at each step, which tool it called, and what came back is
+recoverable from the checkpoint rather than reconstructed from logs written by
+hand.
+
+That matters because Phase E claims the audit is complete under attack. A claim
+like that is only testable if the loop has a state object to inspect.
+
+The cost is a dependency with its own release cadence in the middle of the hot
+path, and a framework whose abstractions I have to understand to debug. Taken
+knowingly.
+
+## The model is an interface, and an unconfigured run fails loudly
+
+Three implementations: a hosted Anthropic path (the default), a local
+open-weights path over an Ollama-compatible HTTP API (so the results
+reproduce without a paid API), and a scripted deterministic model used by the
+test suite.
+
+The scripted model exists for tests only and is never scored. A stub cannot be
+prompt-injected in any meaningful sense, so a number produced against it would
+be fiction. An unconfigured run therefore raises rather than falling back to a
+stub, because the failure mode that matters here is a results table quietly
+populated by something that was never a language model.
+
+## Numbers appear only when a run produced them
+
+Every table in `docs/` is either populated from a committed run artefact or
+marked as not yet measured, with the command that would populate it. There is
+no third state. The baseline numbers were produced without a model and are
+real; the agent and attack numbers require a configured model.
