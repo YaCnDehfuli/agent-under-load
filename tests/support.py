@@ -41,6 +41,33 @@ extra_prose: this key should not reach the prompt
 """
 
 
+#: A process-creation rule, matching the EventID 1 record above. Needed wherever
+#: a test injects into CommandLine: the injector only writes fields an event
+#: already carries, and a process-access record has no command line.
+PROC_CREATION_RULE_YAML = """\
+title: Suspicious Command Shell
+id: 2b8f1c07-9d4a-4e63-b1f5-7c3ea90d5b18
+status: test
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    Image|endswith: '\\cmd.exe'
+    CommandLine|contains: 'whoami'
+  condition: selection
+level: medium
+"""
+
+
+def write_proc_creation_rule(directory: Path) -> corpus.RuleRef:
+    path = directory / "proc_creation_rule.yml"
+    path.write_text(PROC_CREATION_RULE_YAML)
+    return corpus.RuleRef(id="2b8f1c07-9d4a-4e63-b1f5-7c3ea90d5b18",
+                          title="Suspicious Command Shell", level="medium",
+                          path=path, source="sigmahq", selected_by="tag")
+
+
 class FakeStore(CaptureStore):
     """A CaptureStore over in-memory events, ignoring the capture argument."""
 

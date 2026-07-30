@@ -5,9 +5,12 @@ reconstructed afterwards by someone who was not watching it: which tools were
 called, what came back, how much of what came back was text an adversary wrote,
 and what the agent concluded.
 
-Entries are append-only and sequenced. Tamper-evidence is added later, as its
-own control with its own test; right now the guarantee is completeness and
-ordering, not integrity.
+Entries are append-only, sequenced, and hash-chained: each entry carries the
+digest of the previous one, so removing or editing an entry breaks every digest
+after it. That is tamper-*evidence*, not tamper-proofing — an attacker holding
+the log can recompute the whole chain. It detects a single altered record, which
+is the realistic case when the log has been forwarded somewhere the attacker does
+not control, and it is honest about being no more than that.
 
 Fields worth alerting on, for the detection-engineering side of this:
 
@@ -21,6 +24,7 @@ Fields worth alerting on, for the detection-engineering side of this:
 from __future__ import annotations
 
 import dataclasses
+import hashlib
 import json
 import time
 from pathlib import Path
@@ -29,16 +33,33 @@ from typing import Any, Iterator
 from agent.provenance import Provenance
 
 
+#: Digest standing in for "nothing before this". Any fixed value works; naming it
+#: keeps the first entry's chaining rule identical to every other entry's.
+GENESIS = "0" * 64
+
+
 @dataclasses.dataclass(frozen=True)
 class AuditEntry:
     seq: int
     kind: str
     at: float
     payload: dict[str, Any]
+    #: Digest of the entry before this one.
+    previous: str = GENESIS
+    #: Digest of this entry, computed over its content and `previous`.
+    digest: str = ""
 
-    def to_json(self) -> dict[str, Any]:
+    def body(self) -> dict[str, Any]:
         return {"seq": self.seq, "kind": self.kind, "at": round(self.at, 6),
                 **self.payload}
+
+    def compute_digest(self) -> str:
+        material = json.dumps({"previous": self.previous, **self.body()},
+                              sort_keys=True, default=str)
+        return hashlib.sha256(material.encode()).hexdigest()
+
+    def to_json(self) -> dict[str, Any]:
+        return {**self.body(), "previous": self.previous, "digest": self.digest}
 
 
 class AuditLog:
@@ -51,8 +72,10 @@ class AuditLog:
     # -- writing ----------------------------------------------------------
 
     def _append(self, kind: str, **payload: Any) -> AuditEntry:
+        previous = self._entries[-1].digest if self._entries else GENESIS
         entry = AuditEntry(seq=len(self._entries), kind=kind,
-                           at=self._clock(), payload=payload)
+                           at=self._clock(), payload=payload, previous=previous)
+        entry = dataclasses.replace(entry, digest=entry.compute_digest())
         self._entries.append(entry)
         return entry
 
@@ -129,6 +152,32 @@ class AuditLog:
     def untrusted_bytes(self) -> int:
         """Total adversary-written text that reached the model this run."""
         return sum(e.payload.get("untrusted_bytes", 0) for e in self._entries)
+
+    @property
+    def head(self) -> str:
+        """Digest of the last entry: the whole log in 64 characters.
+
+        Publishing this somewhere append-only is what turns tamper-evidence into
+        something an attacker cannot quietly undo.
+        """
+        return self._entries[-1].digest if self._entries else GENESIS
+
+    def verify(self) -> list[str]:
+        """Empty when the chain holds, otherwise what is wrong with it."""
+        problems: list[str] = []
+        previous = GENESIS
+        for position, entry in enumerate(self._entries):
+            if entry.seq != position:
+                problems.append(f"entry {position}: seq is {entry.seq}")
+            if entry.previous != previous:
+                problems.append(
+                    f"entry {entry.seq}: previous digest does not match entry "
+                    f"{position - 1}"
+                )
+            if entry.digest != entry.compute_digest():
+                problems.append(f"entry {entry.seq}: content does not match its digest")
+            previous = entry.digest
+        return problems
 
     def to_jsonl(self) -> str:
         return "\n".join(json.dumps(e.to_json(), default=str) for e in self._entries)
