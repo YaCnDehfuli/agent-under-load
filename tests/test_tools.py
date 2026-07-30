@@ -10,61 +10,16 @@ from __future__ import annotations
 
 import pytest
 
-from agent import corpus
 from agent.events import Ingestion
 from agent.provenance import Provenance
-from agent.tools import CONTRACTS, CaptureStore, Toolbox
-
-SYNTHETIC = [
-    {"EventID": 1, "Channel": "Sysmon", "UtcTime": "t0",
-     "Image": "C:\\Windows\\System32\\cmd.exe", "CommandLine": "cmd /c whoami",
-     "Hostname": "H"},
-    {"EventID": 10, "Channel": "Sysmon", "UtcTime": "t1",
-     "SourceImage": "C:\\tools\\procdump.exe",
-     "TargetImage": "C:\\Windows\\system32\\lsass.exe",
-     "GrantedAccess": "0x1fffff", "Hostname": "H"},
-    {"EventID": 10, "Channel": "Sysmon", "UtcTime": "t2",
-     "SourceImage": "C:\\Windows\\explorer.exe",
-     "TargetImage": "C:\\Windows\\system32\\svchost.exe",
-     "GrantedAccess": "0x1010", "Hostname": "H"},
-]
-
-
-class FakeStore(CaptureStore):
-    """A store over a handful of hand-written events.
-
-    The unit suite must pass with no corpus on disk, and these tests are about
-    the tools rather than about the data.
-    """
-
-    def __init__(self, raws=None):
-        super().__init__()
-        from agent.events import Event
-        self._events = [Event(raw, i) for i, raw in enumerate(raws or SYNTHETIC)]
-
-    def load(self, capture):
-        return self._events
+from agent.tools import CONTRACTS, Toolbox
+from tests.support import FakeStore, write_rule
 
 
 @pytest.fixture
 def toolbox(tmp_path, synthetic_capture):
-    rule_path = tmp_path / "rule.yml"
-    rule_path.write_text(
-        "title: Suspicious LSASS Access\n"
-        "id: abc\n"
-        "status: test\n"
-        "logsource:\n  category: process_access\n"
-        "detection:\n"
-        "  selection:\n"
-        "    TargetImage|endswith: '\\lsass.exe'\n"
-        "    GrantedAccess: '0x1fffff'\n"
-        "  condition: selection\n"
-        "level: high\n"
-        "extra_prose: this key should not reach the prompt\n"
-    )
-    rule = corpus.RuleRef(id="abc", title="Suspicious LSASS Access", level="high",
-                          path=rule_path, source="sigmahq", selected_by="tag")
-    return Toolbox(rule=rule, capture=synthetic_capture, store=FakeStore())
+    return Toolbox(rule=write_rule(tmp_path), capture=synthetic_capture,
+                   store=FakeStore())
 
 
 def test_every_contract_declares_a_ceiling_and_what_it_reads():
@@ -137,11 +92,7 @@ def test_query_events_survives_a_nonsense_limit(toolbox):
 def test_ingestion_mode_changes_what_a_query_returns(tmp_path, synthetic_capture):
     raws = [{"EventID": 1, "Channel": "Sysmon", "CommandLine": "whoami",
              "Image": "C:\\x.exe", "Message": "Process Create:\r\nrendered blob"}]
-    rule_path = tmp_path / "r.yml"
-    rule_path.write_text("title: t\ndetection:\n  selection:\n    a: b\n"
-                         "  condition: selection\n")
-    rule = corpus.RuleRef(id="r", title="t", level="low", path=rule_path,
-                          source="sigmahq", selected_by="tag")
+    rule = write_rule(tmp_path)
 
     raw_box = Toolbox(rule=rule, capture=synthetic_capture, store=FakeStore(raws),
                       ingestion=Ingestion.RAW)
@@ -160,13 +111,8 @@ def test_a_bad_attack_lookup_is_an_error_the_model_can_recover_from(toolbox):
 
 
 def test_unavailable_tools_are_refused_not_executed(tmp_path, synthetic_capture):
-    rule_path = tmp_path / "r.yml"
-    rule_path.write_text("title: t\ndetection:\n  selection:\n    a: b\n"
-                         "  condition: selection\n")
-    rule = corpus.RuleRef(id="r", title="t", level="low", path=rule_path,
-                          source="sigmahq", selected_by="tag")
-    box = Toolbox(rule=rule, capture=synthetic_capture, store=FakeStore(),
-                  allowed={"count_events"})
+    box = Toolbox(rule=write_rule(tmp_path), capture=synthetic_capture,
+                  store=FakeStore(), allowed={"count_events"})
     assert "not available" in box.call("query_events", {}).error
     assert not box.call("count_events", {}).error
 
