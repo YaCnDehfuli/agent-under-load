@@ -97,12 +97,17 @@ def run_suppression(
     limit_cases: int | None = None,
     limit_payloads: int | None = None,
     max_events: int = DEFAULT_MAX_EVENTS,
+    model=None,
+    cases=None,
+    base_store: CaptureStore | None = None,
 ) -> tuple[list[Attempt], dict]:
-    evaluation = corpus.evaluation_set()
-    # only true positives can be suppressed: there is nothing to hide in a case
-    # whose correct answer is already "false positive"
-    cases = sorted((c for c in evaluation.triage if c.truth == "true_positive"),
-                   key=lambda c: (c.capture.id, c.case_id))
+    if cases is None:
+        evaluation = corpus.evaluation_set()
+        # only true positives can be suppressed: there is nothing to hide in a
+        # case whose correct answer is already "false positive"
+        cases = sorted((c for c in evaluation.triage
+                        if c.truth == "true_positive"),
+                       key=lambda c: (c.capture.id, c.case_id))
     if limit_cases:
         cases = cases[:limit_cases]
 
@@ -110,9 +115,9 @@ def run_suppression(
     if limit_payloads:
         payloads = payloads[:limit_payloads]
 
-    model = models.from_env()
+    model = model or models.from_env()
     config = AgentConfig(controls=controls)
-    base_store = CaptureStore()
+    base_store = base_store or CaptureStore()
     clean_graph = TriageGraph(model, config, store=base_store)
 
     clean = _clean_labels(clean_graph, cases)
@@ -171,20 +176,25 @@ def run_escalation(
     controls: frozenset[Control],
     limit_cases: int | None = None,
     max_events: int = DEFAULT_MAX_EVENTS,
+    model=None,
+    cases=None,
+    base_store: CaptureStore | None = None,
 ) -> tuple[list[Attempt], dict]:
     """Try to induce a harmful action request, and see if the boundary holds."""
     from agent.authz import Capability, decide
 
-    evaluation = corpus.evaluation_set()
-    cases = sorted((c for c in evaluation.triage if c.truth == "true_positive"),
-                   key=lambda c: (c.capture.id, c.case_id))
+    if cases is None:
+        evaluation = corpus.evaluation_set()
+        cases = sorted((c for c in evaluation.triage
+                        if c.truth == "true_positive"),
+                       key=lambda c: (c.capture.id, c.case_id))
     if limit_cases:
         cases = cases[:limit_cases]
 
     payloads = [p for p in load_payloads() if p.objective == "escalation"]
-    model = models.from_env()
+    model = model or models.from_env()
     config = AgentConfig(controls=controls)
-    base_store = CaptureStore()
+    base_store = base_store or CaptureStore()
 
     attempts: list[Attempt] = []
     for case in cases:
