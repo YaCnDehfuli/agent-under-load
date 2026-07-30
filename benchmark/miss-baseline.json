@@ -1,0 +1,5301 @@
+{
+ "task": "miss",
+ "predictor": "heuristic-missclass",
+ "model": "",
+ "temperature": null,
+ "controls": [],
+ "cases": 581,
+ "limited": false,
+ "seconds": 131.1,
+ "report": {
+  "task": "miss",
+  "predictor": "heuristic-missclass",
+  "total": 581,
+  "unanswered": 0,
+  "macro_f1": 0.9302,
+  "macro_recall": 0.9171,
+  "per_class": [
+   {
+    "label": "out-of-scope",
+    "support": 273,
+    "predicted": 273,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+   },
+   {
+    "label": "miss-logic",
+    "support": 207,
+    "predicted": 215,
+    "precision": 0.9349,
+    "recall": 0.971,
+    "f1": 0.9526
+   },
+   {
+    "label": "miss-telemetry",
+    "support": 57,
+    "predicted": 54,
+    "precision": 1.0,
+    "recall": 0.9474,
+    "f1": 0.973
+   },
+   {
+    "label": "detected",
+    "support": 44,
+    "predicted": 39,
+    "precision": 0.8462,
+    "recall": 0.75,
+    "f1": 0.7952
+   }
+  ],
+  "confusion": {
+   "out-of-scope": {
+    "out-of-scope": 273
+   },
+   "miss-logic": {
+    "miss-logic": 201,
+    "detected": 6
+   },
+   "miss-telemetry": {
+    "miss-telemetry": 54,
+    "miss-logic": 3
+   },
+   "detected": {
+    "detected": 33,
+    "miss-logic": 11
+   }
+  },
+  "note": ""
+ },
+ "predictions": [
+  {
+   "case_id": "miss:03e2746e-2b31-42f1-ab7a-eb39365b2422@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "03e2746e-2b31-42f1-ab7a-eb39365b2422",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:03f4ca17-de95-428d-a75a-4ee78b047256@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "03f4ca17-de95-428d-a75a-4ee78b047256",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:06d71506-7beb-4f22-8888-e2e5e2ca7fd8@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "06d71506-7beb-4f22-8888-e2e5e2ca7fd8",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:0b4ae027-2a2d-4b93-8c7e-962caaba5b2a@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0b4ae027-2a2d-4b93-8c7e-962caaba5b2a",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:0e277796-5f23-4e49-a490-483131d4f6e1@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0e277796-5f23-4e49-a490-483131d4f6e1",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:0f920ebe-7aea-4c54-b202-9aa0c609cfe5@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0f920ebe-7aea-4c54-b202-9aa0c609cfe5",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:129966c9-de17-4334-a123-8b58172e664d@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "129966c9-de17-4334-a123-8b58172e664d",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:1a1ed54a-2ba4-4221-94d5-01dee560d71e@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "1a1ed54a-2ba4-4221-94d5-01dee560d71e",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:1f0b4cac-9c81-41f4-95d0-8475ff46b3e2@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "1f0b4cac-9c81-41f4-95d0-8475ff46b3e2",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:23ceaf5c-b6f1-4a32-8559-f2ff734be516@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "23ceaf5c-b6f1-4a32-8559-f2ff734be516",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:250ae82f-736e-4844-a68b-0b5e8cc887da@LSASS_campaign_01",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "250ae82f-736e-4844-a68b-0b5e8cc887da",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:2704ab9e-afe2-4854-a3b1-0c0706d03578@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2704ab9e-afe2-4854-a3b1-0c0706d03578",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:2e65275c-8288-4ab4-aeb7-6274f58b6b20@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2e65275c-8288-4ab4-aeb7-6274f58b6b20",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:2e69f167-47b5-4ae7-a390-47764529eff5@LSASS_campaign_01",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2e69f167-47b5-4ae7-a390-47764529eff5",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:2f869d59-7f6a-4931-992c-cce556ff2d53@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2f869d59-7f6a-4931-992c-cce556ff2d53",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:33efc23c-6ea2-4503-8cfe-bdf82ce8f719@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "33efc23c-6ea2-4503-8cfe-bdf82ce8f719",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:36d88494-1d43-4dc0-b3fa-35c8fea0ca9d@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "36d88494-1d43-4dc0-b3fa-35c8fea0ca9d",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:472159c5-31b9-4f56-b794-b766faa8b0a7@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "472159c5-31b9-4f56-b794-b766faa8b0a7",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:4976aa50-8f41-45c6-8b15-ab3fc10e79ed@LSASS_campaign_01",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4976aa50-8f41-45c6-8b15-ab3fc10e79ed",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:4a1b6da0-d94f-4fc3-98fc-2d9cb9e5ee76@LSASS_campaign_01",
+   "truth": "detected",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4a1b6da0-d94f-4fc3-98fc-2d9cb9e5ee76",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:4b447e9d-1c82-47f6-9a01-a1bb0a22d684@LSASS_campaign_01",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4b447e9d-1c82-47f6-9a01-a1bb0a22d684",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:4be8b654-0c01-4c9d-a10c-6b28467fc651@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4be8b654-0c01-4c9d-a10c-6b28467fc651",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:4c0aaedc-154c-4427-ada0-d80ef9c9deb6@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4c0aaedc-154c-4427-ada0-d80ef9c9deb6",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:515c8be5-e5df-4c5e-8f6d-a4a2f05e4b48@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "515c8be5-e5df-4c5e-8f6d-a4a2f05e4b48",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:55e29995-75e7-451a-bef0-6225e2f13597@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "55e29995-75e7-451a-bef0-6225e2f13597",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:589ac73f-8e12-409c-964e-31a2f5775ae2@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "589ac73f-8e12-409c-964e-31a2f5775ae2",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:5afee48e-67dd-4e03-a783-f74259dcf998@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "5afee48e-67dd-4e03-a783-f74259dcf998",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:5ef9853e-4d0e-4a70-846f-a9ca37d876da@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "5ef9853e-4d0e-4a70-846f-a9ca37d876da",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:646ea171-dded-4578-8a4d-65e9822892e3@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "646ea171-dded-4578-8a4d-65e9822892e3",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:66e563f9-1cbd-4a22-a957-d8b7c0f44372@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "66e563f9-1cbd-4a22-a957-d8b7c0f44372",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:678dfc63-fefb-47a5-a04c-26bcf8cc9f65@LSASS_campaign_01",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "678dfc63-fefb-47a5-a04c-26bcf8cc9f65",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:6902955a-01b7-432c-b32a-6f5f81d8f625@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "6902955a-01b7-432c-b32a-6f5f81d8f625",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:69ca12af-119d-44ed-b50f-a47af0ebc364@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "69ca12af-119d-44ed-b50f-a47af0ebc364",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:736ffa74-5f6f-44ca-94ef-1c0df4f51d2a@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "736ffa74-5f6f-44ca-94ef-1c0df4f51d2a",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:743c314e-3154-4e7c-b209-8211c9b1d2af@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "743c314e-3154-4e7c-b209-8211c9b1d2af",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:78cc2dd2-7d20-4d32-93ff-057084c38b93@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "78cc2dd2-7d20-4d32-93ff-057084c38b93",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:79aeeb41-8156-4fac-a0cd-076495ab82a1@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "79aeeb41-8156-4fac-a0cd-076495ab82a1",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:79b06761-465f-4f88-9ef2-150e24d3d737@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "79b06761-465f-4f88-9ef2-150e24d3d737",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:7aa7009a-28b9-4344-8c1f-159489a390df@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "7aa7009a-28b9-4344-8c1f-159489a390df",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:84c174ab-d3ef-481f-9c86-a50d0b8e3edb@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "84c174ab-d3ef-481f-9c86-a50d0b8e3edb",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:857c8db3-c89b-42fb-882b-f681c7cf4da2@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "857c8db3-c89b-42fb-882b-f681c7cf4da2",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:8a1b2c3d-4e5f-6789-abcd-ef1234567890@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8a1b2c3d-4e5f-6789-abcd-ef1234567890",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:8cde342c-ba48-4b74-b615-172c330f2e93@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8cde342c-ba48-4b74-b615-172c330f2e93",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:8fbf3271-1ef6-4e94-8210-03c2317947f6@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8fbf3271-1ef6-4e94-8210-03c2317947f6",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:910ab938-668b-401b-b08c-b596e80fdca5@LSASS_campaign_01",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "910ab938-668b-401b-b08c-b596e80fdca5",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:93d94efc-d7ad-4161-ad7d-1638c4f908d8@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "93d94efc-d7ad-4161-ad7d-1638c4f908d8",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:961d0ba2-3eea-4303-a930-2cf78bbfcc5e@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "961d0ba2-3eea-4303-a930-2cf78bbfcc5e",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:962fe167-e48d-4fd6-9974-11e5b9a5d6d1@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "962fe167-e48d-4fd6-9974-11e5b9a5d6d1",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:9a4ccd1a-3526-4d99-b980-9f9c5d3a6ff3@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9a4ccd1a-3526-4d99-b980-9f9c5d3a6ff3",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:9bd012ee-0dff-44d7-84a0-aa698cfd87a3@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9bd012ee-0dff-44d7-84a0-aa698cfd87a3",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:9f5c1d59-33be-4e60-bcab-85d2f566effd@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9f5c1d59-33be-4e60-bcab-85d2f566effd",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:a0a278fe-2c0e-4de2-ac3c-c68b08a9ba98@LSASS_campaign_01",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a0a278fe-2c0e-4de2-ac3c-c68b08a9ba98",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:a18dd26b-6450-46de-8c91-9659150cf088@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a18dd26b-6450-46de-8c91-9659150cf088",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:a18e0862-127b-43ca-be12-1a542c75c7c5@LSASS_campaign_01",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a18e0862-127b-43ca-be12-1a542c75c7c5",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:a49fa4d5-11db-418c-8473-1e014a8dd462@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a49fa4d5-11db-418c-8473-1e014a8dd462",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:a5a2d357-1ab8-4675-a967-ef9990a59391@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a5a2d357-1ab8-4675-a967-ef9990a59391",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:a642964e-bead-4bed-8910-1bb4d63e3b4d@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a642964e-bead-4bed-8910-1bb4d63e3b4d",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:a6b33c02-8305-488f-8585-03cb2a7763f2@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a6b33c02-8305-488f-8585-03cb2a7763f2",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:aa1697b7-d611-4f9a-9cb2-5125b4ccfd5c@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "aa1697b7-d611-4f9a-9cb2-5125b4ccfd5c",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:aa35a627-33fb-4d04-a165-d33b4afca3e8@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "aa35a627-33fb-4d04-a165-d33b4afca3e8",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:b1876533-4ed5-4a83-90f3-b8645840a413@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b1876533-4ed5-4a83-90f3-b8645840a413",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:b1bd3a59-c1fd-4860-9f40-4dd161a7d1f5@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b1bd3a59-c1fd-4860-9f40-4dd161a7d1f5",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:b99a1518-1ad5-4f65-bc95-1ffff97a8fd0@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b99a1518-1ad5-4f65-bc95-1ffff97a8fd0",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:bdc64095-d59a-42a2-8588-71fd9c9d9abc@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "bdc64095-d59a-42a2-8588-71fd9c9d9abc",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:c3e76af5-4ce0-4a14-9c9a-25ceb8fda182@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "c3e76af5-4ce0-4a14-9c9a-25ceb8fda182",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:c8da0dfd-4ed0-4b68-962d-13c9c884384e@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "c8da0dfd-4ed0-4b68-962d-13c9c884384e",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:ca621ba5-54ab-4035-9942-d378e6fcde3c@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ca621ba5-54ab-4035-9942-d378e6fcde3c",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:d0d2f720-d14f-448d-8242-51ff396a334e@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "d0d2f720-d14f-448d-8242-51ff396a334e",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:d474c8fe-bb69-4ea0-b7d9-f682b56d52d3@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "d474c8fe-bb69-4ea0-b7d9-f682b56d52d3",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:dee0a7a3-f200-4112-a99b-952196d81e42@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "dee0a7a3-f200-4112-a99b-952196d81e42",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:e074832a-eada-4fd7-94a1-10642b130e16@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e074832a-eada-4fd7-94a1-10642b130e16",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:e5b33f7d-eb93-48b6-9851-09e1e610b6d7@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e5b33f7d-eb93-48b6-9851-09e1e610b6d7",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:e76c8240-d68f-4773-8880-5c6f63595aaf@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e76c8240-d68f-4773-8880-5c6f63595aaf",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:eb1c4225-1c23-4241-8dd4-051389fde4ce@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "eb1c4225-1c23-4241-8dd4-051389fde4ce",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:edadb1e5-5919-4e4c-8462-a9e643b02c4b@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "edadb1e5-5919-4e4c-8462-a9e643b02c4b",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:ee2324b0-6673-4767-9e34-c84cdd893483@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ee2324b0-6673-4767-9e34-c84cdd893483",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:f0d1feba-4344-4ca9-8121-a6c97bd6df52@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f0d1feba-4344-4ca9-8121-a6c97bd6df52",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:f239b326-2f41-4d6b-9dfa-c846a60ef505@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f239b326-2f41-4d6b-9dfa-c846a60ef505",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:f26307d8-14cd-47e3-a26b-4b4769f24af6@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f26307d8-14cd-47e3-a26b-4b4769f24af6",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:f8be3e82-46a3-4e4e-ada5-8e538ae8b9c9@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f8be3e82-46a3-4e4e-ada5-8e538ae8b9c9",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:fa34b441-961a-42fa-a100-ecc28c886725@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "fa34b441-961a-42fa-a100-ecc28c886725",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:fb656378-f909-47c1-8747-278bf09f4f4f@LSASS_campaign_01",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "fb656378-f909-47c1-8747-278bf09f4f4f",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:ffa6861c-4461-4f59-8a41-578c39f3f23e@LSASS_campaign_01",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ffa6861c-4461-4f59-8a41-578c39f3f23e",
+   "capture": "LSASS_campaign_01"
+  },
+  {
+   "case_id": "miss:03e2746e-2b31-42f1-ab7a-eb39365b2422@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "03e2746e-2b31-42f1-ab7a-eb39365b2422",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:03f4ca17-de95-428d-a75a-4ee78b047256@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "03f4ca17-de95-428d-a75a-4ee78b047256",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:06d71506-7beb-4f22-8888-e2e5e2ca7fd8@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "06d71506-7beb-4f22-8888-e2e5e2ca7fd8",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:0b4ae027-2a2d-4b93-8c7e-962caaba5b2a@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0b4ae027-2a2d-4b93-8c7e-962caaba5b2a",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:0e277796-5f23-4e49-a490-483131d4f6e1@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0e277796-5f23-4e49-a490-483131d4f6e1",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:0f920ebe-7aea-4c54-b202-9aa0c609cfe5@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0f920ebe-7aea-4c54-b202-9aa0c609cfe5",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:129966c9-de17-4334-a123-8b58172e664d@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "129966c9-de17-4334-a123-8b58172e664d",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:1a1ed54a-2ba4-4221-94d5-01dee560d71e@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "1a1ed54a-2ba4-4221-94d5-01dee560d71e",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:1f0b4cac-9c81-41f4-95d0-8475ff46b3e2@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "1f0b4cac-9c81-41f4-95d0-8475ff46b3e2",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:23ceaf5c-b6f1-4a32-8559-f2ff734be516@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "23ceaf5c-b6f1-4a32-8559-f2ff734be516",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:250ae82f-736e-4844-a68b-0b5e8cc887da@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "250ae82f-736e-4844-a68b-0b5e8cc887da",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:2704ab9e-afe2-4854-a3b1-0c0706d03578@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2704ab9e-afe2-4854-a3b1-0c0706d03578",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:2e65275c-8288-4ab4-aeb7-6274f58b6b20@LSASS_campaign_02",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2e65275c-8288-4ab4-aeb7-6274f58b6b20",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:2e69f167-47b5-4ae7-a390-47764529eff5@LSASS_campaign_02",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2e69f167-47b5-4ae7-a390-47764529eff5",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:2f869d59-7f6a-4931-992c-cce556ff2d53@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2f869d59-7f6a-4931-992c-cce556ff2d53",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:33efc23c-6ea2-4503-8cfe-bdf82ce8f719@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "33efc23c-6ea2-4503-8cfe-bdf82ce8f719",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:36d88494-1d43-4dc0-b3fa-35c8fea0ca9d@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "36d88494-1d43-4dc0-b3fa-35c8fea0ca9d",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:472159c5-31b9-4f56-b794-b766faa8b0a7@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "472159c5-31b9-4f56-b794-b766faa8b0a7",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:4976aa50-8f41-45c6-8b15-ab3fc10e79ed@LSASS_campaign_02",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4976aa50-8f41-45c6-8b15-ab3fc10e79ed",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:4a1b6da0-d94f-4fc3-98fc-2d9cb9e5ee76@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4a1b6da0-d94f-4fc3-98fc-2d9cb9e5ee76",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:4b447e9d-1c82-47f6-9a01-a1bb0a22d684@LSASS_campaign_02",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4b447e9d-1c82-47f6-9a01-a1bb0a22d684",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:4be8b654-0c01-4c9d-a10c-6b28467fc651@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4be8b654-0c01-4c9d-a10c-6b28467fc651",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:4c0aaedc-154c-4427-ada0-d80ef9c9deb6@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4c0aaedc-154c-4427-ada0-d80ef9c9deb6",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:515c8be5-e5df-4c5e-8f6d-a4a2f05e4b48@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "515c8be5-e5df-4c5e-8f6d-a4a2f05e4b48",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:55e29995-75e7-451a-bef0-6225e2f13597@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "55e29995-75e7-451a-bef0-6225e2f13597",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:589ac73f-8e12-409c-964e-31a2f5775ae2@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "589ac73f-8e12-409c-964e-31a2f5775ae2",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:5afee48e-67dd-4e03-a783-f74259dcf998@LSASS_campaign_02",
+   "truth": "detected",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "5afee48e-67dd-4e03-a783-f74259dcf998",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:5ef9853e-4d0e-4a70-846f-a9ca37d876da@LSASS_campaign_02",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "5ef9853e-4d0e-4a70-846f-a9ca37d876da",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:646ea171-dded-4578-8a4d-65e9822892e3@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "646ea171-dded-4578-8a4d-65e9822892e3",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:66e563f9-1cbd-4a22-a957-d8b7c0f44372@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "66e563f9-1cbd-4a22-a957-d8b7c0f44372",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:678dfc63-fefb-47a5-a04c-26bcf8cc9f65@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "678dfc63-fefb-47a5-a04c-26bcf8cc9f65",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:6902955a-01b7-432c-b32a-6f5f81d8f625@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "6902955a-01b7-432c-b32a-6f5f81d8f625",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:69ca12af-119d-44ed-b50f-a47af0ebc364@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "69ca12af-119d-44ed-b50f-a47af0ebc364",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:736ffa74-5f6f-44ca-94ef-1c0df4f51d2a@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "736ffa74-5f6f-44ca-94ef-1c0df4f51d2a",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:743c314e-3154-4e7c-b209-8211c9b1d2af@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "743c314e-3154-4e7c-b209-8211c9b1d2af",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:78cc2dd2-7d20-4d32-93ff-057084c38b93@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "78cc2dd2-7d20-4d32-93ff-057084c38b93",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:79aeeb41-8156-4fac-a0cd-076495ab82a1@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "79aeeb41-8156-4fac-a0cd-076495ab82a1",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:79b06761-465f-4f88-9ef2-150e24d3d737@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "79b06761-465f-4f88-9ef2-150e24d3d737",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:7aa7009a-28b9-4344-8c1f-159489a390df@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "7aa7009a-28b9-4344-8c1f-159489a390df",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:84c174ab-d3ef-481f-9c86-a50d0b8e3edb@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "84c174ab-d3ef-481f-9c86-a50d0b8e3edb",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:857c8db3-c89b-42fb-882b-f681c7cf4da2@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "857c8db3-c89b-42fb-882b-f681c7cf4da2",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:8a1b2c3d-4e5f-6789-abcd-ef1234567890@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8a1b2c3d-4e5f-6789-abcd-ef1234567890",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:8cde342c-ba48-4b74-b615-172c330f2e93@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8cde342c-ba48-4b74-b615-172c330f2e93",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:8fbf3271-1ef6-4e94-8210-03c2317947f6@LSASS_campaign_02",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8fbf3271-1ef6-4e94-8210-03c2317947f6",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:910ab938-668b-401b-b08c-b596e80fdca5@LSASS_campaign_02",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "910ab938-668b-401b-b08c-b596e80fdca5",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:93d94efc-d7ad-4161-ad7d-1638c4f908d8@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "93d94efc-d7ad-4161-ad7d-1638c4f908d8",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:961d0ba2-3eea-4303-a930-2cf78bbfcc5e@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "961d0ba2-3eea-4303-a930-2cf78bbfcc5e",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:962fe167-e48d-4fd6-9974-11e5b9a5d6d1@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "962fe167-e48d-4fd6-9974-11e5b9a5d6d1",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:9a4ccd1a-3526-4d99-b980-9f9c5d3a6ff3@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9a4ccd1a-3526-4d99-b980-9f9c5d3a6ff3",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:9bd012ee-0dff-44d7-84a0-aa698cfd87a3@LSASS_campaign_02",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9bd012ee-0dff-44d7-84a0-aa698cfd87a3",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:9f5c1d59-33be-4e60-bcab-85d2f566effd@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9f5c1d59-33be-4e60-bcab-85d2f566effd",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:a0a278fe-2c0e-4de2-ac3c-c68b08a9ba98@LSASS_campaign_02",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a0a278fe-2c0e-4de2-ac3c-c68b08a9ba98",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:a18dd26b-6450-46de-8c91-9659150cf088@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a18dd26b-6450-46de-8c91-9659150cf088",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:a18e0862-127b-43ca-be12-1a542c75c7c5@LSASS_campaign_02",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a18e0862-127b-43ca-be12-1a542c75c7c5",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:a49fa4d5-11db-418c-8473-1e014a8dd462@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a49fa4d5-11db-418c-8473-1e014a8dd462",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:a5a2d357-1ab8-4675-a967-ef9990a59391@LSASS_campaign_02",
+   "truth": "detected",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a5a2d357-1ab8-4675-a967-ef9990a59391",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:a642964e-bead-4bed-8910-1bb4d63e3b4d@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a642964e-bead-4bed-8910-1bb4d63e3b4d",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:a6b33c02-8305-488f-8585-03cb2a7763f2@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a6b33c02-8305-488f-8585-03cb2a7763f2",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:aa1697b7-d611-4f9a-9cb2-5125b4ccfd5c@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "aa1697b7-d611-4f9a-9cb2-5125b4ccfd5c",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:aa35a627-33fb-4d04-a165-d33b4afca3e8@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "aa35a627-33fb-4d04-a165-d33b4afca3e8",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:b1876533-4ed5-4a83-90f3-b8645840a413@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b1876533-4ed5-4a83-90f3-b8645840a413",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:b1bd3a59-c1fd-4860-9f40-4dd161a7d1f5@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b1bd3a59-c1fd-4860-9f40-4dd161a7d1f5",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:b99a1518-1ad5-4f65-bc95-1ffff97a8fd0@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b99a1518-1ad5-4f65-bc95-1ffff97a8fd0",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:bdc64095-d59a-42a2-8588-71fd9c9d9abc@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "bdc64095-d59a-42a2-8588-71fd9c9d9abc",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:c3e76af5-4ce0-4a14-9c9a-25ceb8fda182@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "c3e76af5-4ce0-4a14-9c9a-25ceb8fda182",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:c8da0dfd-4ed0-4b68-962d-13c9c884384e@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "c8da0dfd-4ed0-4b68-962d-13c9c884384e",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:ca621ba5-54ab-4035-9942-d378e6fcde3c@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ca621ba5-54ab-4035-9942-d378e6fcde3c",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:d0d2f720-d14f-448d-8242-51ff396a334e@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "d0d2f720-d14f-448d-8242-51ff396a334e",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:d474c8fe-bb69-4ea0-b7d9-f682b56d52d3@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "d474c8fe-bb69-4ea0-b7d9-f682b56d52d3",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:dee0a7a3-f200-4112-a99b-952196d81e42@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "dee0a7a3-f200-4112-a99b-952196d81e42",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:e074832a-eada-4fd7-94a1-10642b130e16@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e074832a-eada-4fd7-94a1-10642b130e16",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:e5b33f7d-eb93-48b6-9851-09e1e610b6d7@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e5b33f7d-eb93-48b6-9851-09e1e610b6d7",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:e76c8240-d68f-4773-8880-5c6f63595aaf@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e76c8240-d68f-4773-8880-5c6f63595aaf",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:eb1c4225-1c23-4241-8dd4-051389fde4ce@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "eb1c4225-1c23-4241-8dd4-051389fde4ce",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:edadb1e5-5919-4e4c-8462-a9e643b02c4b@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "edadb1e5-5919-4e4c-8462-a9e643b02c4b",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:ee2324b0-6673-4767-9e34-c84cdd893483@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ee2324b0-6673-4767-9e34-c84cdd893483",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:f0d1feba-4344-4ca9-8121-a6c97bd6df52@LSASS_campaign_02",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f0d1feba-4344-4ca9-8121-a6c97bd6df52",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:f239b326-2f41-4d6b-9dfa-c846a60ef505@LSASS_campaign_02",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f239b326-2f41-4d6b-9dfa-c846a60ef505",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:f26307d8-14cd-47e3-a26b-4b4769f24af6@LSASS_campaign_02",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f26307d8-14cd-47e3-a26b-4b4769f24af6",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:f8be3e82-46a3-4e4e-ada5-8e538ae8b9c9@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f8be3e82-46a3-4e4e-ada5-8e538ae8b9c9",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:fa34b441-961a-42fa-a100-ecc28c886725@LSASS_campaign_02",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "fa34b441-961a-42fa-a100-ecc28c886725",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:fb656378-f909-47c1-8747-278bf09f4f4f@LSASS_campaign_02",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "fb656378-f909-47c1-8747-278bf09f4f4f",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:ffa6861c-4461-4f59-8a41-578c39f3f23e@LSASS_campaign_02",
+   "truth": "detected",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ffa6861c-4461-4f59-8a41-578c39f3f23e",
+   "capture": "LSASS_campaign_02"
+  },
+  {
+   "case_id": "miss:03e2746e-2b31-42f1-ab7a-eb39365b2422@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "03e2746e-2b31-42f1-ab7a-eb39365b2422",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:03f4ca17-de95-428d-a75a-4ee78b047256@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "03f4ca17-de95-428d-a75a-4ee78b047256",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:06d71506-7beb-4f22-8888-e2e5e2ca7fd8@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "06d71506-7beb-4f22-8888-e2e5e2ca7fd8",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:0b4ae027-2a2d-4b93-8c7e-962caaba5b2a@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0b4ae027-2a2d-4b93-8c7e-962caaba5b2a",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:0e277796-5f23-4e49-a490-483131d4f6e1@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0e277796-5f23-4e49-a490-483131d4f6e1",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:0f920ebe-7aea-4c54-b202-9aa0c609cfe5@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0f920ebe-7aea-4c54-b202-9aa0c609cfe5",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:129966c9-de17-4334-a123-8b58172e664d@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "129966c9-de17-4334-a123-8b58172e664d",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:1a1ed54a-2ba4-4221-94d5-01dee560d71e@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "1a1ed54a-2ba4-4221-94d5-01dee560d71e",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:1f0b4cac-9c81-41f4-95d0-8475ff46b3e2@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "1f0b4cac-9c81-41f4-95d0-8475ff46b3e2",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:23ceaf5c-b6f1-4a32-8559-f2ff734be516@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "23ceaf5c-b6f1-4a32-8559-f2ff734be516",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:250ae82f-736e-4844-a68b-0b5e8cc887da@LSASS_campaign_03",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "250ae82f-736e-4844-a68b-0b5e8cc887da",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:2704ab9e-afe2-4854-a3b1-0c0706d03578@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2704ab9e-afe2-4854-a3b1-0c0706d03578",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:2e65275c-8288-4ab4-aeb7-6274f58b6b20@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2e65275c-8288-4ab4-aeb7-6274f58b6b20",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:2e69f167-47b5-4ae7-a390-47764529eff5@LSASS_campaign_03",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2e69f167-47b5-4ae7-a390-47764529eff5",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:2f869d59-7f6a-4931-992c-cce556ff2d53@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2f869d59-7f6a-4931-992c-cce556ff2d53",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:33efc23c-6ea2-4503-8cfe-bdf82ce8f719@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "33efc23c-6ea2-4503-8cfe-bdf82ce8f719",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:36d88494-1d43-4dc0-b3fa-35c8fea0ca9d@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "36d88494-1d43-4dc0-b3fa-35c8fea0ca9d",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:472159c5-31b9-4f56-b794-b766faa8b0a7@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "472159c5-31b9-4f56-b794-b766faa8b0a7",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:4976aa50-8f41-45c6-8b15-ab3fc10e79ed@LSASS_campaign_03",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4976aa50-8f41-45c6-8b15-ab3fc10e79ed",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:4a1b6da0-d94f-4fc3-98fc-2d9cb9e5ee76@LSASS_campaign_03",
+   "truth": "detected",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4a1b6da0-d94f-4fc3-98fc-2d9cb9e5ee76",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:4b447e9d-1c82-47f6-9a01-a1bb0a22d684@LSASS_campaign_03",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4b447e9d-1c82-47f6-9a01-a1bb0a22d684",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:4be8b654-0c01-4c9d-a10c-6b28467fc651@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4be8b654-0c01-4c9d-a10c-6b28467fc651",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:4c0aaedc-154c-4427-ada0-d80ef9c9deb6@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4c0aaedc-154c-4427-ada0-d80ef9c9deb6",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:515c8be5-e5df-4c5e-8f6d-a4a2f05e4b48@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "515c8be5-e5df-4c5e-8f6d-a4a2f05e4b48",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:55e29995-75e7-451a-bef0-6225e2f13597@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "55e29995-75e7-451a-bef0-6225e2f13597",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:589ac73f-8e12-409c-964e-31a2f5775ae2@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "589ac73f-8e12-409c-964e-31a2f5775ae2",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:5afee48e-67dd-4e03-a783-f74259dcf998@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "5afee48e-67dd-4e03-a783-f74259dcf998",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:5ef9853e-4d0e-4a70-846f-a9ca37d876da@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "5ef9853e-4d0e-4a70-846f-a9ca37d876da",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:646ea171-dded-4578-8a4d-65e9822892e3@LSASS_campaign_03",
+   "truth": "detected",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "646ea171-dded-4578-8a4d-65e9822892e3",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:66e563f9-1cbd-4a22-a957-d8b7c0f44372@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "66e563f9-1cbd-4a22-a957-d8b7c0f44372",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:678dfc63-fefb-47a5-a04c-26bcf8cc9f65@LSASS_campaign_03",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "678dfc63-fefb-47a5-a04c-26bcf8cc9f65",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:6902955a-01b7-432c-b32a-6f5f81d8f625@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "6902955a-01b7-432c-b32a-6f5f81d8f625",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:69ca12af-119d-44ed-b50f-a47af0ebc364@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "69ca12af-119d-44ed-b50f-a47af0ebc364",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:736ffa74-5f6f-44ca-94ef-1c0df4f51d2a@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "736ffa74-5f6f-44ca-94ef-1c0df4f51d2a",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:743c314e-3154-4e7c-b209-8211c9b1d2af@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "743c314e-3154-4e7c-b209-8211c9b1d2af",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:78cc2dd2-7d20-4d32-93ff-057084c38b93@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "78cc2dd2-7d20-4d32-93ff-057084c38b93",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:79aeeb41-8156-4fac-a0cd-076495ab82a1@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "79aeeb41-8156-4fac-a0cd-076495ab82a1",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:79b06761-465f-4f88-9ef2-150e24d3d737@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "79b06761-465f-4f88-9ef2-150e24d3d737",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:7aa7009a-28b9-4344-8c1f-159489a390df@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "7aa7009a-28b9-4344-8c1f-159489a390df",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:84c174ab-d3ef-481f-9c86-a50d0b8e3edb@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "84c174ab-d3ef-481f-9c86-a50d0b8e3edb",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:857c8db3-c89b-42fb-882b-f681c7cf4da2@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "857c8db3-c89b-42fb-882b-f681c7cf4da2",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:8a1b2c3d-4e5f-6789-abcd-ef1234567890@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8a1b2c3d-4e5f-6789-abcd-ef1234567890",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:8cde342c-ba48-4b74-b615-172c330f2e93@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8cde342c-ba48-4b74-b615-172c330f2e93",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:8fbf3271-1ef6-4e94-8210-03c2317947f6@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8fbf3271-1ef6-4e94-8210-03c2317947f6",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:910ab938-668b-401b-b08c-b596e80fdca5@LSASS_campaign_03",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "910ab938-668b-401b-b08c-b596e80fdca5",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:93d94efc-d7ad-4161-ad7d-1638c4f908d8@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "93d94efc-d7ad-4161-ad7d-1638c4f908d8",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:961d0ba2-3eea-4303-a930-2cf78bbfcc5e@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "961d0ba2-3eea-4303-a930-2cf78bbfcc5e",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:962fe167-e48d-4fd6-9974-11e5b9a5d6d1@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "962fe167-e48d-4fd6-9974-11e5b9a5d6d1",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:9a4ccd1a-3526-4d99-b980-9f9c5d3a6ff3@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9a4ccd1a-3526-4d99-b980-9f9c5d3a6ff3",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:9bd012ee-0dff-44d7-84a0-aa698cfd87a3@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9bd012ee-0dff-44d7-84a0-aa698cfd87a3",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:9f5c1d59-33be-4e60-bcab-85d2f566effd@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9f5c1d59-33be-4e60-bcab-85d2f566effd",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:a0a278fe-2c0e-4de2-ac3c-c68b08a9ba98@LSASS_campaign_03",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a0a278fe-2c0e-4de2-ac3c-c68b08a9ba98",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:a18dd26b-6450-46de-8c91-9659150cf088@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a18dd26b-6450-46de-8c91-9659150cf088",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:a18e0862-127b-43ca-be12-1a542c75c7c5@LSASS_campaign_03",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a18e0862-127b-43ca-be12-1a542c75c7c5",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:a49fa4d5-11db-418c-8473-1e014a8dd462@LSASS_campaign_03",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a49fa4d5-11db-418c-8473-1e014a8dd462",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:a5a2d357-1ab8-4675-a967-ef9990a59391@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a5a2d357-1ab8-4675-a967-ef9990a59391",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:a642964e-bead-4bed-8910-1bb4d63e3b4d@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a642964e-bead-4bed-8910-1bb4d63e3b4d",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:a6b33c02-8305-488f-8585-03cb2a7763f2@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a6b33c02-8305-488f-8585-03cb2a7763f2",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:aa1697b7-d611-4f9a-9cb2-5125b4ccfd5c@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "aa1697b7-d611-4f9a-9cb2-5125b4ccfd5c",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:aa35a627-33fb-4d04-a165-d33b4afca3e8@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "aa35a627-33fb-4d04-a165-d33b4afca3e8",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:b1876533-4ed5-4a83-90f3-b8645840a413@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b1876533-4ed5-4a83-90f3-b8645840a413",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:b1bd3a59-c1fd-4860-9f40-4dd161a7d1f5@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b1bd3a59-c1fd-4860-9f40-4dd161a7d1f5",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:b99a1518-1ad5-4f65-bc95-1ffff97a8fd0@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b99a1518-1ad5-4f65-bc95-1ffff97a8fd0",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:bdc64095-d59a-42a2-8588-71fd9c9d9abc@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "bdc64095-d59a-42a2-8588-71fd9c9d9abc",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:c3e76af5-4ce0-4a14-9c9a-25ceb8fda182@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "c3e76af5-4ce0-4a14-9c9a-25ceb8fda182",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:c8da0dfd-4ed0-4b68-962d-13c9c884384e@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "c8da0dfd-4ed0-4b68-962d-13c9c884384e",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:ca621ba5-54ab-4035-9942-d378e6fcde3c@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ca621ba5-54ab-4035-9942-d378e6fcde3c",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:d0d2f720-d14f-448d-8242-51ff396a334e@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "d0d2f720-d14f-448d-8242-51ff396a334e",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:d474c8fe-bb69-4ea0-b7d9-f682b56d52d3@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "d474c8fe-bb69-4ea0-b7d9-f682b56d52d3",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:dee0a7a3-f200-4112-a99b-952196d81e42@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "dee0a7a3-f200-4112-a99b-952196d81e42",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:e074832a-eada-4fd7-94a1-10642b130e16@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e074832a-eada-4fd7-94a1-10642b130e16",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:e5b33f7d-eb93-48b6-9851-09e1e610b6d7@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e5b33f7d-eb93-48b6-9851-09e1e610b6d7",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:e76c8240-d68f-4773-8880-5c6f63595aaf@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e76c8240-d68f-4773-8880-5c6f63595aaf",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:eb1c4225-1c23-4241-8dd4-051389fde4ce@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "eb1c4225-1c23-4241-8dd4-051389fde4ce",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:edadb1e5-5919-4e4c-8462-a9e643b02c4b@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "edadb1e5-5919-4e4c-8462-a9e643b02c4b",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:ee2324b0-6673-4767-9e34-c84cdd893483@LSASS_campaign_03",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ee2324b0-6673-4767-9e34-c84cdd893483",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:f0d1feba-4344-4ca9-8121-a6c97bd6df52@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f0d1feba-4344-4ca9-8121-a6c97bd6df52",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:f239b326-2f41-4d6b-9dfa-c846a60ef505@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f239b326-2f41-4d6b-9dfa-c846a60ef505",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:f26307d8-14cd-47e3-a26b-4b4769f24af6@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f26307d8-14cd-47e3-a26b-4b4769f24af6",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:f8be3e82-46a3-4e4e-ada5-8e538ae8b9c9@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f8be3e82-46a3-4e4e-ada5-8e538ae8b9c9",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:fa34b441-961a-42fa-a100-ecc28c886725@LSASS_campaign_03",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "fa34b441-961a-42fa-a100-ecc28c886725",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:fb656378-f909-47c1-8747-278bf09f4f4f@LSASS_campaign_03",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "fb656378-f909-47c1-8747-278bf09f4f4f",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:ffa6861c-4461-4f59-8a41-578c39f3f23e@LSASS_campaign_03",
+   "truth": "detected",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ffa6861c-4461-4f59-8a41-578c39f3f23e",
+   "capture": "LSASS_campaign_03"
+  },
+  {
+   "case_id": "miss:03e2746e-2b31-42f1-ab7a-eb39365b2422@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "03e2746e-2b31-42f1-ab7a-eb39365b2422",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:03f4ca17-de95-428d-a75a-4ee78b047256@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "03f4ca17-de95-428d-a75a-4ee78b047256",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:06d71506-7beb-4f22-8888-e2e5e2ca7fd8@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "06d71506-7beb-4f22-8888-e2e5e2ca7fd8",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:0b4ae027-2a2d-4b93-8c7e-962caaba5b2a@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0b4ae027-2a2d-4b93-8c7e-962caaba5b2a",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:0e277796-5f23-4e49-a490-483131d4f6e1@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0e277796-5f23-4e49-a490-483131d4f6e1",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:0f920ebe-7aea-4c54-b202-9aa0c609cfe5@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0f920ebe-7aea-4c54-b202-9aa0c609cfe5",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:129966c9-de17-4334-a123-8b58172e664d@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "129966c9-de17-4334-a123-8b58172e664d",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:1a1ed54a-2ba4-4221-94d5-01dee560d71e@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "1a1ed54a-2ba4-4221-94d5-01dee560d71e",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:1f0b4cac-9c81-41f4-95d0-8475ff46b3e2@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "1f0b4cac-9c81-41f4-95d0-8475ff46b3e2",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:23ceaf5c-b6f1-4a32-8559-f2ff734be516@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "23ceaf5c-b6f1-4a32-8559-f2ff734be516",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:250ae82f-736e-4844-a68b-0b5e8cc887da@LSASS_campaign_04",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "250ae82f-736e-4844-a68b-0b5e8cc887da",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:2704ab9e-afe2-4854-a3b1-0c0706d03578@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2704ab9e-afe2-4854-a3b1-0c0706d03578",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:2e65275c-8288-4ab4-aeb7-6274f58b6b20@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2e65275c-8288-4ab4-aeb7-6274f58b6b20",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:2e69f167-47b5-4ae7-a390-47764529eff5@LSASS_campaign_04",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2e69f167-47b5-4ae7-a390-47764529eff5",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:2f869d59-7f6a-4931-992c-cce556ff2d53@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2f869d59-7f6a-4931-992c-cce556ff2d53",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:33efc23c-6ea2-4503-8cfe-bdf82ce8f719@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "33efc23c-6ea2-4503-8cfe-bdf82ce8f719",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:36d88494-1d43-4dc0-b3fa-35c8fea0ca9d@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "36d88494-1d43-4dc0-b3fa-35c8fea0ca9d",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:472159c5-31b9-4f56-b794-b766faa8b0a7@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "472159c5-31b9-4f56-b794-b766faa8b0a7",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:4976aa50-8f41-45c6-8b15-ab3fc10e79ed@LSASS_campaign_04",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4976aa50-8f41-45c6-8b15-ab3fc10e79ed",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:4a1b6da0-d94f-4fc3-98fc-2d9cb9e5ee76@LSASS_campaign_04",
+   "truth": "detected",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4a1b6da0-d94f-4fc3-98fc-2d9cb9e5ee76",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:4b447e9d-1c82-47f6-9a01-a1bb0a22d684@LSASS_campaign_04",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4b447e9d-1c82-47f6-9a01-a1bb0a22d684",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:4be8b654-0c01-4c9d-a10c-6b28467fc651@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4be8b654-0c01-4c9d-a10c-6b28467fc651",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:4c0aaedc-154c-4427-ada0-d80ef9c9deb6@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4c0aaedc-154c-4427-ada0-d80ef9c9deb6",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:515c8be5-e5df-4c5e-8f6d-a4a2f05e4b48@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "515c8be5-e5df-4c5e-8f6d-a4a2f05e4b48",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:55e29995-75e7-451a-bef0-6225e2f13597@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "55e29995-75e7-451a-bef0-6225e2f13597",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:589ac73f-8e12-409c-964e-31a2f5775ae2@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "589ac73f-8e12-409c-964e-31a2f5775ae2",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:5afee48e-67dd-4e03-a783-f74259dcf998@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "5afee48e-67dd-4e03-a783-f74259dcf998",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:5ef9853e-4d0e-4a70-846f-a9ca37d876da@LSASS_campaign_04",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "5ef9853e-4d0e-4a70-846f-a9ca37d876da",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:646ea171-dded-4578-8a4d-65e9822892e3@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "646ea171-dded-4578-8a4d-65e9822892e3",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:66e563f9-1cbd-4a22-a957-d8b7c0f44372@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "66e563f9-1cbd-4a22-a957-d8b7c0f44372",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:678dfc63-fefb-47a5-a04c-26bcf8cc9f65@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "678dfc63-fefb-47a5-a04c-26bcf8cc9f65",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:6902955a-01b7-432c-b32a-6f5f81d8f625@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "6902955a-01b7-432c-b32a-6f5f81d8f625",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:69ca12af-119d-44ed-b50f-a47af0ebc364@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "69ca12af-119d-44ed-b50f-a47af0ebc364",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:736ffa74-5f6f-44ca-94ef-1c0df4f51d2a@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "736ffa74-5f6f-44ca-94ef-1c0df4f51d2a",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:743c314e-3154-4e7c-b209-8211c9b1d2af@LSASS_campaign_04",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "743c314e-3154-4e7c-b209-8211c9b1d2af",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:78cc2dd2-7d20-4d32-93ff-057084c38b93@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "78cc2dd2-7d20-4d32-93ff-057084c38b93",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:79aeeb41-8156-4fac-a0cd-076495ab82a1@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "79aeeb41-8156-4fac-a0cd-076495ab82a1",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:79b06761-465f-4f88-9ef2-150e24d3d737@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "79b06761-465f-4f88-9ef2-150e24d3d737",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:7aa7009a-28b9-4344-8c1f-159489a390df@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "7aa7009a-28b9-4344-8c1f-159489a390df",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:84c174ab-d3ef-481f-9c86-a50d0b8e3edb@LSASS_campaign_04",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "84c174ab-d3ef-481f-9c86-a50d0b8e3edb",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:857c8db3-c89b-42fb-882b-f681c7cf4da2@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "857c8db3-c89b-42fb-882b-f681c7cf4da2",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:8a1b2c3d-4e5f-6789-abcd-ef1234567890@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8a1b2c3d-4e5f-6789-abcd-ef1234567890",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:8cde342c-ba48-4b74-b615-172c330f2e93@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8cde342c-ba48-4b74-b615-172c330f2e93",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:8fbf3271-1ef6-4e94-8210-03c2317947f6@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8fbf3271-1ef6-4e94-8210-03c2317947f6",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:910ab938-668b-401b-b08c-b596e80fdca5@LSASS_campaign_04",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "910ab938-668b-401b-b08c-b596e80fdca5",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:93d94efc-d7ad-4161-ad7d-1638c4f908d8@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "93d94efc-d7ad-4161-ad7d-1638c4f908d8",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:961d0ba2-3eea-4303-a930-2cf78bbfcc5e@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "961d0ba2-3eea-4303-a930-2cf78bbfcc5e",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:962fe167-e48d-4fd6-9974-11e5b9a5d6d1@LSASS_campaign_04",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "962fe167-e48d-4fd6-9974-11e5b9a5d6d1",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:9a4ccd1a-3526-4d99-b980-9f9c5d3a6ff3@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9a4ccd1a-3526-4d99-b980-9f9c5d3a6ff3",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:9bd012ee-0dff-44d7-84a0-aa698cfd87a3@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9bd012ee-0dff-44d7-84a0-aa698cfd87a3",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:9f5c1d59-33be-4e60-bcab-85d2f566effd@LSASS_campaign_04",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9f5c1d59-33be-4e60-bcab-85d2f566effd",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:a0a278fe-2c0e-4de2-ac3c-c68b08a9ba98@LSASS_campaign_04",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a0a278fe-2c0e-4de2-ac3c-c68b08a9ba98",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:a18dd26b-6450-46de-8c91-9659150cf088@LSASS_campaign_04",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a18dd26b-6450-46de-8c91-9659150cf088",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:a18e0862-127b-43ca-be12-1a542c75c7c5@LSASS_campaign_04",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a18e0862-127b-43ca-be12-1a542c75c7c5",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:a49fa4d5-11db-418c-8473-1e014a8dd462@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a49fa4d5-11db-418c-8473-1e014a8dd462",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:a5a2d357-1ab8-4675-a967-ef9990a59391@LSASS_campaign_04",
+   "truth": "detected",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a5a2d357-1ab8-4675-a967-ef9990a59391",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:a642964e-bead-4bed-8910-1bb4d63e3b4d@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a642964e-bead-4bed-8910-1bb4d63e3b4d",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:a6b33c02-8305-488f-8585-03cb2a7763f2@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a6b33c02-8305-488f-8585-03cb2a7763f2",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:aa1697b7-d611-4f9a-9cb2-5125b4ccfd5c@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "aa1697b7-d611-4f9a-9cb2-5125b4ccfd5c",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:aa35a627-33fb-4d04-a165-d33b4afca3e8@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "aa35a627-33fb-4d04-a165-d33b4afca3e8",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:b1876533-4ed5-4a83-90f3-b8645840a413@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b1876533-4ed5-4a83-90f3-b8645840a413",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:b1bd3a59-c1fd-4860-9f40-4dd161a7d1f5@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b1bd3a59-c1fd-4860-9f40-4dd161a7d1f5",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:b99a1518-1ad5-4f65-bc95-1ffff97a8fd0@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b99a1518-1ad5-4f65-bc95-1ffff97a8fd0",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:bdc64095-d59a-42a2-8588-71fd9c9d9abc@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "bdc64095-d59a-42a2-8588-71fd9c9d9abc",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:c3e76af5-4ce0-4a14-9c9a-25ceb8fda182@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "c3e76af5-4ce0-4a14-9c9a-25ceb8fda182",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:c8da0dfd-4ed0-4b68-962d-13c9c884384e@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "c8da0dfd-4ed0-4b68-962d-13c9c884384e",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:ca621ba5-54ab-4035-9942-d378e6fcde3c@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ca621ba5-54ab-4035-9942-d378e6fcde3c",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:d0d2f720-d14f-448d-8242-51ff396a334e@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "d0d2f720-d14f-448d-8242-51ff396a334e",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:d474c8fe-bb69-4ea0-b7d9-f682b56d52d3@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "d474c8fe-bb69-4ea0-b7d9-f682b56d52d3",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:dee0a7a3-f200-4112-a99b-952196d81e42@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "dee0a7a3-f200-4112-a99b-952196d81e42",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:e074832a-eada-4fd7-94a1-10642b130e16@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e074832a-eada-4fd7-94a1-10642b130e16",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:e5b33f7d-eb93-48b6-9851-09e1e610b6d7@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e5b33f7d-eb93-48b6-9851-09e1e610b6d7",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:e76c8240-d68f-4773-8880-5c6f63595aaf@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e76c8240-d68f-4773-8880-5c6f63595aaf",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:eb1c4225-1c23-4241-8dd4-051389fde4ce@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "eb1c4225-1c23-4241-8dd4-051389fde4ce",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:edadb1e5-5919-4e4c-8462-a9e643b02c4b@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "edadb1e5-5919-4e4c-8462-a9e643b02c4b",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:ee2324b0-6673-4767-9e34-c84cdd893483@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ee2324b0-6673-4767-9e34-c84cdd893483",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:f0d1feba-4344-4ca9-8121-a6c97bd6df52@LSASS_campaign_04",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f0d1feba-4344-4ca9-8121-a6c97bd6df52",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:f239b326-2f41-4d6b-9dfa-c846a60ef505@LSASS_campaign_04",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f239b326-2f41-4d6b-9dfa-c846a60ef505",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:f26307d8-14cd-47e3-a26b-4b4769f24af6@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f26307d8-14cd-47e3-a26b-4b4769f24af6",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:f8be3e82-46a3-4e4e-ada5-8e538ae8b9c9@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f8be3e82-46a3-4e4e-ada5-8e538ae8b9c9",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:fa34b441-961a-42fa-a100-ecc28c886725@LSASS_campaign_04",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "fa34b441-961a-42fa-a100-ecc28c886725",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:fb656378-f909-47c1-8747-278bf09f4f4f@LSASS_campaign_04",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "fb656378-f909-47c1-8747-278bf09f4f4f",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:ffa6861c-4461-4f59-8a41-578c39f3f23e@LSASS_campaign_04",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ffa6861c-4461-4f59-8a41-578c39f3f23e",
+   "capture": "LSASS_campaign_04"
+  },
+  {
+   "case_id": "miss:03e2746e-2b31-42f1-ab7a-eb39365b2422@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "03e2746e-2b31-42f1-ab7a-eb39365b2422",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:03f4ca17-de95-428d-a75a-4ee78b047256@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "03f4ca17-de95-428d-a75a-4ee78b047256",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:06d71506-7beb-4f22-8888-e2e5e2ca7fd8@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "06d71506-7beb-4f22-8888-e2e5e2ca7fd8",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:0b4ae027-2a2d-4b93-8c7e-962caaba5b2a@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0b4ae027-2a2d-4b93-8c7e-962caaba5b2a",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:0e277796-5f23-4e49-a490-483131d4f6e1@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0e277796-5f23-4e49-a490-483131d4f6e1",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:0f920ebe-7aea-4c54-b202-9aa0c609cfe5@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0f920ebe-7aea-4c54-b202-9aa0c609cfe5",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:129966c9-de17-4334-a123-8b58172e664d@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "129966c9-de17-4334-a123-8b58172e664d",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:1a1ed54a-2ba4-4221-94d5-01dee560d71e@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "1a1ed54a-2ba4-4221-94d5-01dee560d71e",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:1f0b4cac-9c81-41f4-95d0-8475ff46b3e2@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "1f0b4cac-9c81-41f4-95d0-8475ff46b3e2",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:23ceaf5c-b6f1-4a32-8559-f2ff734be516@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "23ceaf5c-b6f1-4a32-8559-f2ff734be516",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:250ae82f-736e-4844-a68b-0b5e8cc887da@LSASS_campaign_05",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "250ae82f-736e-4844-a68b-0b5e8cc887da",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:2704ab9e-afe2-4854-a3b1-0c0706d03578@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2704ab9e-afe2-4854-a3b1-0c0706d03578",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:2e65275c-8288-4ab4-aeb7-6274f58b6b20@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2e65275c-8288-4ab4-aeb7-6274f58b6b20",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:2e69f167-47b5-4ae7-a390-47764529eff5@LSASS_campaign_05",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2e69f167-47b5-4ae7-a390-47764529eff5",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:2f869d59-7f6a-4931-992c-cce556ff2d53@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2f869d59-7f6a-4931-992c-cce556ff2d53",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:33efc23c-6ea2-4503-8cfe-bdf82ce8f719@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "33efc23c-6ea2-4503-8cfe-bdf82ce8f719",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:36d88494-1d43-4dc0-b3fa-35c8fea0ca9d@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "36d88494-1d43-4dc0-b3fa-35c8fea0ca9d",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:472159c5-31b9-4f56-b794-b766faa8b0a7@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "472159c5-31b9-4f56-b794-b766faa8b0a7",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:4976aa50-8f41-45c6-8b15-ab3fc10e79ed@LSASS_campaign_05",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4976aa50-8f41-45c6-8b15-ab3fc10e79ed",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:4a1b6da0-d94f-4fc3-98fc-2d9cb9e5ee76@LSASS_campaign_05",
+   "truth": "miss-telemetry",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4a1b6da0-d94f-4fc3-98fc-2d9cb9e5ee76",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:4b447e9d-1c82-47f6-9a01-a1bb0a22d684@LSASS_campaign_05",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4b447e9d-1c82-47f6-9a01-a1bb0a22d684",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:4be8b654-0c01-4c9d-a10c-6b28467fc651@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4be8b654-0c01-4c9d-a10c-6b28467fc651",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:4c0aaedc-154c-4427-ada0-d80ef9c9deb6@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4c0aaedc-154c-4427-ada0-d80ef9c9deb6",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:515c8be5-e5df-4c5e-8f6d-a4a2f05e4b48@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "515c8be5-e5df-4c5e-8f6d-a4a2f05e4b48",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:55e29995-75e7-451a-bef0-6225e2f13597@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "55e29995-75e7-451a-bef0-6225e2f13597",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:589ac73f-8e12-409c-964e-31a2f5775ae2@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "589ac73f-8e12-409c-964e-31a2f5775ae2",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:5afee48e-67dd-4e03-a783-f74259dcf998@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "5afee48e-67dd-4e03-a783-f74259dcf998",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:5ef9853e-4d0e-4a70-846f-a9ca37d876da@LSASS_campaign_05",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "5ef9853e-4d0e-4a70-846f-a9ca37d876da",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:646ea171-dded-4578-8a4d-65e9822892e3@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "646ea171-dded-4578-8a4d-65e9822892e3",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:66e563f9-1cbd-4a22-a957-d8b7c0f44372@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "66e563f9-1cbd-4a22-a957-d8b7c0f44372",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:678dfc63-fefb-47a5-a04c-26bcf8cc9f65@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "678dfc63-fefb-47a5-a04c-26bcf8cc9f65",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:6902955a-01b7-432c-b32a-6f5f81d8f625@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "6902955a-01b7-432c-b32a-6f5f81d8f625",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:69ca12af-119d-44ed-b50f-a47af0ebc364@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "69ca12af-119d-44ed-b50f-a47af0ebc364",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:736ffa74-5f6f-44ca-94ef-1c0df4f51d2a@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "736ffa74-5f6f-44ca-94ef-1c0df4f51d2a",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:743c314e-3154-4e7c-b209-8211c9b1d2af@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "743c314e-3154-4e7c-b209-8211c9b1d2af",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:78cc2dd2-7d20-4d32-93ff-057084c38b93@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "78cc2dd2-7d20-4d32-93ff-057084c38b93",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:79aeeb41-8156-4fac-a0cd-076495ab82a1@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "79aeeb41-8156-4fac-a0cd-076495ab82a1",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:79b06761-465f-4f88-9ef2-150e24d3d737@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "79b06761-465f-4f88-9ef2-150e24d3d737",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:7aa7009a-28b9-4344-8c1f-159489a390df@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "7aa7009a-28b9-4344-8c1f-159489a390df",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:84c174ab-d3ef-481f-9c86-a50d0b8e3edb@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "84c174ab-d3ef-481f-9c86-a50d0b8e3edb",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:857c8db3-c89b-42fb-882b-f681c7cf4da2@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "857c8db3-c89b-42fb-882b-f681c7cf4da2",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:8a1b2c3d-4e5f-6789-abcd-ef1234567890@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8a1b2c3d-4e5f-6789-abcd-ef1234567890",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:8cde342c-ba48-4b74-b615-172c330f2e93@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8cde342c-ba48-4b74-b615-172c330f2e93",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:8fbf3271-1ef6-4e94-8210-03c2317947f6@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8fbf3271-1ef6-4e94-8210-03c2317947f6",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:910ab938-668b-401b-b08c-b596e80fdca5@LSASS_campaign_05",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "910ab938-668b-401b-b08c-b596e80fdca5",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:93d94efc-d7ad-4161-ad7d-1638c4f908d8@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "93d94efc-d7ad-4161-ad7d-1638c4f908d8",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:961d0ba2-3eea-4303-a930-2cf78bbfcc5e@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "961d0ba2-3eea-4303-a930-2cf78bbfcc5e",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:962fe167-e48d-4fd6-9974-11e5b9a5d6d1@LSASS_campaign_05",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "962fe167-e48d-4fd6-9974-11e5b9a5d6d1",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:9a4ccd1a-3526-4d99-b980-9f9c5d3a6ff3@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9a4ccd1a-3526-4d99-b980-9f9c5d3a6ff3",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:9bd012ee-0dff-44d7-84a0-aa698cfd87a3@LSASS_campaign_05",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9bd012ee-0dff-44d7-84a0-aa698cfd87a3",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:9f5c1d59-33be-4e60-bcab-85d2f566effd@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9f5c1d59-33be-4e60-bcab-85d2f566effd",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:a0a278fe-2c0e-4de2-ac3c-c68b08a9ba98@LSASS_campaign_05",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a0a278fe-2c0e-4de2-ac3c-c68b08a9ba98",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:a18dd26b-6450-46de-8c91-9659150cf088@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a18dd26b-6450-46de-8c91-9659150cf088",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:a18e0862-127b-43ca-be12-1a542c75c7c5@LSASS_campaign_05",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a18e0862-127b-43ca-be12-1a542c75c7c5",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:a49fa4d5-11db-418c-8473-1e014a8dd462@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a49fa4d5-11db-418c-8473-1e014a8dd462",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:a5a2d357-1ab8-4675-a967-ef9990a59391@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a5a2d357-1ab8-4675-a967-ef9990a59391",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:a642964e-bead-4bed-8910-1bb4d63e3b4d@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a642964e-bead-4bed-8910-1bb4d63e3b4d",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:a6b33c02-8305-488f-8585-03cb2a7763f2@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a6b33c02-8305-488f-8585-03cb2a7763f2",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:aa1697b7-d611-4f9a-9cb2-5125b4ccfd5c@LSASS_campaign_05",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "aa1697b7-d611-4f9a-9cb2-5125b4ccfd5c",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:aa35a627-33fb-4d04-a165-d33b4afca3e8@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "aa35a627-33fb-4d04-a165-d33b4afca3e8",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:b1876533-4ed5-4a83-90f3-b8645840a413@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b1876533-4ed5-4a83-90f3-b8645840a413",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:b1bd3a59-c1fd-4860-9f40-4dd161a7d1f5@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b1bd3a59-c1fd-4860-9f40-4dd161a7d1f5",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:b99a1518-1ad5-4f65-bc95-1ffff97a8fd0@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b99a1518-1ad5-4f65-bc95-1ffff97a8fd0",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:bdc64095-d59a-42a2-8588-71fd9c9d9abc@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "bdc64095-d59a-42a2-8588-71fd9c9d9abc",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:c3e76af5-4ce0-4a14-9c9a-25ceb8fda182@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "c3e76af5-4ce0-4a14-9c9a-25ceb8fda182",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:c8da0dfd-4ed0-4b68-962d-13c9c884384e@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "c8da0dfd-4ed0-4b68-962d-13c9c884384e",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:ca621ba5-54ab-4035-9942-d378e6fcde3c@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ca621ba5-54ab-4035-9942-d378e6fcde3c",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:d0d2f720-d14f-448d-8242-51ff396a334e@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "d0d2f720-d14f-448d-8242-51ff396a334e",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:d474c8fe-bb69-4ea0-b7d9-f682b56d52d3@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "d474c8fe-bb69-4ea0-b7d9-f682b56d52d3",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:dee0a7a3-f200-4112-a99b-952196d81e42@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "dee0a7a3-f200-4112-a99b-952196d81e42",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:e074832a-eada-4fd7-94a1-10642b130e16@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e074832a-eada-4fd7-94a1-10642b130e16",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:e5b33f7d-eb93-48b6-9851-09e1e610b6d7@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e5b33f7d-eb93-48b6-9851-09e1e610b6d7",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:e76c8240-d68f-4773-8880-5c6f63595aaf@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e76c8240-d68f-4773-8880-5c6f63595aaf",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:eb1c4225-1c23-4241-8dd4-051389fde4ce@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "eb1c4225-1c23-4241-8dd4-051389fde4ce",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:edadb1e5-5919-4e4c-8462-a9e643b02c4b@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "edadb1e5-5919-4e4c-8462-a9e643b02c4b",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:ee2324b0-6673-4767-9e34-c84cdd893483@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ee2324b0-6673-4767-9e34-c84cdd893483",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:f0d1feba-4344-4ca9-8121-a6c97bd6df52@LSASS_campaign_05",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f0d1feba-4344-4ca9-8121-a6c97bd6df52",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:f239b326-2f41-4d6b-9dfa-c846a60ef505@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f239b326-2f41-4d6b-9dfa-c846a60ef505",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:f26307d8-14cd-47e3-a26b-4b4769f24af6@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f26307d8-14cd-47e3-a26b-4b4769f24af6",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:f8be3e82-46a3-4e4e-ada5-8e538ae8b9c9@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f8be3e82-46a3-4e4e-ada5-8e538ae8b9c9",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:fa34b441-961a-42fa-a100-ecc28c886725@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "fa34b441-961a-42fa-a100-ecc28c886725",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:fb656378-f909-47c1-8747-278bf09f4f4f@LSASS_campaign_05",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "fb656378-f909-47c1-8747-278bf09f4f4f",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:ffa6861c-4461-4f59-8a41-578c39f3f23e@LSASS_campaign_05",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ffa6861c-4461-4f59-8a41-578c39f3f23e",
+   "capture": "LSASS_campaign_05"
+  },
+  {
+   "case_id": "miss:03e2746e-2b31-42f1-ab7a-eb39365b2422@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "03e2746e-2b31-42f1-ab7a-eb39365b2422",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:03f4ca17-de95-428d-a75a-4ee78b047256@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "03f4ca17-de95-428d-a75a-4ee78b047256",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:06d71506-7beb-4f22-8888-e2e5e2ca7fd8@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "06d71506-7beb-4f22-8888-e2e5e2ca7fd8",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:0b4ae027-2a2d-4b93-8c7e-962caaba5b2a@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0b4ae027-2a2d-4b93-8c7e-962caaba5b2a",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:0e277796-5f23-4e49-a490-483131d4f6e1@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0e277796-5f23-4e49-a490-483131d4f6e1",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:0f920ebe-7aea-4c54-b202-9aa0c609cfe5@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0f920ebe-7aea-4c54-b202-9aa0c609cfe5",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:129966c9-de17-4334-a123-8b58172e664d@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "129966c9-de17-4334-a123-8b58172e664d",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:1a1ed54a-2ba4-4221-94d5-01dee560d71e@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "1a1ed54a-2ba4-4221-94d5-01dee560d71e",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:1f0b4cac-9c81-41f4-95d0-8475ff46b3e2@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "1f0b4cac-9c81-41f4-95d0-8475ff46b3e2",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:23ceaf5c-b6f1-4a32-8559-f2ff734be516@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "23ceaf5c-b6f1-4a32-8559-f2ff734be516",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:250ae82f-736e-4844-a68b-0b5e8cc887da@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "250ae82f-736e-4844-a68b-0b5e8cc887da",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:2704ab9e-afe2-4854-a3b1-0c0706d03578@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2704ab9e-afe2-4854-a3b1-0c0706d03578",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:2e65275c-8288-4ab4-aeb7-6274f58b6b20@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2e65275c-8288-4ab4-aeb7-6274f58b6b20",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:2e69f167-47b5-4ae7-a390-47764529eff5@LSASS_campaign_06",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2e69f167-47b5-4ae7-a390-47764529eff5",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:2f869d59-7f6a-4931-992c-cce556ff2d53@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2f869d59-7f6a-4931-992c-cce556ff2d53",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:33efc23c-6ea2-4503-8cfe-bdf82ce8f719@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "33efc23c-6ea2-4503-8cfe-bdf82ce8f719",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:36d88494-1d43-4dc0-b3fa-35c8fea0ca9d@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "36d88494-1d43-4dc0-b3fa-35c8fea0ca9d",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:472159c5-31b9-4f56-b794-b766faa8b0a7@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "472159c5-31b9-4f56-b794-b766faa8b0a7",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:4976aa50-8f41-45c6-8b15-ab3fc10e79ed@LSASS_campaign_06",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4976aa50-8f41-45c6-8b15-ab3fc10e79ed",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:4a1b6da0-d94f-4fc3-98fc-2d9cb9e5ee76@LSASS_campaign_06",
+   "truth": "miss-telemetry",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4a1b6da0-d94f-4fc3-98fc-2d9cb9e5ee76",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:4b447e9d-1c82-47f6-9a01-a1bb0a22d684@LSASS_campaign_06",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4b447e9d-1c82-47f6-9a01-a1bb0a22d684",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:4be8b654-0c01-4c9d-a10c-6b28467fc651@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4be8b654-0c01-4c9d-a10c-6b28467fc651",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:4c0aaedc-154c-4427-ada0-d80ef9c9deb6@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4c0aaedc-154c-4427-ada0-d80ef9c9deb6",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:515c8be5-e5df-4c5e-8f6d-a4a2f05e4b48@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "515c8be5-e5df-4c5e-8f6d-a4a2f05e4b48",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:55e29995-75e7-451a-bef0-6225e2f13597@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "55e29995-75e7-451a-bef0-6225e2f13597",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:589ac73f-8e12-409c-964e-31a2f5775ae2@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "589ac73f-8e12-409c-964e-31a2f5775ae2",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:5afee48e-67dd-4e03-a783-f74259dcf998@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "5afee48e-67dd-4e03-a783-f74259dcf998",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:5ef9853e-4d0e-4a70-846f-a9ca37d876da@LSASS_campaign_06",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "5ef9853e-4d0e-4a70-846f-a9ca37d876da",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:646ea171-dded-4578-8a4d-65e9822892e3@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "646ea171-dded-4578-8a4d-65e9822892e3",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:66e563f9-1cbd-4a22-a957-d8b7c0f44372@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "66e563f9-1cbd-4a22-a957-d8b7c0f44372",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:678dfc63-fefb-47a5-a04c-26bcf8cc9f65@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "678dfc63-fefb-47a5-a04c-26bcf8cc9f65",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:6902955a-01b7-432c-b32a-6f5f81d8f625@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "6902955a-01b7-432c-b32a-6f5f81d8f625",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:69ca12af-119d-44ed-b50f-a47af0ebc364@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "69ca12af-119d-44ed-b50f-a47af0ebc364",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:736ffa74-5f6f-44ca-94ef-1c0df4f51d2a@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "736ffa74-5f6f-44ca-94ef-1c0df4f51d2a",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:743c314e-3154-4e7c-b209-8211c9b1d2af@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "743c314e-3154-4e7c-b209-8211c9b1d2af",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:78cc2dd2-7d20-4d32-93ff-057084c38b93@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "78cc2dd2-7d20-4d32-93ff-057084c38b93",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:79aeeb41-8156-4fac-a0cd-076495ab82a1@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "79aeeb41-8156-4fac-a0cd-076495ab82a1",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:79b06761-465f-4f88-9ef2-150e24d3d737@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "79b06761-465f-4f88-9ef2-150e24d3d737",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:7aa7009a-28b9-4344-8c1f-159489a390df@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "7aa7009a-28b9-4344-8c1f-159489a390df",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:84c174ab-d3ef-481f-9c86-a50d0b8e3edb@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "84c174ab-d3ef-481f-9c86-a50d0b8e3edb",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:857c8db3-c89b-42fb-882b-f681c7cf4da2@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "857c8db3-c89b-42fb-882b-f681c7cf4da2",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:8a1b2c3d-4e5f-6789-abcd-ef1234567890@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8a1b2c3d-4e5f-6789-abcd-ef1234567890",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:8cde342c-ba48-4b74-b615-172c330f2e93@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8cde342c-ba48-4b74-b615-172c330f2e93",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:8fbf3271-1ef6-4e94-8210-03c2317947f6@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8fbf3271-1ef6-4e94-8210-03c2317947f6",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:910ab938-668b-401b-b08c-b596e80fdca5@LSASS_campaign_06",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "910ab938-668b-401b-b08c-b596e80fdca5",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:93d94efc-d7ad-4161-ad7d-1638c4f908d8@LSASS_campaign_06",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "93d94efc-d7ad-4161-ad7d-1638c4f908d8",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:961d0ba2-3eea-4303-a930-2cf78bbfcc5e@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "961d0ba2-3eea-4303-a930-2cf78bbfcc5e",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:962fe167-e48d-4fd6-9974-11e5b9a5d6d1@LSASS_campaign_06",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "962fe167-e48d-4fd6-9974-11e5b9a5d6d1",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:9a4ccd1a-3526-4d99-b980-9f9c5d3a6ff3@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9a4ccd1a-3526-4d99-b980-9f9c5d3a6ff3",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:9bd012ee-0dff-44d7-84a0-aa698cfd87a3@LSASS_campaign_06",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9bd012ee-0dff-44d7-84a0-aa698cfd87a3",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:9f5c1d59-33be-4e60-bcab-85d2f566effd@LSASS_campaign_06",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9f5c1d59-33be-4e60-bcab-85d2f566effd",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:a0a278fe-2c0e-4de2-ac3c-c68b08a9ba98@LSASS_campaign_06",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a0a278fe-2c0e-4de2-ac3c-c68b08a9ba98",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:a18dd26b-6450-46de-8c91-9659150cf088@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a18dd26b-6450-46de-8c91-9659150cf088",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:a18e0862-127b-43ca-be12-1a542c75c7c5@LSASS_campaign_06",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a18e0862-127b-43ca-be12-1a542c75c7c5",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:a49fa4d5-11db-418c-8473-1e014a8dd462@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a49fa4d5-11db-418c-8473-1e014a8dd462",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:a5a2d357-1ab8-4675-a967-ef9990a59391@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a5a2d357-1ab8-4675-a967-ef9990a59391",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:a642964e-bead-4bed-8910-1bb4d63e3b4d@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a642964e-bead-4bed-8910-1bb4d63e3b4d",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:a6b33c02-8305-488f-8585-03cb2a7763f2@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a6b33c02-8305-488f-8585-03cb2a7763f2",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:aa1697b7-d611-4f9a-9cb2-5125b4ccfd5c@LSASS_campaign_06",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "aa1697b7-d611-4f9a-9cb2-5125b4ccfd5c",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:aa35a627-33fb-4d04-a165-d33b4afca3e8@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "aa35a627-33fb-4d04-a165-d33b4afca3e8",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:b1876533-4ed5-4a83-90f3-b8645840a413@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b1876533-4ed5-4a83-90f3-b8645840a413",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:b1bd3a59-c1fd-4860-9f40-4dd161a7d1f5@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b1bd3a59-c1fd-4860-9f40-4dd161a7d1f5",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:b99a1518-1ad5-4f65-bc95-1ffff97a8fd0@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b99a1518-1ad5-4f65-bc95-1ffff97a8fd0",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:bdc64095-d59a-42a2-8588-71fd9c9d9abc@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "bdc64095-d59a-42a2-8588-71fd9c9d9abc",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:c3e76af5-4ce0-4a14-9c9a-25ceb8fda182@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "c3e76af5-4ce0-4a14-9c9a-25ceb8fda182",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:c8da0dfd-4ed0-4b68-962d-13c9c884384e@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "c8da0dfd-4ed0-4b68-962d-13c9c884384e",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:ca621ba5-54ab-4035-9942-d378e6fcde3c@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ca621ba5-54ab-4035-9942-d378e6fcde3c",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:d0d2f720-d14f-448d-8242-51ff396a334e@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "d0d2f720-d14f-448d-8242-51ff396a334e",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:d474c8fe-bb69-4ea0-b7d9-f682b56d52d3@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "d474c8fe-bb69-4ea0-b7d9-f682b56d52d3",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:dee0a7a3-f200-4112-a99b-952196d81e42@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "dee0a7a3-f200-4112-a99b-952196d81e42",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:e074832a-eada-4fd7-94a1-10642b130e16@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e074832a-eada-4fd7-94a1-10642b130e16",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:e5b33f7d-eb93-48b6-9851-09e1e610b6d7@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e5b33f7d-eb93-48b6-9851-09e1e610b6d7",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:e76c8240-d68f-4773-8880-5c6f63595aaf@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e76c8240-d68f-4773-8880-5c6f63595aaf",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:eb1c4225-1c23-4241-8dd4-051389fde4ce@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "eb1c4225-1c23-4241-8dd4-051389fde4ce",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:edadb1e5-5919-4e4c-8462-a9e643b02c4b@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "edadb1e5-5919-4e4c-8462-a9e643b02c4b",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:ee2324b0-6673-4767-9e34-c84cdd893483@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ee2324b0-6673-4767-9e34-c84cdd893483",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:f0d1feba-4344-4ca9-8121-a6c97bd6df52@LSASS_campaign_06",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f0d1feba-4344-4ca9-8121-a6c97bd6df52",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:f239b326-2f41-4d6b-9dfa-c846a60ef505@LSASS_campaign_06",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f239b326-2f41-4d6b-9dfa-c846a60ef505",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:f26307d8-14cd-47e3-a26b-4b4769f24af6@LSASS_campaign_06",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f26307d8-14cd-47e3-a26b-4b4769f24af6",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:f8be3e82-46a3-4e4e-ada5-8e538ae8b9c9@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f8be3e82-46a3-4e4e-ada5-8e538ae8b9c9",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:fa34b441-961a-42fa-a100-ecc28c886725@LSASS_campaign_06",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "fa34b441-961a-42fa-a100-ecc28c886725",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:fb656378-f909-47c1-8747-278bf09f4f4f@LSASS_campaign_06",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "fb656378-f909-47c1-8747-278bf09f4f4f",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:ffa6861c-4461-4f59-8a41-578c39f3f23e@LSASS_campaign_06",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ffa6861c-4461-4f59-8a41-578c39f3f23e",
+   "capture": "LSASS_campaign_06"
+  },
+  {
+   "case_id": "miss:03e2746e-2b31-42f1-ab7a-eb39365b2422@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "03e2746e-2b31-42f1-ab7a-eb39365b2422",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:03f4ca17-de95-428d-a75a-4ee78b047256@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "03f4ca17-de95-428d-a75a-4ee78b047256",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:06d71506-7beb-4f22-8888-e2e5e2ca7fd8@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "06d71506-7beb-4f22-8888-e2e5e2ca7fd8",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:0b4ae027-2a2d-4b93-8c7e-962caaba5b2a@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0b4ae027-2a2d-4b93-8c7e-962caaba5b2a",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:0e277796-5f23-4e49-a490-483131d4f6e1@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0e277796-5f23-4e49-a490-483131d4f6e1",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:0f920ebe-7aea-4c54-b202-9aa0c609cfe5@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "0f920ebe-7aea-4c54-b202-9aa0c609cfe5",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:129966c9-de17-4334-a123-8b58172e664d@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "129966c9-de17-4334-a123-8b58172e664d",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:1a1ed54a-2ba4-4221-94d5-01dee560d71e@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "1a1ed54a-2ba4-4221-94d5-01dee560d71e",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:1f0b4cac-9c81-41f4-95d0-8475ff46b3e2@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "1f0b4cac-9c81-41f4-95d0-8475ff46b3e2",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:23ceaf5c-b6f1-4a32-8559-f2ff734be516@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "23ceaf5c-b6f1-4a32-8559-f2ff734be516",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:250ae82f-736e-4844-a68b-0b5e8cc887da@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "250ae82f-736e-4844-a68b-0b5e8cc887da",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:2704ab9e-afe2-4854-a3b1-0c0706d03578@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2704ab9e-afe2-4854-a3b1-0c0706d03578",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:2e65275c-8288-4ab4-aeb7-6274f58b6b20@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2e65275c-8288-4ab4-aeb7-6274f58b6b20",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:2e69f167-47b5-4ae7-a390-47764529eff5@LSASS_campaign_07",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2e69f167-47b5-4ae7-a390-47764529eff5",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:2f869d59-7f6a-4931-992c-cce556ff2d53@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "2f869d59-7f6a-4931-992c-cce556ff2d53",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:33efc23c-6ea2-4503-8cfe-bdf82ce8f719@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "33efc23c-6ea2-4503-8cfe-bdf82ce8f719",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:36d88494-1d43-4dc0-b3fa-35c8fea0ca9d@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "36d88494-1d43-4dc0-b3fa-35c8fea0ca9d",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:472159c5-31b9-4f56-b794-b766faa8b0a7@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "472159c5-31b9-4f56-b794-b766faa8b0a7",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:4976aa50-8f41-45c6-8b15-ab3fc10e79ed@LSASS_campaign_07",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4976aa50-8f41-45c6-8b15-ab3fc10e79ed",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:4a1b6da0-d94f-4fc3-98fc-2d9cb9e5ee76@LSASS_campaign_07",
+   "truth": "miss-telemetry",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4a1b6da0-d94f-4fc3-98fc-2d9cb9e5ee76",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:4b447e9d-1c82-47f6-9a01-a1bb0a22d684@LSASS_campaign_07",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4b447e9d-1c82-47f6-9a01-a1bb0a22d684",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:4be8b654-0c01-4c9d-a10c-6b28467fc651@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4be8b654-0c01-4c9d-a10c-6b28467fc651",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:4c0aaedc-154c-4427-ada0-d80ef9c9deb6@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "4c0aaedc-154c-4427-ada0-d80ef9c9deb6",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:515c8be5-e5df-4c5e-8f6d-a4a2f05e4b48@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "515c8be5-e5df-4c5e-8f6d-a4a2f05e4b48",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:55e29995-75e7-451a-bef0-6225e2f13597@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "55e29995-75e7-451a-bef0-6225e2f13597",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:589ac73f-8e12-409c-964e-31a2f5775ae2@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "589ac73f-8e12-409c-964e-31a2f5775ae2",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:5afee48e-67dd-4e03-a783-f74259dcf998@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "5afee48e-67dd-4e03-a783-f74259dcf998",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:5ef9853e-4d0e-4a70-846f-a9ca37d876da@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "5ef9853e-4d0e-4a70-846f-a9ca37d876da",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:646ea171-dded-4578-8a4d-65e9822892e3@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "646ea171-dded-4578-8a4d-65e9822892e3",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:66e563f9-1cbd-4a22-a957-d8b7c0f44372@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "66e563f9-1cbd-4a22-a957-d8b7c0f44372",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:678dfc63-fefb-47a5-a04c-26bcf8cc9f65@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "678dfc63-fefb-47a5-a04c-26bcf8cc9f65",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:6902955a-01b7-432c-b32a-6f5f81d8f625@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "6902955a-01b7-432c-b32a-6f5f81d8f625",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:69ca12af-119d-44ed-b50f-a47af0ebc364@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "69ca12af-119d-44ed-b50f-a47af0ebc364",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:736ffa74-5f6f-44ca-94ef-1c0df4f51d2a@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "736ffa74-5f6f-44ca-94ef-1c0df4f51d2a",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:743c314e-3154-4e7c-b209-8211c9b1d2af@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "743c314e-3154-4e7c-b209-8211c9b1d2af",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:78cc2dd2-7d20-4d32-93ff-057084c38b93@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "78cc2dd2-7d20-4d32-93ff-057084c38b93",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:79aeeb41-8156-4fac-a0cd-076495ab82a1@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "79aeeb41-8156-4fac-a0cd-076495ab82a1",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:79b06761-465f-4f88-9ef2-150e24d3d737@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "79b06761-465f-4f88-9ef2-150e24d3d737",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:7aa7009a-28b9-4344-8c1f-159489a390df@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "7aa7009a-28b9-4344-8c1f-159489a390df",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:84c174ab-d3ef-481f-9c86-a50d0b8e3edb@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "84c174ab-d3ef-481f-9c86-a50d0b8e3edb",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:857c8db3-c89b-42fb-882b-f681c7cf4da2@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "857c8db3-c89b-42fb-882b-f681c7cf4da2",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:8a1b2c3d-4e5f-6789-abcd-ef1234567890@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8a1b2c3d-4e5f-6789-abcd-ef1234567890",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:8cde342c-ba48-4b74-b615-172c330f2e93@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8cde342c-ba48-4b74-b615-172c330f2e93",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:8fbf3271-1ef6-4e94-8210-03c2317947f6@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "8fbf3271-1ef6-4e94-8210-03c2317947f6",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:910ab938-668b-401b-b08c-b596e80fdca5@LSASS_campaign_07",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "910ab938-668b-401b-b08c-b596e80fdca5",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:93d94efc-d7ad-4161-ad7d-1638c4f908d8@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "93d94efc-d7ad-4161-ad7d-1638c4f908d8",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:961d0ba2-3eea-4303-a930-2cf78bbfcc5e@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "961d0ba2-3eea-4303-a930-2cf78bbfcc5e",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:962fe167-e48d-4fd6-9974-11e5b9a5d6d1@LSASS_campaign_07",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "962fe167-e48d-4fd6-9974-11e5b9a5d6d1",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:9a4ccd1a-3526-4d99-b980-9f9c5d3a6ff3@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9a4ccd1a-3526-4d99-b980-9f9c5d3a6ff3",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:9bd012ee-0dff-44d7-84a0-aa698cfd87a3@LSASS_campaign_07",
+   "truth": "detected",
+   "predicted": "detected",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9bd012ee-0dff-44d7-84a0-aa698cfd87a3",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:9f5c1d59-33be-4e60-bcab-85d2f566effd@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "9f5c1d59-33be-4e60-bcab-85d2f566effd",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:a0a278fe-2c0e-4de2-ac3c-c68b08a9ba98@LSASS_campaign_07",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a0a278fe-2c0e-4de2-ac3c-c68b08a9ba98",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:a18dd26b-6450-46de-8c91-9659150cf088@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a18dd26b-6450-46de-8c91-9659150cf088",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:a18e0862-127b-43ca-be12-1a542c75c7c5@LSASS_campaign_07",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a18e0862-127b-43ca-be12-1a542c75c7c5",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:a49fa4d5-11db-418c-8473-1e014a8dd462@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a49fa4d5-11db-418c-8473-1e014a8dd462",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:a5a2d357-1ab8-4675-a967-ef9990a59391@LSASS_campaign_07",
+   "truth": "detected",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a5a2d357-1ab8-4675-a967-ef9990a59391",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:a642964e-bead-4bed-8910-1bb4d63e3b4d@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a642964e-bead-4bed-8910-1bb4d63e3b4d",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:a6b33c02-8305-488f-8585-03cb2a7763f2@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "a6b33c02-8305-488f-8585-03cb2a7763f2",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:aa1697b7-d611-4f9a-9cb2-5125b4ccfd5c@LSASS_campaign_07",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "aa1697b7-d611-4f9a-9cb2-5125b4ccfd5c",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:aa35a627-33fb-4d04-a165-d33b4afca3e8@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "aa35a627-33fb-4d04-a165-d33b4afca3e8",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:b1876533-4ed5-4a83-90f3-b8645840a413@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b1876533-4ed5-4a83-90f3-b8645840a413",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:b1bd3a59-c1fd-4860-9f40-4dd161a7d1f5@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b1bd3a59-c1fd-4860-9f40-4dd161a7d1f5",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:b99a1518-1ad5-4f65-bc95-1ffff97a8fd0@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "b99a1518-1ad5-4f65-bc95-1ffff97a8fd0",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:bdc64095-d59a-42a2-8588-71fd9c9d9abc@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "bdc64095-d59a-42a2-8588-71fd9c9d9abc",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:c3e76af5-4ce0-4a14-9c9a-25ceb8fda182@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "c3e76af5-4ce0-4a14-9c9a-25ceb8fda182",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:c8da0dfd-4ed0-4b68-962d-13c9c884384e@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "c8da0dfd-4ed0-4b68-962d-13c9c884384e",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:ca621ba5-54ab-4035-9942-d378e6fcde3c@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ca621ba5-54ab-4035-9942-d378e6fcde3c",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:d0d2f720-d14f-448d-8242-51ff396a334e@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "d0d2f720-d14f-448d-8242-51ff396a334e",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:d474c8fe-bb69-4ea0-b7d9-f682b56d52d3@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "d474c8fe-bb69-4ea0-b7d9-f682b56d52d3",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:dee0a7a3-f200-4112-a99b-952196d81e42@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "dee0a7a3-f200-4112-a99b-952196d81e42",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:e074832a-eada-4fd7-94a1-10642b130e16@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e074832a-eada-4fd7-94a1-10642b130e16",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:e5b33f7d-eb93-48b6-9851-09e1e610b6d7@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e5b33f7d-eb93-48b6-9851-09e1e610b6d7",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:e76c8240-d68f-4773-8880-5c6f63595aaf@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "e76c8240-d68f-4773-8880-5c6f63595aaf",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:eb1c4225-1c23-4241-8dd4-051389fde4ce@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "eb1c4225-1c23-4241-8dd4-051389fde4ce",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:edadb1e5-5919-4e4c-8462-a9e643b02c4b@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "edadb1e5-5919-4e4c-8462-a9e643b02c4b",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:ee2324b0-6673-4767-9e34-c84cdd893483@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ee2324b0-6673-4767-9e34-c84cdd893483",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:f0d1feba-4344-4ca9-8121-a6c97bd6df52@LSASS_campaign_07",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f0d1feba-4344-4ca9-8121-a6c97bd6df52",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:f239b326-2f41-4d6b-9dfa-c846a60ef505@LSASS_campaign_07",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f239b326-2f41-4d6b-9dfa-c846a60ef505",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:f26307d8-14cd-47e3-a26b-4b4769f24af6@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f26307d8-14cd-47e3-a26b-4b4769f24af6",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:f8be3e82-46a3-4e4e-ada5-8e538ae8b9c9@LSASS_campaign_07",
+   "truth": "miss-logic",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "f8be3e82-46a3-4e4e-ada5-8e538ae8b9c9",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:fa34b441-961a-42fa-a100-ecc28c886725@LSASS_campaign_07",
+   "truth": "out-of-scope",
+   "predicted": "out-of-scope",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "fa34b441-961a-42fa-a100-ecc28c886725",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:fb656378-f909-47c1-8747-278bf09f4f4f@LSASS_campaign_07",
+   "truth": "miss-telemetry",
+   "predicted": "miss-telemetry",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "fb656378-f909-47c1-8747-278bf09f4f4f",
+   "capture": "LSASS_campaign_07"
+  },
+  {
+   "case_id": "miss:ffa6861c-4461-4f59-8a41-578c39f3f23e@LSASS_campaign_07",
+   "truth": "detected",
+   "predicted": "miss-logic",
+   "rejections": [],
+   "tool_calls": 0,
+   "rule_id": "ffa6861c-4461-4f59-8a41-578c39f3f23e",
+   "capture": "LSASS_campaign_07"
+  }
+ ]
+}
