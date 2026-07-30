@@ -1,0 +1,28 @@
+# Pinned so a rerun on another machine resolves the same bytes. Every pin here
+# is justified in the commit that introduced it and in docs/decisions.md.
+
+# the agent loop. explicit graph state and a checkpointable loop, which is what
+# makes the run auditable rather than merely observable
+langgraph==1.2.10
+langchain-core==1.5.2
+
+# the verdict contract. a verdict is a validated structure, not prose
+pydantic==2.13.4
+
+# rule and payload files
+PyYAML==6.0.3
+
+# rule parsing. the agent reads detection logic, and the miss-classification
+# task needs the fields a rule actually depends on
+pySigma==1.4.0
+pysigma-pipeline-sysmon==2.0.0
+pysigma-pipeline-windows==2.0.0
+
+# hosted model path (default). optional at runtime: an unconfigured run fails
+# loudly rather than quietly producing numbers
+anthropic==0.120.2
+
+# local / open-weights model path, so results are reproducible without a paid API
+httpx==0.28.1
+
+pytest==9.1.1
