@@ -138,6 +138,17 @@ Bandit and Semgrep for SAST, pip-audit for dependencies, gitleaks for secrets,
 and Trivy for the filesystem. It also re-derives the committed baseline numbers
 and fails if they drift from what is in `benchmark/`.
 
+Which of those have actually been run, since a configured scanner is not a clean
+scanner:
+
+| scanner | run here? | outcome |
+|---|---|---|
+| Bandit | yes | 2 findings, both addressed below; now clean |
+| pip-audit | yes | 1 finding, accepted with reasoning below |
+| Semgrep | **no** | the environment this was built in cannot reach `semgrep.dev` to fetch the rule packs, so it is configured in CI but unverified locally |
+| gitleaks | **no** | GitHub Actions only |
+| Trivy | **no** | GitHub Actions only |
+
 Findings and what was done about them:
 
 | finding | response |
