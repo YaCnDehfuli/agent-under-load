@@ -67,7 +67,7 @@
   <text class="small" x="868" y="192">43 placements/payloads</text>
   <text class="small" x="868" y="214">248 mountable attempts</text>
   <text class="small" x="868" y="236">13.1% reachable</text>
-  <circle class="ok" cx="1010" cy="161" r="7"/>
+  <circle class="ok" cx="1028" cy="161" r="7"/>
 
   <path class="line" d="M949 270 V318 H145 V346"/>
 
@@ -104,7 +104,7 @@
   <text class="small" x="868" y="408">suppression flips</text>
   <text class="small" x="868" y="430">escalation requests</text>
   <text class="small" x="868" y="452">control ablations</text>
-  <circle class="warn" cx="1010" cy="377" r="7"/>
+  <circle class="warn" cx="1028" cy="377" r="7"/>
 
   <path class="dashed" d="M1052 416 H1116 V522 H660"/>
   <rect class="future" x="420" y="508" width="240" height="76"/>
