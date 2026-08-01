@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="620" viewBox="0 0 1240 620" role="img" aria-labelledby="title desc">
+  <title id="title">Agent Under Load full plan</title>
+  <desc id="desc">A plan diagram for Agent Under Load showing completed corpus, baseline, provenance, injection, controls, and the future model-backed evaluation loop.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#07111f"/>
+      <stop offset="1" stop-color="#10151b"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#122239"/>
+      <stop offset="1" stop-color="#15251f"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8fb1c8"/>
+    </marker>
+    <style>
+      .bg { fill: url(#bg); }
+      .card { fill: url(#card); stroke: #304961; stroke-width: 1.5; rx: 12; }
+      .future { fill: #151b24; stroke: #6f8ea6; stroke-dasharray: 7 7; stroke-width: 1.5; rx: 12; }
+      .title { fill: #eff7ff; font: 700 24px Arial, sans-serif; }
+      .label { fill: #eff7ff; font: 700 17px Arial, sans-serif; }
+      .small { fill: #aec2d2; font: 13px Arial, sans-serif; }
+      .tiny { fill: #8ca5b8; font: 12px Arial, sans-serif; }
+      .line { stroke: #8fb1c8; stroke-width: 2.4; fill: none; marker-end: url(#arrow); }
+      .dashed { stroke: #8fb1c8; stroke-width: 2.4; stroke-dasharray: 6 6; fill: none; marker-end: url(#arrow); }
+      .node { fill: #1fb6ff; stroke: #cdf3ff; stroke-width: 1.2; }
+      .ok { fill: #33d17a; }
+      .warn { fill: #ffd166; }
+      .bad { fill: #ff6b6b; }
+      .chip { fill: #102d3b; stroke: #28627c; stroke-width: 1; rx: 8; }
+    </style>
+  </defs>
+  <rect class="bg" width="1240" height="620"/>
+  <text class="title" x="42" y="54">Agent Under Load: Full Plan</text>
+  <text class="small" x="42" y="80">Evidence-based evaluation of a detection-triage agent under telemetry-borne prompt injection.</text>
+
+  <text class="tiny" x="42" y="112">DONE</text>
+  <rect class="card" x="42" y="130" width="206" height="140"/>
+  <text class="label" x="64" y="164">Ground truth</text>
+  <text class="small" x="64" y="192">Detection Under Load</text>
+  <text class="small" x="64" y="214">rule/capture labels</text>
+  <text class="small" x="64" y="236">pinned telemetry</text>
+  <circle class="ok" cx="206" cy="161" r="7"/>
+
+  <path class="line" d="M248 200 H310"/>
+
+  <rect class="card" x="310" y="130" width="206" height="140"/>
+  <text class="label" x="332" y="164">Case builder</text>
+  <text class="small" x="332" y="192">triage cases</text>
+  <text class="small" x="332" y="214">miss cases</text>
+  <text class="small" x="332" y="236">shape leak tests</text>
+  <circle class="ok" cx="474" cy="161" r="7"/>
+
+  <path class="line" d="M516 200 H578"/>
+
+  <rect class="card" x="578" y="130" width="206" height="140"/>
+  <text class="label" x="600" y="164">Baselines</text>
+  <text class="small" x="600" y="192">triage macro-F1 0.60</text>
+  <text class="small" x="600" y="214">miss macro-F1 0.93</text>
+  <text class="small" x="600" y="236">no API key needed</text>
+  <circle class="ok" cx="742" cy="161" r="7"/>
+
+  <path class="line" d="M784 200 H846"/>
+
+  <rect class="card" x="846" y="130" width="206" height="140"/>
+  <text class="label" x="868" y="164">Injection surface</text>
+  <text class="small" x="868" y="192">43 placements/payloads</text>
+  <text class="small" x="868" y="214">248 mountable attempts</text>
+  <text class="small" x="868" y="236">13.1% reachable</text>
+  <circle class="ok" cx="1010" cy="161" r="7"/>
+
+  <path class="line" d="M949 270 V318 H145 V346"/>
+
+  <rect class="card" x="42" y="346" width="206" height="140"/>
+  <text class="label" x="64" y="380">Provenance</text>
+  <text class="small" x="64" y="408">adversary-writable</text>
+  <text class="small" x="64" y="430">OS-generated</text>
+  <text class="small" x="64" y="452">tool ceilings</text>
+  <circle class="ok" cx="206" cy="377" r="7"/>
+
+  <path class="line" d="M248 416 H310"/>
+
+  <rect class="card" x="310" y="346" width="206" height="140"/>
+  <text class="label" x="332" y="380">Controls</text>
+  <text class="small" x="332" y="408">contract validation</text>
+  <text class="small" x="332" y="430">citation checks</text>
+  <text class="small" x="332" y="452">authorization boundary</text>
+  <circle class="ok" cx="474" cy="377" r="7"/>
+
+  <path class="dashed" d="M516 416 H578"/>
+
+  <text class="tiny" x="578" y="328">FUTURE MODEL-BACKED RUN</text>
+  <rect class="future" x="578" y="346" width="206" height="140"/>
+  <text class="label" x="600" y="380">Live agent run</text>
+  <text class="small" x="600" y="408">configured model</text>
+  <text class="small" x="600" y="430">tool traces</text>
+  <text class="small" x="600" y="452">contracted verdicts</text>
+  <circle class="warn" cx="742" cy="377" r="7"/>
+
+  <path class="dashed" d="M784 416 H846"/>
+
+  <rect class="future" x="846" y="346" width="206" height="140"/>
+  <text class="label" x="868" y="380">Attack evaluation</text>
+  <text class="small" x="868" y="408">suppression flips</text>
+  <text class="small" x="868" y="430">escalation requests</text>
+  <text class="small" x="868" y="452">control ablations</text>
+  <circle class="warn" cx="1010" cy="377" r="7"/>
+
+  <path class="dashed" d="M1052 416 H1116 V522 H660"/>
+  <rect class="future" x="420" y="508" width="240" height="76"/>
+  <text class="label" x="442" y="540">Publication threshold</text>
+  <text class="small" x="442" y="562">agent score + attack score + limits</text>
+
+  <text class="tiny" x="42" y="596">Boundary: current committed results measure the baseline and mountable attack surface, not a language model's performance.</text>
+</svg>

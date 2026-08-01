@@ -11,7 +11,7 @@ red-team projects have the mirror problem: they attack a target built to be
 attacked, so the attack succeeding says nothing.
 
 This repo avoids both by borrowing a labelled corpus. The sibling repo
-[`chain-under-load`](https://github.com/YaCnDehfuli/chain-under-load) runs 83
+[`detection-under-load`](https://github.com/YaCnDehfuli/detection-under-load) runs 83
 detection rules against recorded Windows telemetry and labels every
 rule/capture pair with a deterministic classifier. That gives two scored tasks
 with exact answers:

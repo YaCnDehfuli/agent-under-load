@@ -1,6 +1,6 @@
 """Turn the sibling repo's published results into typed evaluation cases.
 
-`chain-under-load` runs 83 detection rules against recorded Windows telemetry
+`detection-under-load` runs detection rules against recorded Windows telemetry
 and writes `benchmark/results.json`: for every rule/capture pair, whether the
 rule fired and — when it did not — a deterministic four-way explanation. That
 file is the ground truth here. This module reads it and emits cases.
@@ -47,9 +47,13 @@ EXTRACT_ROOT = CORPUS_ROOT / "extracted"
 
 #: Where the sibling repo is checked out. It is a data dependency, not a code
 #: one: this repo reads its manifest and results and never imports from it.
-CHAIN_REPO = Path(
-    os.environ.get("CHAIN_UNDER_LOAD", REPO_ROOT.parent / "chain-under-load")
+DETECTION_REPO = Path(
+    os.environ.get(
+        "DETECTION_UNDER_LOAD",
+        os.environ.get("CHAIN_UNDER_LOAD", REPO_ROOT.parent / "detection-under-load"),
+    )
 )
+CHAIN_REPO = DETECTION_REPO  # backward-compatible name for older tests/scripts
 
 TriageTruth = Literal["true_positive", "false_positive"]
 MissTruth = Literal["detected", "miss-logic", "miss-telemetry", "out-of-scope"]
@@ -79,7 +83,7 @@ class RuleRef:
     title: str
     level: str
     path: Path
-    source: Literal["sigmahq", "chain-under-load"]
+    source: Literal["sigmahq", "detection-under-load"]
     selected_by: str
 
     def text(self) -> str:
@@ -209,11 +213,11 @@ class EvaluationSet:
 
 
 def _chain_file(name: str) -> Path:
-    path = CHAIN_REPO / name
+    path = DETECTION_REPO / name
     if not path.exists():
         raise CorpusError(
-            f"{path} not found. Point CHAIN_UNDER_LOAD at a checkout of "
-            f"https://github.com/YaCnDehfuli/chain-under-load"
+            f"{path} not found. Point DETECTION_UNDER_LOAD at a checkout of "
+            f"https://github.com/YaCnDehfuli/detection-under-load"
         )
     return path
 
@@ -236,7 +240,7 @@ def _resolve_rule_path(file_field: str) -> tuple[Path, str]:
     """
     if file_field.startswith("corpus/"):
         return CORPUS_ROOT / file_field[len("corpus/") :], "sigmahq"
-    return CHAIN_REPO / file_field, "chain-under-load"
+    return DETECTION_REPO / file_field, "detection-under-load"
 
 
 def rules(results: dict | None = None) -> tuple[dict[str, RuleRef], list[Absence]]:

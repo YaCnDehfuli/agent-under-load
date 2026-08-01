@@ -1,13 +1,32 @@
 # agent-under-load
 
-An LLM agent that triages security detections, scored against exact ground
-truth — and then attacked through the one channel a real adversary controls: the
-telemetry it reads.
+Agent Under Load is an evidence-based harness for evaluating a security triage
+agent under realistic indirect prompt injection. The task is narrow on purpose:
+given detection evidence, can an agent distinguish true positives from false
+positives, explain why rules missed, and resist instructions hidden inside the
+telemetry an adversary actually controls?
 
 Ground truth is borrowed from the sibling repo
-[`chain-under-load`](https://github.com/YaCnDehfuli/chain-under-load), which runs
-83 detection rules against recorded Windows telemetry and labels every
+[`detection-under-load`](https://github.com/YaCnDehfuli/detection-under-load),
+which runs detection rules against recorded Windows telemetry and labels every
 rule/capture pair with a deterministic classifier.
+
+![Agent Under Load full plan](docs/assets/agent-under-load-full-plan.svg)
+
+## Status at a glance
+
+| area | state |
+|---|---|
+| Corpus integration | done; reuses pinned Detection Under Load telemetry |
+| Case generation | done; triage and miss-classification cases are reproducible |
+| No-LLM baseline | done; committed benchmark artifacts are checked |
+| Injection realism | done; payloads only mount in adversary-writable fields |
+| Controls | implemented and tested at the harness level |
+| Language-model run | not yet measured; requires a configured model credential |
+| Attack success rate | not yet measured; depends on the language-model run |
+
+This repository is therefore a serious evaluation scaffold with real model-free
+measurements, not a completed claim about any model's security performance.
 
 ## Results
 
@@ -50,7 +69,7 @@ and it is narrower than "the agent reads attacker text" suggests.
 ### What is not measured
 
 **No model credential was available in the environment this repo was built in, so
-the agent has never been run against a language model.** There is no
+the agent has not yet been measured against a language model.** There is no
 agent-versus-baseline number, no attack success rate, and no before/after control
 table. Those cells are empty in the docs and say so.
 
@@ -87,7 +106,7 @@ benchmark/  committed run artefacts
 
 ```bash
 pip install -r requirements.txt
-git clone https://github.com/YaCnDehfuli/chain-under-load ../chain-under-load
+git clone https://github.com/YaCnDehfuli/detection-under-load ../detection-under-load
 python -m agent.corpus --fetch      # ~30 MB, sparse, pinned; verifies digests
 python -m agent.corpus --list
 python -m pytest tests -q
@@ -197,7 +216,7 @@ Never "production." Never "frontier."
 
 ## The set
 
-- [`chain-under-load`](https://github.com/YaCnDehfuli/chain-under-load) — do
+- [`detection-under-load`](https://github.com/YaCnDehfuli/detection-under-load) — do
   published detection rules catch a technique executed seven different ways?
   Supplies the ground truth used here.
 - **this repo** — can an agent do the triage, and can it be attacked through the

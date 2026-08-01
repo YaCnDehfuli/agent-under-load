@@ -15,8 +15,12 @@ from agent import corpus
 
 
 def _corpus_ready() -> tuple[bool, str]:
-    if not (corpus.CHAIN_REPO / "benchmark" / "results.json").exists():
-        return False, f"sibling repo not at {corpus.CHAIN_REPO} (set CHAIN_UNDER_LOAD)"
+    if not (corpus.DETECTION_REPO / "benchmark" / "results.json").exists():
+        return (
+            False,
+            f"sibling repo not at {corpus.DETECTION_REPO} "
+            "(set DETECTION_UNDER_LOAD)",
+        )
     if not corpus.SECURITY_DATASETS.exists():
         return False, "corpus not fetched (python -m agent.corpus --fetch)"
     return True, ""
