@@ -1,4 +1,11 @@
-# agent-under-load
+# Agent Under Load
+
+[![CI](https://github.com/YaCnDehfuli/agent-under-load/actions/workflows/ci.yml/badge.svg)](https://github.com/YaCnDehfuli/agent-under-load/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![LangGraph](https://img.shields.io/badge/Agent-LangGraph-1C3C3C)](https://github.com/langchain-ai/langgraph)
+[![License: MIT](https://img.shields.io/badge/License-MIT-2ea44f.svg)](LICENSE)
+
+**Technical focus:** security-agent evaluation · indirect prompt injection · detection triage · reproducible benchmarking · least privilege
 
 Agent Under Load is an evidence-based harness for evaluating a security triage
 agent under realistic indirect prompt injection. The task is narrow on purpose:
@@ -221,3 +228,8 @@ Never "production." Never "frontier."
   Supplies the ground truth used here.
 - **this repo** — can an agent do the triage, and can it be attacked through the
   telemetry?
+
+
+## License
+
+[MIT](LICENSE). The sibling benchmark corpus and third-party rules retain their original terms.
