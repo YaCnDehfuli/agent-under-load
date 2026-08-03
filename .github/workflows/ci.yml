@@ -51,7 +51,7 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-      - run: pip install bandit semgrep
+      - run: pip install -r requirements-ci.txt
       - name: bandit
         # B101 (assert) is excluded in tests only: pytest is built on assert.
         run: |
@@ -68,7 +68,7 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-      - run: pip install pip-audit
+      - run: pip install -r requirements-ci.txt
       - name: pip-audit
         # Advisories against the pinned versions, since the pins are what a
         # reader would install. One advisory is ignored with a reason:
