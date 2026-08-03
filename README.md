@@ -75,10 +75,12 @@ and it is narrower than "the agent reads attacker text" suggests.
 
 ### What is not measured
 
-** the agent has not yet been measured against a language model. The harness is complete but the project is still under contruction" To populate the tables:
+**The agent has not been run against a language model.** The harness is
+complete and the commands below populate the tables; nothing above claims a
+result that a model produced, because none has.
 
 ```bash
-export AGENT_API_KEY=...                    # or AGENT_MODEL=ollama
+export ANTHROPIC_API_KEY=...                # or AGENT_MODEL=ollama
 python -m score.run   --task triage --predictor agent
 python -m attack.runner --objective suppression --controls none
 python -m attack.runner --objective suppression --controls all
