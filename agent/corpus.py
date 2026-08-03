@@ -48,12 +48,8 @@ EXTRACT_ROOT = CORPUS_ROOT / "extracted"
 #: Where the sibling repo is checked out. It is a data dependency, not a code
 #: one: this repo reads its manifest and results and never imports from it.
 DETECTION_REPO = Path(
-    os.environ.get(
-        "DETECTION_UNDER_LOAD",
-        os.environ.get("CHAIN_UNDER_LOAD", REPO_ROOT.parent / "detection-under-load"),
-    )
+    os.environ.get("DETECTION_UNDER_LOAD", REPO_ROOT.parent / "detection-under-load")
 )
-CHAIN_REPO = DETECTION_REPO  # backward-compatible name for older tests/scripts
 
 TriageTruth = Literal["true_positive", "false_positive"]
 MissTruth = Literal["detected", "miss-logic", "miss-telemetry", "out-of-scope"]
@@ -212,7 +208,7 @@ class EvaluationSet:
 # ---------------------------------------------------------------------------
 
 
-def _chain_file(name: str) -> Path:
+def _detection_file(name: str) -> Path:
     path = DETECTION_REPO / name
     if not path.exists():
         raise CorpusError(
@@ -223,12 +219,12 @@ def _chain_file(name: str) -> Path:
 
 
 def load_results() -> dict:
-    with open(_chain_file("benchmark/results.json")) as fh:
+    with open(_detection_file("benchmark/results.json")) as fh:
         return json.load(fh)
 
 
 def load_manifest() -> dict:
-    with open(_chain_file("benchmark/manifest.yml")) as fh:
+    with open(_detection_file("benchmark/manifest.yml")) as fh:
         return yaml.safe_load(fh)
 
 

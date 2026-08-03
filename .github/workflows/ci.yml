@@ -34,7 +34,7 @@ jobs:
       - name: the unit suite must not depend on the corpus
         # a test that quietly needs data is a test that fails for the wrong
         # reason on someone else's machine
-        run: CHAIN_UNDER_LOAD=/nonexistent python -m pytest tests -q
+        run: DETECTION_UNDER_LOAD=/nonexistent python -m pytest tests -q
 
   sast:
     runs-on: ubuntu-latest
