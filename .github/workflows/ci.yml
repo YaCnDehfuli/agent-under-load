@@ -1,5 +1,12 @@
 name: ci
 
+# Actions are pinned to a commit sha, with the release tag in the trailing
+# comment so a reader can verify the pair. A tag — including a major-version
+# tag like v4 — is a mutable pointer the action's owner can move, and these
+# actions run with the repository checked out and, in the gitleaks job, with a
+# GITHUB_TOKEN in the environment. requirements.txt already pins for this
+# reason; the workflow is the other half of the same argument.
+
 on:
   push:
     branches: [main]
@@ -18,8 +25,8 @@ jobs:
     # push. corpus- and model-marked tests skip themselves.
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
         with:
           python-version: "3.11"
           cache: pip
@@ -39,8 +46,8 @@ jobs:
   sast:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
         with:
           python-version: "3.11"
           cache: pip
@@ -56,8 +63,8 @@ jobs:
   dependencies:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
         with:
           python-version: "3.11"
           cache: pip
@@ -83,20 +90,20 @@ jobs:
   secrets:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
         with:
           fetch-depth: 0
       - name: gitleaks
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7  # v2.3.9
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   filesystem-scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
       - name: trivy
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8  # v0.36.0
         with:
           scan-type: fs
           scanners: vuln,secret,misconfig
@@ -111,8 +118,8 @@ jobs:
     timeout-minutes: 60
     if: github.event_name != 'pull_request'
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
         with:
           python-version: "3.11"
           cache: pip
@@ -120,7 +127,7 @@ jobs:
       - name: fetch the sibling repo, which holds the ground truth
         run: git clone --depth 1 https://github.com/YaCnDehfuli/detection-under-load ../detection-under-load
       - name: cache corpus
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830  # v4.3.0
         with:
           path: corpus
           key: corpus-${{ hashFiles('../detection-under-load/benchmark/manifest.yml') }}
