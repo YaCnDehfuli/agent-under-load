@@ -47,6 +47,13 @@ it, because scope comes from the case and the agent cannot widen it. With the
 control off, the same request is granted. That is one case under a scripted
 model, so it demonstrates the mechanism rather than a rate.
 
+The "completely" in the table above is a claim about the mechanism, and it was
+not true of the code until recently: `_in_scope` matched substrings, so a
+one-character target passed the scope check. Fixed, with the reasoning and the
+non-obvious second half in `docs/decisions.md`. It matters for how this table
+gets read — the escalation rows measure a boundary, so a bug in the boundary
+would have shown up here as a defence result.
+
 **`provenance_tags` has no offline test, and that is the honest position.** It is
 an instruction to the model. Whether it changes behaviour is exactly the sort of
 claim that needs a measured rate, and there is nothing to substitute for one.

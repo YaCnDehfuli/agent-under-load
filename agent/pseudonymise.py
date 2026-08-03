@@ -61,6 +61,11 @@ PRINCIPAL_FIELDS = ("User", "SourceUser", "TargetUser", "ParentUser",
 DOMAIN_REPLACEMENT = "corp.example"
 NETBIOS_REPLACEMENT = "CORP"
 
+#: Matches a host pseudonym this module hands out. The authorization boundary
+#: uses it to tell a host name apart from the other replacements in the same
+#: table, since only hosts are assets a session can be scoped to.
+HOST_PSEUDONYM = re.compile(r"HOST\d+")
+
 #: Built-in Windows principals. These appear in the `DOMAIN\user` position but
 #: name the operating system, not the lab, and they are load-bearing evidence:
 #: "NT AUTHORITY\SYSTEM opened a handle to LSASS" reads very differently from

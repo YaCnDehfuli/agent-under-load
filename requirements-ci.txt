@@ -1,0 +1,26 @@
+# The security toolchain, pinned for the same reason requirements.txt is: a
+# scanner that resolves fresh on every run turns a green build red with no
+# commit, and the failure is undiagnosable because nothing in the repo changed.
+#
+# Deliberately not in requirements.txt. pyproject.toml declares
+# dynamic = ["dependencies"] against that file, so anything added there becomes
+# an install requirement of the package — a reader who wants to run the harness
+# should not be made to install three scanners.
+#
+# What pinning does and does not freeze, since the difference decides how much
+# to trust a green build:
+#
+#   pip-audit  the client, not the advisory database. New CVEs against the
+#              pinned dependencies still surface on the next run.
+#   bandit     the rule set as well as the client. A new check ships in a new
+#              release and is not picked up until this file moves.
+#   semgrep    the client and the rule-pack compatibility. The packs are fetched
+#              from semgrep.dev at run time, so their contents still move.
+#
+# The weekly cron in ci.yml is what surfaces a needed bump: it re-resolves the
+# rest of the toolchain against these pins, so drift shows up on a schedule
+# rather than in the middle of a pull request.
+
+bandit==1.9.4
+semgrep==1.172.0
+pip-audit==2.10.1

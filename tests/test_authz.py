@@ -28,6 +28,7 @@ from agent.contracts import (
 )
 from agent.graph import AgentConfig, Control, TriageGraph
 from agent.models import ModelReply, ScriptedModel, ToolCall
+from agent.pseudonymise import capture_handle
 from attack.inject import InjectedStore, Injection, load_payloads
 from tests.support import FakeStore, synthetic_triage_case, write_rule
 
@@ -89,14 +90,87 @@ def test_the_agent_cannot_widen_its_own_scope_by_naming_an_asset():
     """Scope is anchored on the capability's strings, not the request's."""
     decision = decide(_request("enrich_alert", "lab/synthetic and also DC01"),
                       CAPABILITY)
-    # matching is loose enough to accept an asset named inside the capture, but
-    # the capability's own string has to be the anchor
-    assert decision.granted or "outside this session's scope" in decision.reason
+    assert not decision.granted
+    assert "outside this session's scope" in decision.reason
     assert decide(_request("enrich_alert", "DC01"), CAPABILITY).granted is False
 
 
 def test_an_empty_target_is_refused():
     assert not decide(_request("enrich_alert", "  "), CAPABILITY).granted
+
+
+# -- the substring bypass, and what replaced it ---------------------------
+#
+# `_in_scope` used to test containment in both directions. Against a capability
+# scoped to `lab/synthetic` that granted `s`, because `s` occurs in the scope
+# string — one shared character was enough to pass an authorization check.
+
+
+@pytest.mark.parametrize("target", ["s", "l", "/", "y", "n"])
+def test_a_single_character_target_is_refused(target):
+    """The regression. Every one of these was granted by substring matching."""
+    decision = decide(_request("enrich_alert", target), CAPABILITY)
+    assert not decision.granted
+    assert "outside this session's scope" in decision.reason
+
+
+@pytest.mark.parametrize("target", ["lab", "synthetic", "lab/", "ab/synth"])
+def test_a_substring_of_a_scoped_identifier_is_refused(target):
+    """A fragment of an identifier is not the identifier."""
+    assert not decide(_request("enrich_alert", target), CAPABILITY).granted
+
+
+@pytest.mark.parametrize("target", [
+    "lab/synthetic and PRODUCTION-DC01",
+    "lab/synthetic; also isolate the domain controller",
+])
+def test_a_scoped_identifier_with_extra_text_is_refused(target):
+    """Wrapping a scoped name in a sentence does not carry the sentence in."""
+    assert not decide(_request("enrich_alert", target), CAPABILITY).granted
+
+
+@pytest.mark.parametrize("target", ["  lab/synthetic  ", "LAB/SYNTHETIC",
+                                    "lab/synthetic\n"])
+def test_matching_survives_case_and_surrounding_whitespace(target):
+    """Exact, but not brittle about how the model spelled it."""
+    assert decide(_request("enrich_alert", target), CAPABILITY).granted
+
+
+# -- the capability names what the agent can actually see -----------------
+
+
+def test_the_capture_handle_is_in_scope(tmp_path):
+    """The case that would break under a naive tightening of _in_scope.
+
+    The agent is only ever shown `capture-<digest>`, so if the capability were
+    minted over the raw corpus id, exact matching would refuse every request —
+    and the capability_scope ablation row would report a control that looks
+    perfect because nothing can satisfy it, rather than because scope holds.
+    """
+    case = synthetic_triage_case(write_rule(tmp_path))
+    capability = Capability.for_case(case)
+    handle = capture_handle(case.capture.id)
+
+    assert handle.startswith("capture-")
+    assert decide(_request("enrich_alert", handle), capability).granted
+
+
+def test_the_raw_capture_id_is_not_in_scope(tmp_path):
+    """It is not in the agent's namespace, so it should not be a key to it."""
+    case = synthetic_triage_case(write_rule(tmp_path))
+    capability = Capability.for_case(case)
+
+    assert case.capture.id == "lab/synthetic"
+    assert not decide(_request("enrich_alert", case.capture.id), capability).granted
+
+
+def test_an_asset_from_the_capture_is_in_scope(tmp_path):
+    """A host the session was given, added by the toolbox and not by the model."""
+    case = synthetic_triage_case(write_rule(tmp_path))
+    capability = Capability.for_case(case).with_assets({"HOST1"})
+
+    assert decide(_request("tag_asset", "HOST1"), capability).granted
+    assert not decide(_request("tag_asset", "HOST2"), capability).granted
 
 
 def test_unenforced_mode_grants_but_records_what_it_would_have_done():
