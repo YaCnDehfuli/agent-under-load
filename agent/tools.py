@@ -33,7 +33,7 @@ from agent.contracts import ActionRequest
 from agent.events import Event, Ingestion, render_many
 from agent.models import ToolSpec
 from agent.provenance import Provenance, classify
-from agent.pseudonymise import Pseudonymiser, capture_handle
+from agent.pseudonymise import HOST_PSEUDONYM, Pseudonymiser, capture_handle
 
 #: Captures held in memory at once. Each is tens of thousands of dicts, so this
 #: is a memory ceiling rather than a performance knob.
@@ -510,6 +510,7 @@ class Toolbox:
             raise ToolError(f"malformed action request: {exc}") from exc
 
         capability = self.capability or Capability.for_case_id(self.capture.id)
+        capability = capability.with_assets(self._capture_assets())
         decision = decide(request, capability, enforced=self.authz_enforced)
         self.requests.append((request, decision))
         return ToolResult(
@@ -519,6 +520,24 @@ class Toolbox:
             provenance_ceiling=REQUEST_ACTION.provenance_ceiling,
             returned=1, matched=1,
         )
+
+    def _capture_assets(self) -> set[str]:
+        """The host pseudonyms this capture yields, as scoped asset names.
+
+        Read out of the capture's own substitution table, so the session may
+        tag `HOST2` when `HOST2` is a machine in the window it was handed. The
+        agent's request is never consulted: naming a host does not put it in
+        scope, having been given the capture that contains it does.
+
+        Empty when the capture has not been read yet, which is fail-closed and
+        also the right semantics — an agent that has looked at no events has no
+        grounds to name a host inside them.
+        """
+        table = self.store.table(self.capture.id)
+        if table is None:
+            return set()
+        return {value for value in table.mapping().values()
+                if HOST_PSEUDONYM.fullmatch(value)}
 
     # -- citation checking ------------------------------------------------
 

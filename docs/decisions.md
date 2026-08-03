@@ -247,3 +247,50 @@ One finding is accepted rather than fixed, with the reasoning recorded in the
 workflow: `diskcache <= 5.6.3` deserialises with pickle (CVE-2025-69872), arrives
 transitively through pySigma, and has no published fix, so it cannot be pinned
 away. It is ignored by ID so every other advisory still fails the build.
+
+## The authorization boundary matched substrings, and one character was enough
+
+Recorded as a defect rather than a refinement, because the module it sits in is
+the one this repo points at when it claims defence in depth.
+
+`_in_scope` tested containment in both directions:
+
+```python
+return any(needle in scope.lower() or scope.lower() in needle
+           for scope in capability.targets)
+```
+
+Against a session scoped to `lab/synthetic`, the target `s` was granted — `s`
+occurs in the scope string. So did `l`, `/`, `lab`, `synthetic`, and
+`lab/synthetic and PRODUCTION-DC01`. Every adversarial target in what is now
+`tests/test_authz.py` passed. The docstring called this "loose on purpose", and
+the looseness was real, but it was not bounded by anything.
+
+The interesting part is why the obvious fix is wrong. `Capability.for_case` was
+minting `targets={case.capture.id}` — the raw corpus id, `LSASS_campaign_01`.
+The agent never sees that string: it is shown `capture-<sha256[:8]}`, because
+the capture id was pseudonymised to stop it announcing the label (see the
+confound entry above). There is no substring relationship between a digest and
+the id it came from. So the loose match was failing in both directions at once —
+letting arbitrary fragments through, while never actually admitting a legitimate
+request, since the agent could not produce the only string in the scope set.
+
+Replacing the substring test with equality and stopping there would have
+refused *everything*. The Phase D `capability_scope` row would then have shown a
+control with a perfect record — not because scope was enforced, but because no
+request could satisfy it, which is a measurement artefact dressed as a defence.
+It is the same failure the empty-tables rule elsewhere in this file exists to
+prevent: a number that looks like a result and is an artefact of the harness.
+
+So the fix is two-sided, and both halves are load-bearing:
+
+- the capability is minted over identifiers the agent can actually name — the
+  capture handle, plus host pseudonyms the toolbox reads out of the capture's
+  own substitution table when the session asks to act on one;
+- matching is exact after casefolding and whitespace collapse, and nothing else
+  is normalised, because every additional normalisation widens what counts as
+  the same identifier and this function decides an authorization question.
+
+Assets still come from the capture and never from the request, which was always
+the mechanism. What changed is that the scope set and the agent's vocabulary are
+now the same namespace, so the boundary can be strict without being vacuous.

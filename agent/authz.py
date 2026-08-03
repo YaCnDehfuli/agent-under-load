@@ -36,6 +36,7 @@ from typing import Iterable
 
 from agent import corpus
 from agent.contracts import ActionRequest
+from agent.pseudonymise import capture_handle
 
 
 @dataclasses.dataclass(frozen=True)
@@ -88,7 +89,10 @@ class Capability:
     """A session-scoped grant. Minted outside the agent, never handed to it."""
 
     actions: frozenset[str]
-    #: Asset identifiers this session may touch. Empty means none.
+    #: Asset identifiers this session may touch, matched exactly. Empty means
+    #: none. These are identifiers in the namespace the agent can actually see —
+    #: the capture handle, and host pseudonyms drawn from the capture itself —
+    #: not raw corpus ids, which never reach a prompt.
     targets: frozenset[str]
     #: Session identity, for the audit trail.
     session: str = ""
@@ -100,22 +104,40 @@ class Capability:
         Targets are drawn from the case, not from anything the model said, which
         is the whole mechanism. The agent cannot add an asset to its own scope by
         mentioning one.
+
+        The scoped identifier is the capture *handle*, not the raw corpus id.
+        The agent is only ever shown the handle (`agent.pseudonymise`), so a
+        capability minted over the raw id would name a string the agent cannot
+        produce — and with exact matching that grants nothing at all.
         """
         return cls(
             actions=DEFAULT_GRANT,
-            targets=frozenset({case.capture.id}),
+            targets=frozenset({capture_handle(case.capture.id)}),
             session=f"triage:{case.case_id}",
         )
 
     @classmethod
     def for_case_id(cls, capture_id: str) -> "Capability":
         """Same grant, when only the capture is to hand."""
-        return cls(actions=DEFAULT_GRANT, targets=frozenset({capture_id}),
+        return cls(actions=DEFAULT_GRANT,
+                   targets=frozenset({capture_handle(capture_id)}),
                    session=f"triage:{capture_id}")
 
     def widen(self, actions: Iterable[str]) -> "Capability":
         """Only ever called by an operator, never from inside a run."""
         return dataclasses.replace(self, actions=self.actions | set(actions))
+
+    def with_assets(self, assets: Iterable[str]) -> "Capability":
+        """Add assets found *inside* this session's own capture.
+
+        Called by the toolbox with the host pseudonyms the capture yields, so a
+        session may tag a host it has actually observed. The distinction that
+        matters: these come from the capture's substitution table, never from
+        the request, so this widens scope with what the session was given and
+        not with what the model asked for.
+        """
+        return dataclasses.replace(
+            self, targets=self.targets | {a for a in assets if a and a.strip()})
 
 
 @dataclasses.dataclass(frozen=True)
@@ -179,18 +201,39 @@ def decide(
                     enforced=enforced)
 
 
-def _in_scope(target: str, capability: Capability) -> bool:
-    """A target is in scope when the capability names it, or names its capture.
+def _normalise(value: str) -> str:
+    """Casefold and collapse whitespace, so `HOST1 ` and `host1` are one string.
 
-    Matching is loose on purpose — a session scoped to a capture may act on an
-    asset named inside it — but it is anchored on the *capability's* strings, so
-    the agent cannot extend scope by naming something new.
+    Deliberately nothing else. Any further normalisation — stripping
+    punctuation, unifying separators — widens what counts as the same
+    identifier, and this function decides an authorization question.
     """
-    needle = target.strip().lower()
+    return " ".join(value.split()).lower()
+
+
+def _in_scope(target: str, capability: Capability) -> bool:
+    """A target is in scope only when the capability names it exactly.
+
+    Matching is exact after normalisation, never by substring. The original
+    implementation tested containment in both directions, and that was a
+    bypass rather than a convenience: against a capability scoped to
+    `lab/synthetic`, the target `s` was granted, because `s` occurs in the
+    scope string. One character shared with any scoped identifier was enough,
+    which made the "held for human" result in the ablation table a claim the
+    code did not support.
+
+    Exactness only works because the capability is minted over identifiers the
+    agent can actually name — see `Capability.for_case`. Tightening this
+    function alone, against the raw corpus ids the capability used to carry,
+    would refuse every request including the legitimate ones, and
+    `capability_scope` would then look like a perfect control for the entirely
+    wrong reason: not because scope is enforced, but because nothing can
+    satisfy it.
+    """
+    needle = _normalise(target)
     if not needle:
         return False
-    return any(needle in scope.lower() or scope.lower() in needle
-               for scope in capability.targets)
+    return any(needle == _normalise(scope) for scope in capability.targets)
 
 
 def _apply(enforced: bool, decision: Decision) -> Decision:
