@@ -294,3 +294,38 @@ So the fix is two-sided, and both halves are load-bearing:
 Assets still come from the capture and never from the request, which was always
 the mechanism. What changed is that the scope set and the agent's vocabulary are
 now the same namespace, so the boundary can be strict without being vacuous.
+
+## Claude Code's commit attribution is turned off in this repo
+
+Claude Code appends `Co-Authored-By:` and `Claude-Session:` trailers to commit
+messages by default. GitHub reads `Co-authored-by` as authorship metadata, so
+those trailers put a second name in the repository's contributor list — which
+is wrong here: every commit was authored and committed by one person, and the
+trailers described a tool, not a co-author.
+
+The trailers are gone from every reachable commit. `.claude/settings.json` now
+disables both, at repository scope rather than user scope so a fresh clone
+inherits it.
+
+The trailers turned out to be the smaller half. A Claude Code session also
+ships with `user.name=Claude` / `user.email=noreply@anthropic.com` in its git
+config, so commits made in one are *authored* by Claude unless the identity is
+set first — and an author line puts a name in the contributor list far more
+directly than a trailer does. Disabling attribution does not touch it, because
+it is git configuration rather than a Claude Code setting. So the check below
+covers author and committer as well as trailers:
+
+```bash
+git log --all --format='%an|%ae|%cn|%ce' | grep -i claude
+```
+
+Before pushing, for the trailers themselves:
+
+```bash
+git log --all --format='%H%n%B%n---' |
+  rg -i '^(Co-authored-by: Claude|Claude-Session:)'
+```
+
+No output is the expected result. Old object SHAs stay addressable until GitHub
+garbage-collects them, and the contributor list is rebuilt on GitHub's schedule
+rather than on push, so the interface can lag the API for a while.
