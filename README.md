@@ -1,46 +1,45 @@
 # Agent Under Load
 
+Harness that scores a detection-triage agent and a no-LLM baseline, and measures which injection placements recorded telemetry can carry.
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-2ea44f.svg)](LICENSE)
 [![CI](https://github.com/YaCnDehfuli/agent-under-load/actions/workflows/ci.yml/badge.svg)](https://github.com/YaCnDehfuli/agent-under-load/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![LangGraph](https://img.shields.io/badge/Agent-LangGraph-1C3C3C)](https://github.com/langchain-ai/langgraph)
 [![Release](https://img.shields.io/github/v/release/YaCnDehfuli/agent-under-load)](https://github.com/YaCnDehfuli/agent-under-load/releases)
 
-**Technical focus:** security-agent evaluation · indirect prompt injection · detection triage · reproducible benchmarking · least privilege
+## Results
 
-Agent Under Load is an evidence-based harness for evaluating a security triage
-agent under realistic indirect prompt injection. The task is narrow on purpose:
-given detection evidence, can an agent distinguish true positives from false
-positives, explain why rules missed, and resist instructions hidden inside the
-telemetry an adversary actually controls?
+No-LLM baseline on 80 triage cases (44 true positive / 36 false positive): macro-F1 **0.60**. Bare accuracy is not reported.
+
+Miss classification on 581 rule/capture pairs: macro-F1 **0.93**. That label is a deterministic function of the rule and the telemetry; the baseline re-derives it, so a faithful reimplementation should score high.
+
+Mountable injection surface: **248 of 1892** placements (**13.1%**).
+
+**No language-model run has been measured.**
+
+![Agent Under Load full plan](docs/assets/agent-under-load-full-plan.svg)
+
+**Research artifact.** v0.1.0 is a harness. This repository does not report a model-security result.
+
+## Quickstart
+
+```bash
+pip install -r requirements.txt
+git clone https://github.com/YaCnDehfuli/detection-under-load ../detection-under-load
+python -m agent.corpus --fetch
+python -m agent.corpus --list
+python -m pytest tests -q
+```
+
+`python -m agent.corpus --fetch` pulls about 30 MB, sparse and pinned, and verifies digests.
 
 Ground truth is borrowed from the sibling repo
 [`detection-under-load`](https://github.com/YaCnDehfuli/detection-under-load),
 which runs detection rules against recorded Windows telemetry and labels every
 rule/capture pair with a deterministic classifier.
 
-![Agent Under Load full plan](docs/assets/agent-under-load-full-plan.svg)
-
-## Status at a glance
-
-| area | state |
-|---|---|
-| Corpus integration | done; reuses pinned Detection Under Load telemetry |
-| Case generation | done; triage and miss-classification cases are reproducible |
-| No-LLM baseline | done; committed benchmark artifacts are checked |
-| Injection realism | done; payloads only mount in adversary-writable fields |
-| Controls | implemented and tested at the harness level |
-| Language-model run | not yet measured; requires a configured model credential |
-| Attack success rate | not yet measured; depends on the language-model run |
-
-This repository is therefore a serious evaluation scaffold with real model-free
-measurements, not a completed claim about any model's security performance.
-
-## Results
-
-**Read this section first, including the part that says what is missing.**
-
-### The bar, measured
+## The bar, measured
 
 Reproducible with no API key.
 
@@ -101,16 +100,6 @@ docs/       decisions, architecture, threat-model, results-*
 benchmark/  committed run artefacts
 ```
 
-## Running it
-
-```bash
-pip install -r requirements.txt
-git clone https://github.com/YaCnDehfuli/detection-under-load ../detection-under-load
-python -m agent.corpus --fetch      # ~30 MB, sparse, pinned; verifies digests
-python -m agent.corpus --list
-python -m pytest tests -q
-```
-
 ## Pipeline
 
 CI runs the unit suite (twice: once normally, once with the corpus path removed),
@@ -129,5 +118,10 @@ scanner:
 | gitleaks | **no** | GitHub Actions only |
 | Trivy | **no** | GitHub Actions only |
 
+## Limitations
 
-
+No language-model run has been measured, so this repository is not a
+model-security result. The miss-classification macro-F1 of 0.93 is a near-ceiling
+score by construction: the labels are a deterministic function of the rule and
+the telemetry, and the baseline re-derives them. The no-LLM triage bar (macro-F1
+0.60 on 80 cases) is the informative comparison. v0.1.0 is a harness.
