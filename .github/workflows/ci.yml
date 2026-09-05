@@ -117,6 +117,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     if: github.event_name != 'pull_request'
+    env:
+      # hashFiles only sees paths inside GITHUB_WORKSPACE; clone the sibling
+      # here instead of one directory up so the cache key and later steps share
+      # the same in-repo checkout.
+      DETECTION_UNDER_LOAD: ${{ github.workspace }}/detection-under-load
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
@@ -125,12 +130,12 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - name: fetch the sibling repo, which holds the ground truth
-        run: git clone --depth 1 https://github.com/YaCnDehfuli/detection-under-load ../detection-under-load
+        run: git clone --depth 1 https://github.com/YaCnDehfuli/detection-under-load detection-under-load
       - name: cache corpus
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830  # v4.3.0
         with:
           path: corpus
-          key: corpus-${{ hashFiles('../detection-under-load/benchmark/manifest.yml') }}
+          key: corpus-${{ hashFiles('detection-under-load/benchmark/manifest.yml') }}
       - name: fetch and verify the pinned corpus
         run: python -m agent.corpus --fetch
       - run: python -m agent.corpus --list
