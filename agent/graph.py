@@ -173,6 +173,14 @@ adversary-writable ones when they disagree.\
 """
 
 
+def system_prompt(task: str, config: AgentConfig) -> str:
+    """The system prompt a run sends, which the run directory records a digest of."""
+    system = SYSTEM_TRIAGE if task == "triage_verdict" else SYSTEM_MISS
+    if config.has(Control.PROVENANCE_TAGS):
+        system += PROVENANCE_PREAMBLE
+    return system
+
+
 def _case_prompt(case: corpus.TriageCase | corpus.MissCase) -> str:
     inputs = case.inputs()
     rule = inputs["rule"]
@@ -212,10 +220,7 @@ class TriageGraph:
     # -- nodes ------------------------------------------------------------
 
     def _prepare(self, state: TriageState) -> dict[str, Any]:
-        system = state["system"]
-        if self.config.has(Control.PROVENANCE_TAGS):
-            system = system + PROVENANCE_PREAMBLE
-        return {"system": system, "turns": 0, "tool_calls": 0,
+        return {"turns": 0, "tool_calls": 0,
                 "rejections": [], "repairs": 0, "failed_validation": False}
 
     def _investigate(self, state: TriageState) -> dict[str, Any]:
@@ -377,7 +382,8 @@ class TriageGraph:
             # it would have decided, so the ablation row is the same code path
             authz_enforced=self.config.has(Control.CAPABILITY_SCOPE),
         )
-        self._audit = audit or AuditLog()
+        # not `audit or ...`: an empty log has no entries, so it is falsy
+        self._audit = audit if audit is not None else AuditLog()
         self._audit.started(case_id=case.case_id, task=task,
                             model=self.model.name,
                             temperature=self.model.temperature,
@@ -385,7 +391,7 @@ class TriageGraph:
                             controls=sorted(c.value for c in self.config.controls),
                             rule_id=case.rule.id, capture_id=case.capture.id)
 
-        system = SYSTEM_TRIAGE if task == "triage_verdict" else SYSTEM_MISS
+        system = system_prompt(task, self.config)
         state: TriageState = {
             "case_id": case.case_id,
             "task": task,

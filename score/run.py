@@ -1,26 +1,31 @@
 """Score a predictor against the corpus and write the artefact.
 
     python -m score.run --predictor baseline --task miss
-    python -m score.run --predictor agent --model gpt-oss-20b --task triage
+    python -m score.run --predictor agent --model gpt-oss-20b --task triage \
+        --repeats 3 --budget-usd 5
 
-Every run writes a JSON artefact under `runs/` carrying the predictor, the model
-configuration where there is one, the control set, and the per-case
-predictions. Docs quote artefacts; nothing in `docs/` is typed by hand.
+A baseline run writes one JSON artefact under `runs/`. An agent run writes a
+run directory (see `score/ledger.py`) that it appends to as trajectories finish,
+so it can be stopped and resumed. Docs quote artefacts; nothing in `docs/` is
+typed by hand.
 """
 
 from __future__ import annotations
 
 import argparse
 import dataclasses
+import hashlib
 import json
 import sys
 import time
 from pathlib import Path
 
 from agent import corpus
+from agent.audit import AuditLog
 from agent.baseline import MissBaseline, TriageBaseline
-from agent.graph import ALL_CONTROLS, AgentConfig, Control, TriageGraph
+from agent.graph import ALL_CONTROLS, AgentConfig, Control, TriageGraph, system_prompt
 from agent.tools import CaptureStore
+from score.ledger import ERROR, BudgetExceeded, RunDir, check_budget, cost_usd
 from score.metrics import Prediction, Report, score
 
 RUNS = Path(__file__).resolve().parent.parent / "runs"
@@ -64,13 +69,8 @@ def run(
     predictor: str,
     controls: frozenset[Control] = frozenset(),
     limit: int | None = None,
-    model_key: str = "",
 ) -> tuple[Report, list[dict]]:
-    evaluation = corpus.evaluation_set()
-    cases = evaluation.triage if task == "triage" else evaluation.miss
-    cases = _sorted_by_capture(cases)
-    if limit:
-        cases = cases[:limit]
+    cases = _cases(task, limit)
 
     store = CaptureStore()
     classes = TRIAGE_CLASSES if task == "triage" else MISS_CLASSES
@@ -80,19 +80,8 @@ def run(
                   else MissBaseline(store=store))
         name = engine.name
         predict = engine.predict
-        model_name, temperature, model_config = "", None, {}
-    elif predictor == "agent":
-        from agent import models
-        if not model_key:
-            raise SystemExit("--predictor agent needs --model: a key in models.yml")
-        model = models.load_model(model_key)
-        graph = TriageGraph(model, AgentConfig(controls=controls), store=store)
-        name = f"agent[{model_key}]"
-        predict = graph.run
-        model_name, temperature = model.name, model.temperature
-        model_config = model.config
     else:
-        raise SystemExit(f"unknown predictor {predictor!r}: use baseline or agent")
+        raise SystemExit(f"unknown predictor {predictor!r}: agent runs go through run_agent")
 
     if controls:
         name = f"{name} {AgentConfig(controls=controls).label}"
@@ -121,9 +110,8 @@ def run(
     artefact = {
         "task": task,
         "predictor": name,
-        "model": model_name,
-        "temperature": temperature,
-        "model_config": model_config,
+        "model": "",
+        "temperature": None,
         "controls": sorted(c.value for c in controls),
         "cases": len(cases),
         "limited": bool(limit),
@@ -132,6 +120,191 @@ def run(
         "predictions": records,
     }
     return report, artefact
+
+
+def _cases(task: str, limit: int | None):
+    evaluation = corpus.evaluation_set()
+    cases = _sorted_by_capture(evaluation.triage if task == "triage"
+                               else evaluation.miss)
+    return cases[:limit] if limit else cases
+
+
+# ---------------------------------------------------------------------------
+# agent runs
+# ---------------------------------------------------------------------------
+
+TASK_NAMES = {"triage": "triage_verdict", "miss": "miss_classification"}
+
+#: A run directory is refused on resume when any of these differ from what it
+#: was started with: mixing two configurations inside one run would make its
+#: numbers describe neither.
+IDENTITY = ("task", "model_key", "model_entry", "controls", "system_prompt_sha256")
+
+
+def _git_revision() -> dict:
+    try:
+        sha = corpus._run(["git", "rev-parse", "HEAD"], cwd=RUNS.parent)
+        dirty = corpus._run(["git", "status", "--porcelain", "--untracked-files=no"],
+                            cwd=RUNS.parent)
+    except (corpus.CorpusError, OSError):
+        return {"sha": None, "dirty": None}
+    return {"sha": sha, "dirty": bool(dirty)}
+
+
+def _manifest_digest() -> str | None:
+    try:
+        return corpus.manifest_digest()
+    except corpus.CorpusError:
+        return None
+
+
+def _sum(turns: list[dict], field: str, *, all_or_nothing: bool) -> int | None:
+    values = [t.get(field) for t in turns]
+    known = [v for v in values if v is not None]
+    if not known or (all_or_nothing and len(known) != len(values)):
+        return None
+    return sum(known)
+
+
+def _usage(log: AuditLog) -> dict:
+    turns = [e.payload for e in log.of_kind("model_turn")]
+    return {
+        # a turn with unreported input or output makes the total unknown rather
+        # than silently low; cached and reasoning counts are optional extras
+        "input_tokens": _sum(turns, "input_tokens", all_or_nothing=True),
+        "cached_input_tokens": _sum(turns, "cached_input_tokens", all_or_nothing=False),
+        "output_tokens": _sum(turns, "output_tokens", all_or_nothing=True),
+        "reasoning_tokens": _sum(turns, "reasoning_tokens", all_or_nothing=False),
+        "turns": len(turns),
+        "latency_s": round(sum(t.get("latency_s") or 0.0 for t in turns), 3),
+        "served_models": sorted({t["served_model"] for t in turns if t.get("served_model")}),
+    }
+
+
+def run_agent(
+    cases,
+    model,
+    model_key: str,
+    model_entry: dict,
+    run_dir: Path,
+    task: str = "triage",
+    config: AgentConfig | None = None,
+    repeats: int = 1,
+    budget_usd: float | None = None,
+    store: CaptureStore | None = None,
+) -> dict:
+    """Run the agent over cases × repeats into a run directory, resuming if it exists."""
+    config = config or AgentConfig()
+    price = model_entry.get("price")
+    if budget_usd is not None and cost_usd({"input_tokens": 0, "output_tokens": 0},
+                                           price) is None:
+        raise ValueError(f"{model_key} has no price in models.yml, so a spending "
+                         "cap cannot be enforced")
+
+    system = system_prompt(TASK_NAMES[task], config)
+    identity = {
+        "task": task,
+        "model_key": model_key,
+        "model_entry": model_entry,
+        "controls": sorted(c.value for c in config.controls),
+        "system_prompt_sha256": hashlib.sha256(system.encode()).hexdigest(),
+    }
+    rundir = RunDir(run_dir)
+    meta = rundir.read_meta()
+    if meta is not None:
+        changed = [k for k in IDENTITY if meta.get(k) != identity[k]]
+        if changed:
+            raise ValueError(f"{run_dir} was started with a different "
+                             f"{', '.join(changed)}; use a new --run-dir")
+    else:
+        meta = {**identity, "started": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+                "model_config": model.config, "git": _git_revision(),
+                "corpus_manifest_sha256": _manifest_digest()}
+    rundir.create()
+    # written now, not only at the end, so an interrupted first run still
+    # refuses to be resumed under a different configuration
+    rundir.write_meta(meta)
+
+    done = rundir.completed()
+    pending = [(case, repeat) for repeat in range(1, repeats + 1) for case in cases
+               if (case.case_id, repeat) not in done]
+    projected = check_budget(budget_usd, rundir.spent(), rundir.mean_cost(), len(pending))
+    print(f"  {len(pending)} trajectories to run, {len(done)} already done; "
+          + (f"projected ${projected:.2f} more" if projected is not None
+             else "no cost measured yet"), file=sys.stderr)
+
+    graph = TriageGraph(model, config, store=store or CaptureStore())
+    budget_stop = False
+    for index, (case, repeat) in enumerate(pending, start=1):
+        mean = rundir.mean_cost()
+        if budget_usd is not None and mean is not None \
+                and rundir.spent() + mean > budget_usd:
+            budget_stop = True
+            print(f"  stopping before trajectory {index}: the next one would "
+                  f"pass the ${budget_usd:.2f} cap", file=sys.stderr)
+            break
+
+        log = AuditLog()
+        label, rejections, tool_calls, error = None, [], 0, ""
+        try:
+            result = graph.run(case, audit=log)
+            label, rejections, tool_calls = result.label, result.rejections, result.tool_calls
+            outcome = "answered" if label is not None else "unanswered"
+        except Exception as exc:  # recorded and retried on resume, never dropped
+            outcome, error = ERROR, f"{type(exc).__name__}: {exc}"
+
+        usage = _usage(log)
+        path = rundir.trajectory_path(case.case_id, repeat)
+        path.write_text(log.to_jsonl() + "\n")
+        rundir.append({
+            "case_id": case.case_id, "repeat": repeat, "truth": case.truth,
+            "predicted": label, "outcome": outcome, "rejections": rejections,
+            "error": error, "tool_calls": tool_calls, **usage,
+            "cost_usd": cost_usd(usage, price),
+            "audit_head": log.head, "trajectory": path.name,
+            "rule_id": case.rule.id, "capture": case.capture.id,
+        })
+        if index % 10 == 0 or index == len(pending):
+            print(f"  {index}/{len(pending)} trajectories", file=sys.stderr)
+
+    latest = list(rundir.latest().values())
+    classes = TRIAGE_CLASSES if task == "triage" else MISS_CLASSES
+    reports = {}
+    for repeat in range(1, repeats + 1):
+        scored = [r for r in latest if r["repeat"] == repeat and r["outcome"] != ERROR]
+        if scored:
+            reports[str(repeat)] = score(
+                [Prediction(r["case_id"], r["truth"], r["predicted"]) for r in scored],
+                classes, task=task, predictor=f"agent[{model_key}]").to_json()
+
+    spent = rundir.spent()
+    completed = rundir.completed()
+    remaining = sum((case.case_id, repeat) not in completed
+                    for case in cases for repeat in range(1, repeats + 1))
+    mean = rundir.mean_cost()
+    meta.update({
+        "updated": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+        "repeats": max(repeats, meta.get("repeats", 0)),
+        "totals": {
+            "trajectories": len(latest),
+            **{o: sum(r["outcome"] == o for r in latest)
+               for o in ("answered", "unanswered", ERROR)},
+            **{f: sum(r[f] or 0 for r in latest)
+               for f in ("input_tokens", "cached_input_tokens",
+                         "output_tokens", "reasoning_tokens")},
+        },
+        "budget": {
+            "budget_usd": budget_usd,
+            "actual_cost_usd": round(spent, 6),
+            "projected_remaining_cost_usd": (round(mean * remaining, 6)
+                                             if mean is not None else None),
+            "budget_stop": budget_stop,
+            "pricing_source": (price or {}).get("source"),
+        },
+        "reports": reports,
+    })
+    rundir.write_meta(meta)
+    return meta
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -145,11 +318,36 @@ def main(argv: list[str] | None = None) -> int:
                         help="none | all | comma-separated control names")
     parser.add_argument("--limit", type=int, default=None,
                         help="score only the first N cases, for a smoke run")
-    parser.add_argument("--out", default="", help="artefact path")
+    parser.add_argument("--repeats", type=int, default=1,
+                        help="agent only: runs per case")
+    parser.add_argument("--budget-usd", type=float, default=None,
+                        help="agent only: stop before spending more than this")
+    parser.add_argument("--run-dir", default="",
+                        help="agent only: run directory, resumed if it exists")
+    parser.add_argument("--out", default="", help="baseline artefact path")
     args = parser.parse_args(argv)
+    controls = _controls(args.controls)
 
-    report, artefact = run(args.task, args.predictor, _controls(args.controls),
-                           args.limit, args.model)
+    if args.predictor == "agent":
+        from agent import models
+        if not args.model:
+            raise SystemExit("--predictor agent needs --model: a key in models.yml")
+        model = models.load_model(args.model)
+        label = AgentConfig(controls=controls).label
+        run_dir = (Path(args.run_dir) if args.run_dir
+                   else RUNS / f"{args.task}-{args.model}-{label}")
+        try:
+            meta = run_agent(_cases(args.task, args.limit), model, args.model,
+                             models.registry()[args.model], run_dir, task=args.task,
+                             config=AgentConfig(controls=controls),
+                             repeats=args.repeats, budget_usd=args.budget_usd)
+        except (ValueError, BudgetExceeded) as exc:
+            raise SystemExit(str(exc))
+        print(json.dumps({k: meta[k] for k in ("totals", "budget")}, indent=1))
+        print(f"\nrun directory: {run_dir}", file=sys.stderr)
+        return 0
+
+    report, artefact = run(args.task, args.predictor, controls, args.limit)
 
     print(report.to_markdown())
 

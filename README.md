@@ -95,7 +95,7 @@ can fill itself with something that was never a language model.
 agent/      corpus, provenance, events, contracts, tools, graph, baseline,
             authz, audit, pseudonymise
 attack/     payloads.yml, inject, runner
-score/      metrics, run
+score/      metrics, run, ledger (run directories, resume, spending cap)
 docs/       decisions, architecture, threat-model, results-*
 benchmark/  committed run artefacts
 ```

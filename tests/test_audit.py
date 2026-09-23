@@ -162,6 +162,18 @@ def test_a_model_turn_records_usage_and_timing():
     assert payload["attempts"] == 2
 
 
+def test_a_log_passed_in_is_the_one_written_to(tmp_path):
+    """An empty log is falsy, which once made the graph quietly use its own."""
+    log = AuditLog()
+    graph = TriageGraph(ScriptedModel([ModelReply(answer=TriageVerdict(
+        verdict=Verdict.TRUE_POSITIVE, confidence=0.9,
+        evidence=[EvidenceCitation(event_index=1, field="TargetImage",
+                                   quote="lsass.exe", supports="target")],
+        rationale="x"))]), AgentConfig(), store=FakeStore())
+    graph.run(synthetic_triage_case(write_rule(tmp_path)), audit=log)
+    assert log.of_kind("run_finished")
+
+
 def test_a_provider_that_reports_no_usage_is_recorded_as_unknown():
     log = AuditLog()
     log.model_turn(turn=0, reply=ModelReply(tool_calls=[

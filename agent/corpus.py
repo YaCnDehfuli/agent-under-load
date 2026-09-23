@@ -223,6 +223,11 @@ def load_results() -> dict:
         return json.load(fh)
 
 
+def manifest_digest() -> str:
+    """sha256 of the sibling's manifest, which pins every dataset this repo reads."""
+    return hashlib.sha256(_detection_file("benchmark/manifest.yml").read_bytes()).hexdigest()
+
+
 def load_manifest() -> dict:
     with open(_detection_file("benchmark/manifest.yml")) as fh:
         return yaml.safe_load(fh)
