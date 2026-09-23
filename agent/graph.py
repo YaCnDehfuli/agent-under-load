@@ -41,7 +41,9 @@ from agent.models import Message, Model, ModelReply
 from agent.provenance import Provenance
 from agent.tools import CaptureStore, Toolbox
 
-MAX_TURNS = 8
+#: With medium reasoning, smoke runs cut off 3 of 10 trajectories at 8 turns
+#: while they were still gathering evidence.
+MAX_TURNS = 12
 
 
 class Control(str, enum.Enum):
