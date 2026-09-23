@@ -74,6 +74,25 @@ Some examples the baseline gets wrong, all `false_positive` called
 pass-the-hash rather than dumping it for credentials — a genuinely fine
 distinction, and one the rules themselves do not draw.
 
+### Baselines that read no evidence
+
+The evidence conditions (`docs/decisions.md`) need floors that never open the
+capture. These are they:
+
+| predictor | what it uses | macro-F1 | artefact |
+|---|---|---|---|
+| `constant-fp` | nothing | 0.31 | `benchmark/triage-constant-fp.json` |
+| `constant-tp` | nothing | 0.35 | `benchmark/triage-constant-tp.json` |
+| `rule-prior` | the rule's label on the *other* captures | 0.56 | `benchmark/triage-rule-prior.json` |
+| heuristic | the capture's events | 0.60 | `benchmark/triage-baseline.json` |
+
+`rule-prior` predicts the majority label the same rule carries on every other
+capture, never the case's own, and gets 45 of 80. The rule alone fits about 61
+of 80 when the case is allowed to vote for itself, so most of that apparent
+signal is memorising a capture, not something that transfers. An agent in the
+alert-only condition that beats 0.56 is using something beyond rule identity:
+its prior knowledge of what the rule's title means.
+
 ## Miss classification — a near-ceiling bar, by construction
 
 581 rule/capture pairs.

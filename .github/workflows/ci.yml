@@ -145,6 +145,9 @@ jobs:
         run: |
           python -m score.run --task triage --predictor baseline --out runs/triage.json
           python -m score.run --task miss    --predictor baseline --out runs/miss.json
+          for p in rule-prior constant-tp constant-fp; do
+            python -m score.run --task triage --predictor $p --out runs/triage-$p.json
+          done
       - name: committed results must match a fresh run
         # if the sibling repo reruns and its labels move, this fails and the
         # numbers in docs/ are stale — which is the point
@@ -152,8 +155,11 @@ jobs:
           python - <<'PY'
           import json, sys
           bad = []
-          for name, fresh in (("triage", "runs/triage.json"), ("miss", "runs/miss.json")):
-              committed = json.load(open(f"benchmark/{name}-baseline.json"))["report"]
+          pairs = [("triage-baseline", "runs/triage.json"), ("miss-baseline", "runs/miss.json")]
+          pairs += [(f"triage-{p}", f"runs/triage-{p}.json")
+                    for p in ("rule-prior", "constant-tp", "constant-fp")]
+          for name, fresh in pairs:
+              committed = json.load(open(f"benchmark/{name}.json"))["report"]
               current = json.load(open(fresh))["report"]
               for key in ("per_class", "total", "unanswered"):
                   if committed[key] != current[key]:
