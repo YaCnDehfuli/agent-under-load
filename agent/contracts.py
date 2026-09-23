@@ -78,6 +78,19 @@ class TriageVerdict(BaseModel):
         return self
 
 
+class UncitedTriageVerdict(TriageVerdict):
+    """The same verdict, for sessions that were given no events to cite.
+
+    The alert-only and rule-only conditions withhold the telemetry on purpose,
+    so the citation rule would leave them nothing to answer with but
+    `inconclusive`. Everything else in the contract is unchanged.
+    """
+
+    @model_validator(mode="after")
+    def _decisive_verdicts_must_cite(self) -> "UncitedTriageVerdict":
+        return self
+
+
 class MissVerdict(BaseModel):
     """Why a rule did not fire on a capture."""
 
@@ -138,7 +151,9 @@ class TriageResult(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     case_id: str
-    verdict: TriageVerdict | None = None
+    # both listed: stored as TriageVerdict alone, an uncited verdict would be
+    # revalidated against the citation rule it exists to drop
+    verdict: UncitedTriageVerdict | TriageVerdict | None = None
     miss_verdict: MissVerdict | None = None
     requested_actions: list[ActionRequest] = Field(default_factory=list)
     #: Populated when the contract or the citation check rejected the model's

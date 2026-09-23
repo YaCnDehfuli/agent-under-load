@@ -325,3 +325,34 @@ under a different set of counts. Agent runs refuse to start until the file
 exists. The heuristic baseline never read the field, so its 0.60 is unaffected;
 no agent result had been produced when this was found.
 
+## Evidence conditions change the evidence and nothing else, with one exception
+
+The question is whether a verdict depends on the telemetry, so each condition
+removes or swaps evidence while the prompt, the model settings, the turn limit
+and the contract stay the same:
+
+| condition | tools | events read |
+|---|---|---|
+| reference | all | the alert's own capture |
+| alert-only | none | none |
+| rule-only | `lookup_rule`, `lookup_attack_technique` | none |
+| mismatch-cross | all | another capture with the other label |
+| mismatch-same | all | another capture with the same label |
+
+Only two sentences of the system prompt change between them: what the agent can
+look at, and what it can cite. That is the exception. The contract requires a
+decisive verdict to cite an event, and with no events a model could only ever
+answer `inconclusive`, which would measure the contract rather than the model.
+The two conditions without telemetry use the same verdict schema minus the
+citation rule (`UncitedTriageVerdict`).
+
+In a mismatched run the alert keeps its rule, severity and match count; the
+capture handle and every tool result come from the donor, and citations are
+checked against the donor. The label is constant per capture, so donors are
+paired at capture level, from a seeded shuffle handed out least-used first,
+over the whole case set so a `--limit` run gets the same donors as the full one.
+Each record keeps the donor, its label and whether the alert's rule matches
+anything in it; the donor's label never reaches the model. Same-label swaps are
+the control for cross-label ones: a verdict that flips when the evidence is
+wrong but points the same way is reacting to the swap, not to the content.
+

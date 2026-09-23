@@ -28,6 +28,7 @@ from __future__ import annotations
 import dataclasses
 import functools
 import re
+from collections import Counter
 from typing import Any
 
 from sigma.collection import SigmaCollection
@@ -47,6 +48,7 @@ from agent.contracts import (
     MissVerdict,
     TriageResult,
     TriageVerdict,
+    UncitedTriageVerdict,
     Verdict,
 )
 from agent.events import Event
@@ -458,3 +460,51 @@ class TriageBaseline:
                 rationale="no indicator of LSASS credential access found",
             )
         return TriageResult(case_id=case.case_id, verdict=verdict)
+
+
+# ---------------------------------------------------------------------------
+# baselines that never read the telemetry
+# ---------------------------------------------------------------------------
+
+
+def _uncited(case_id: str, label: str, rationale: str) -> TriageResult:
+    verdict = UncitedTriageVerdict(verdict=Verdict(label), confidence=1.0,
+                                   rationale=rationale)
+    return TriageResult(case_id=case_id, verdict=verdict)
+
+
+class ConstantBaseline:
+    """The same answer for every alert: what a score is worth with no signal."""
+
+    def __init__(self, label: str):
+        self.label = label
+        self.name = f"constant-{label}"
+
+    def predict(self, case: corpus.TriageCase) -> TriageResult:
+        return _uncited(case.case_id, self.label, "always this label")
+
+
+class RulePriorBaseline:
+    """The label a rule usually gets, learned from every other capture.
+
+    Leave-one-capture-out: a case's own capture, and every other case on it,
+    never inform its prediction. The label is constant per capture, so letting
+    a capture vote on itself would be reading the answer. What remains measures
+    how much of the task the rule's identity gives away before any evidence.
+    """
+
+    name = "rule-prior"
+
+    def __init__(self, cases):
+        self.cases = list(cases)
+
+    def predict(self, case: corpus.TriageCase) -> TriageResult:
+        others = [c for c in self.cases if c.capture.id != case.capture.id]
+        same_rule = Counter(c.truth for c in others if c.rule.id == case.rule.id)
+        votes = same_rule or Counter(c.truth for c in others)
+        # ties go to the majority label over the other captures
+        overall = Counter(c.truth for c in others)
+        label = max(votes, key=lambda lab: (votes[lab], overall[lab], lab))
+        source = "this rule on other captures" if same_rule else "all other captures"
+        return _uncited(case.case_id, label, f"majority label of {source}")
+

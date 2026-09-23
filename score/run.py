@@ -25,8 +25,22 @@ from pathlib import Path
 
 from agent import corpus
 from agent.audit import AuditLog
-from agent.baseline import MissBaseline, TriageBaseline
-from agent.graph import ALL_CONTROLS, AgentConfig, Control, TriageGraph, system_prompt
+from agent.baseline import (
+    ConstantBaseline,
+    MissBaseline,
+    RulePriorBaseline,
+    TriageBaseline,
+    analyse_rule,
+    count_matches,
+)
+from agent.graph import (
+    ALL_CONTROLS,
+    AgentConfig,
+    Condition,
+    Control,
+    TriageGraph,
+    system_prompt,
+)
 from agent.tools import CaptureStore
 from score.ledger import (
     ERROR,
@@ -38,6 +52,8 @@ from score.ledger import (
     model_spend,
 )
 from score.metrics import Prediction, Report, score
+from score.pairing import digest as pairing_digest
+from score.pairing import donors as pairing_donors
 
 RUNS = Path(__file__).resolve().parent.parent / "runs"
 
@@ -89,10 +105,14 @@ def run(
     if predictor == "baseline":
         engine = (TriageBaseline(store=store) if task == "triage"
                   else MissBaseline(store=store))
-        name = engine.name
-        predict = engine.predict
+    elif predictor in NO_EVIDENCE_BASELINES and task == "triage":
+        engine = (RulePriorBaseline(_cases("triage", None)) if predictor == "rule-prior"
+                  else ConstantBaseline(NO_EVIDENCE_BASELINES[predictor]))
     else:
-        raise SystemExit(f"unknown predictor {predictor!r}: agent runs go through run_agent")
+        raise SystemExit(f"predictor {predictor!r} does not run on task {task!r}; "
+                         "agent runs go through run_agent")
+    name = engine.name
+    predict = engine.predict
 
     if controls:
         name = f"{name} {AgentConfig(controls=controls).label}"
@@ -146,11 +166,16 @@ def _cases(task: str, limit: int | None):
 
 TASK_NAMES = {"triage": "triage_verdict", "miss": "miss_classification"}
 
+#: Triage predictors that never look at the telemetry: what a score is worth
+#: before any evidence is read. rule-prior maps to None; it is built from cases.
+NO_EVIDENCE_BASELINES = {"constant-tp": "true_positive",
+                         "constant-fp": "false_positive", "rule-prior": None}
+
 #: A run directory is refused on resume when any of these differ from what it
 #: was started with: mixing two configurations inside one run would make its
 #: numbers describe neither.
-IDENTITY = ("task", "model_key", "model_entry", "controls", "system_prompt_sha256",
-            "fire_counts_sha256")
+IDENTITY = ("task", "model_key", "model_entry", "controls", "condition", "seed",
+            "pairing_sha256", "system_prompt_sha256", "fire_counts_sha256")
 
 
 def _git_revision() -> dict:
@@ -208,6 +233,8 @@ def run_agent(
     model_cap_usd: float | None = None,
     store: CaptureStore | None = None,
     workers: int = 1,
+    seed: int = 0,
+    population=None,
 ) -> dict:
     """Run the agent over cases × repeats into a run directory, resuming if it exists.
 
@@ -226,11 +253,21 @@ def run_agent(
                          "cap cannot be enforced")
 
     system = system_prompt(TASK_NAMES[task], config)
+    condition = config.condition
+    # paired over the whole set, so a --limit run gets the same donors as the
+    # full run and the pairing digest doesn't depend on the limit
+    pairing = (pairing_donors(population or cases,
+                              "cross" if condition is Condition.MISMATCH_CROSS else "same",
+                              seed)
+               if condition.mismatched else {})
     identity = {
         "task": task,
         "model_key": model_key,
         "model_entry": model_entry,
         "controls": sorted(c.value for c in config.controls),
+        "condition": condition.value,
+        "seed": seed if condition.mismatched else None,
+        "pairing_sha256": pairing_digest(pairing) if pairing else None,
         "system_prompt_sha256": hashlib.sha256(system.encode()).hexdigest(),
         "fire_counts_sha256": corpus.fire_counts_digest(),
     }
@@ -276,15 +313,24 @@ def run_agent(
         if not hasattr(local, "graph"):
             local.graph = TriageGraph(model, config, store=store or CaptureStore())
         log = AuditLog()
+        donor = pairing[case.case_id][0] if pairing else None
         try:
-            result = local.graph.run(case, audit=log)
+            result = local.graph.run(case, audit=log, donor=donor)
         except Exception as exc:  # recorded and retried on resume, never dropped
-            return None, [], 0, ERROR, f"{type(exc).__name__}: {exc}", log
+            return None, [], 0, ERROR, f"{type(exc).__name__}: {exc}", log, None
         outcome = "answered" if result.label is not None else "unanswered"
-        return result.label, result.rejections, result.tool_calls, outcome, "", log
+        # whether the alert's rule matches anything in the swapped-in capture,
+        # by this repo's approximate matcher: a model can notice an alert whose
+        # rule finds nothing in the evidence it was given
+        fires = (count_matches(analyse_rule(case.rule),
+                               local.graph.store.load(donor)) > 0
+                 if donor else None)
+        return (result.label, result.rejections, result.tool_calls, outcome, "",
+                log, fires)
 
     def record(case, repeat, finished: tuple) -> None:
-        label, rejections, tool_calls, outcome, error, log = finished
+        label, rejections, tool_calls, outcome, error, log, fires = finished
+        donor, donor_truth = pairing.get(case.case_id, (None, None))
         usage = _usage(log)
         path = rundir.trajectory_path(case.case_id, repeat)
         path.write_text(log.to_jsonl() + "\n")
@@ -298,6 +344,9 @@ def run_agent(
                          else cost_usd(usage, price)),
             "audit_head": log.head, "trajectory": path.name,
             "rule_id": case.rule.id, "capture": case.capture.id,
+            "condition": condition.value,
+            "donor": donor.id if donor else None, "donor_truth": donor_truth,
+            "rule_fires_on_donor": fires,
         })
 
     def over_cap(in_flight: int) -> list[str]:
@@ -381,12 +430,17 @@ def run_agent(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--task", choices=("triage", "miss"), required=True)
-    parser.add_argument("--predictor", choices=("baseline", "agent"),
-                        default="baseline")
+    parser.add_argument("--predictor", default="baseline",
+                        choices=("baseline", "agent", *NO_EVIDENCE_BASELINES))
     parser.add_argument("--model", default="",
                         help="model key in models.yml, required for --predictor agent")
     parser.add_argument("--controls", default="",
                         help="none | all | comma-separated control names")
+    parser.add_argument("--condition", default=Condition.REFERENCE.value,
+                        choices=[c.value for c in Condition],
+                        help="agent only: what evidence the agent gets")
+    parser.add_argument("--seed", type=int, default=0,
+                        help="agent only: donor pairing for the mismatch conditions")
     parser.add_argument("--limit", type=int, default=None,
                         help="score only the first N cases, for a smoke run")
     parser.add_argument("--repeats", type=int, default=1,
@@ -409,13 +463,14 @@ def main(argv: list[str] | None = None) -> int:
         if not args.model:
             raise SystemExit("--predictor agent needs --model: a key in models.yml")
         model = models.load_model(args.model)
-        label = AgentConfig(controls=controls).label
+        config = AgentConfig(controls=controls, condition=Condition(args.condition))
         run_dir = (Path(args.run_dir) if args.run_dir
-                   else RUNS / f"{args.task}-{args.model}-{label}")
+                   else RUNS / f"{args.task}-{args.model}-{args.condition}-{config.label}")
         try:
             meta = run_agent(_cases(args.task, args.limit), model, args.model,
                              models.registry()[args.model], run_dir, task=args.task,
-                             config=AgentConfig(controls=controls),
+                             config=config, seed=args.seed,
+                             population=_cases(args.task, None),
                              repeats=args.repeats, budget_usd=args.budget_usd,
                              model_cap_usd=models.registry()[args.model].get("budget_usd"),
                              workers=args.workers)
