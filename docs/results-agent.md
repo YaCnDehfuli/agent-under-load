@@ -143,7 +143,6 @@ captures. Cases are ordered by capture so each archive is parsed once.
   17 captures. A macro-F1 difference of a few points is not resolvable here.
 - **Two labs, one technique.** Every true positive is T1003.001. The agent is not
   shown to generalise to other techniques, because nothing here tests that.
-- **The alert's match count comes from this repo's matcher.** Both labels are
-  recounted per capture by `python -m score.fire_counts` with the same
-  approximate matcher, into `benchmark/fire-counts.json`. Where it disagrees with
-  the sibling's labelling, the file lists the case under `no_match`.
+- **The alert carries no match count.** The count available from the sibling
+  leaked the label, and a per-capture recount with this repo's matcher found
+  nothing on 23 of 80 alerts that fired; see `docs/decisions.md`.

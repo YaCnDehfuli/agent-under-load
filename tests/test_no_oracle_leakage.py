@@ -56,7 +56,6 @@ def test_synthetic_triage_case_inputs_are_clean(synthetic_rule, synthetic_captur
         case_id="tp:synthetic",
         rule=synthetic_rule,
         capture=synthetic_capture,
-        fire_count=3,
         truth="true_positive",
     )
     _assert_clean(case.inputs(), case.case_id)

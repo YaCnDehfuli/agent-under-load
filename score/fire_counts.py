@@ -2,23 +2,16 @@
 
     python -m score.fire_counts
 
-Writes benchmark/fire-counts.json, which the alert header reads its "events
-matched" line from. Both labels are counted the same way, by this repo's
-matcher, on the capture the case is about. The sibling's results can't be used
-for this: they give a true positive's count per capture but a false positive's
-only as the rule's total over the whole benign corpus, and that difference on
-its own separated the labels.
-
-Prints the check that matters before any agent sees the numbers: how the counts
-are distributed per label, and how well a single threshold on them alone would
-do.
+The leak check behind dropping the match count from the alert header (see
+docs/decisions.md). Both labels are counted the same way, by this repo's
+matcher, on the capture the case is about, and the report shows how the counts
+are distributed per label, how well a single threshold on them alone would do,
+and which alerts the matcher finds nothing for.
 """
 
 from __future__ import annotations
 
-import json
 import statistics
-import sys
 
 from agent import corpus
 from agent.baseline import analyse_rule, count_matches
@@ -65,14 +58,8 @@ def main() -> int:
     cases = corpus.evaluation_set().triage
     counts = recount(cases, CaptureStore())
     truth = {c.case_id: c.truth for c in cases}
-    corpus.FIRE_COUNTS.write_text(json.dumps({
-        "matcher": MATCHER,
-        "corpus_manifest_sha256": corpus.manifest_digest(),
-        "counts": counts,
-        "no_match": sorted(c for c, n in counts.items() if n == 0),
-    }, indent=1, sort_keys=True) + "\n")
+    print(f"matcher: {MATCHER}")
     print(report(counts, truth))
-    print(f"\nwritten: {corpus.FIRE_COUNTS}", file=sys.stderr)
     return 0
 
 

@@ -175,7 +175,12 @@ NO_EVIDENCE_BASELINES = {"constant-tp": "true_positive",
 #: was started with: mixing two configurations inside one run would make its
 #: numbers describe neither.
 IDENTITY = ("task", "model_key", "model_entry", "controls", "condition", "seed",
-            "pairing_sha256", "system_prompt_sha256", "fire_counts_sha256")
+            "pairing_sha256", "system_prompt_sha256", "case_prompt_version")
+
+
+#: Bumped when the alert header the model reads changes shape. 2: the match
+#: count line is gone.
+CASE_PROMPT_VERSION = 2
 
 
 def _git_revision() -> dict:
@@ -242,10 +247,6 @@ def run_agent(
     everything this model has cost across the run directories next to it.
     """
     config = config or AgentConfig()
-    if task == "triage" and any(c.fire_count is None for c in cases):
-        raise ValueError("some alerts have no recomputed fire count; run "
-                         "`python -m score.fire_counts` first, so the alert the "
-                         "model sees doesn't change shape between runs")
     price = model_entry.get("price")
     capped = budget_usd is not None or model_cap_usd is not None
     if capped and cost_usd({"input_tokens": 0, "output_tokens": 0}, price) is None:
@@ -269,7 +270,7 @@ def run_agent(
         "seed": seed if condition.mismatched else None,
         "pairing_sha256": pairing_digest(pairing) if pairing else None,
         "system_prompt_sha256": hashlib.sha256(system.encode()).hexdigest(),
-        "fire_counts_sha256": corpus.fire_counts_digest(),
+        "case_prompt_version": CASE_PROMPT_VERSION,
     }
     rundir = RunDir(run_dir)
     meta = rundir.read_meta()

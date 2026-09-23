@@ -317,13 +317,28 @@ The inputs looked symmetric (both labels had a count), which is why the leakage
 test that checks input shape passed. It was only visible by comparing the
 values per label, which is now part of generating them.
 
-The count is now recomputed for both labels, per capture, by the same matcher
-(`python -m score.fire_counts`), and committed as `benchmark/fire-counts.json`.
-The script prints the per-label distribution and the best single threshold, and
-the file's digest is part of every agent run's identity, so a run can't resume
-under a different set of counts. Agent runs refuse to start until the file
-exists. The heuristic baseline never read the field, so its 0.60 is unaffected;
-no agent result had been produced when this was found.
+The first fix was to recount both labels per capture with this repo's matcher
+(`python -m score.fire_counts`). That removed most of the gap, since the best
+single threshold fell to 49 of 80 against 44 for always answering true
+positive, but it showed two other problems:
+
+- 23 of the 80 alerts recount to zero: 11 true positives and 12 false
+  positives. The matcher only follows the AND spine of a detection, and it
+  misses what pySigma caught. An alert reading "0 events matched" for a rule
+  that fired is not an alert a real analyst would ever see.
+- The tail still leaks. All five alerts with a count of 5 or more are false
+  positives; no true positive goes above 4.
+
+So the line is gone from the alert for every condition. The agent can still
+count matches itself with `query_events`, which is the behaviour the study
+measures anyway. The script stays as the leak check, and the run identity
+carries a case-prompt version so a run started with the old header can't be
+resumed under the new one. The heuristic baseline never read the field, so its
+0.60 is unaffected; no agent result had been produced when this was found.
+
+The same matcher produces `rule_fires_on_donor` in the mismatch records, so
+that field is approximate for the same rules and is reported only as a
+secondary split.
 
 ## Evidence conditions change the evidence and nothing else, with one exception
 

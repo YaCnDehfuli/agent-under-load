@@ -98,7 +98,6 @@ def synthetic_triage_case(rule: corpus.RuleRef) -> corpus.TriageCase:
         case_id="tp:synthetic",
         rule=rule,
         capture=SYNTHETIC_CAPTURE,
-        fire_count=1,
         truth="true_positive",
     )
 

@@ -259,8 +259,6 @@ def _case_prompt(case: corpus.TriageCase | corpus.MissCase,
     if "filename" in rule:
         lines.append(f"  file: {rule['filename']}")
     lines.append(f"Capture: {capture['id']}")
-    if isinstance(case, corpus.TriageCase) and inputs["fire_count"] is not None:
-        lines.append(f"Events matched by the rule: {inputs['fire_count']}")
     return "\n".join(lines)
 
 
