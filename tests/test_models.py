@@ -300,3 +300,25 @@ def test_a_key_already_in_the_environment_wins(tmp_path, monkeypatch):
 
 def test_a_missing_env_file_is_not_an_error(tmp_path):
     load_env(tmp_path / "absent")
+
+
+def test_a_host_failure_behind_a_200_is_retried_not_scored():
+    failed = dict(_completion({"content": ""}, finish_reason="error"), provider="Flaky")
+    good = _completion({"tool_calls": [_tool_call("lookup_rule", {})]})
+    reply = _respond(_model([(200, failed, {}), (200, good, {})]))
+    assert reply.tool_calls and reply.attempts == 2
+
+
+def test_a_host_that_keeps_failing_is_an_infrastructure_error():
+    failed = {"model": "m", "provider": "Flaky",
+              "choices": [{"message": {}, "finish_reason": "error",
+                           "error": {"message": "upstream reset"}}]}
+    with pytest.raises(ModelError, match="Flaky failed mid-generation.*upstream reset"):
+        _respond(_model([(200, failed, {})] * 3))
+
+
+def test_the_registry_timeout_reaches_the_client(tmp_path):
+    path = tmp_path / "models.yml"
+    path.write_text("a: {provider: ollama, base_url: http://h.test/v1, model: m, "
+                    "timeout_s: 1800}\n")
+    assert load_model("a", path)._client.timeout.read == 1800

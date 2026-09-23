@@ -26,6 +26,8 @@ qwen3-4b:
   model: qwen3:4b
   temperature: 0
   params: {max_tokens: 4096}
+  # CPU inference: a single turn has taken close to three minutes
+  timeout_s: 1800
   price: {input: 0, cached_input: 0, output: 0, source: local, checked: null}
   budget_usd: 0
 
@@ -36,12 +38,13 @@ gpt-oss-20b:
   model: openai/gpt-oss-20b
   temperature: 0
   # only hosts that honour tools and the reasoning setting, cheapest first;
-  # the host that served each call is recorded as served_by
+  # the host that served each call is recorded as served_by. Darkbloom failed 8
+  # of 27 generations in the smoke run and is left out.
   params:
     max_tokens: 4096
     reasoning: {effort: low}
     usage: {include: true}
-    provider: {require_parameters: true, sort: price}
+    provider: {require_parameters: true, sort: price, ignore: [Darkbloom]}
   # OpenRouter reports what each call cost and that figure is what gets recorded.
   # These rates are the fallback: an upper bound, since hosts on OpenRouter start
   # around $0.018 / $0.09

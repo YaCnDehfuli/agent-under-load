@@ -330,6 +330,8 @@ def _to_anthropic(messages: Sequence[Message]) -> list[dict]:
 RETRYABLE = frozenset({429, 500, 502, 503, 504})
 MAX_ATTEMPTS = 6
 MAX_BACKOFF_S = 60.0
+#: Extra tries when a routed host fails mid-generation behind a 200 response.
+HOST_ERROR_RETRIES = 2
 
 
 class OpenAICompatModel:
@@ -390,6 +392,19 @@ class OpenAICompatModel:
             body["temperature"] = self.temperature
 
         data, latency, attempts = self._post(body)
+        # a router can answer 200 while the host behind it failed mid-generation;
+        # that is the host's fault, so it is retried and then raised, never
+        # scored as a model that gave no answer
+        for _ in range(HOST_ERROR_RETRIES):
+            if not _host_failed(data):
+                break
+            self._sleep(_backoff(None, attempts))
+            data, more_latency, more_attempts = self._post(body)
+            latency, attempts = latency + more_latency, attempts + more_attempts
+        if _host_failed(data):
+            raise ModelError(f"{data.get('provider') or self.provider} failed "
+                             f"mid-generation after {attempts} attempt(s): "
+                             f"{_host_error(data)}")
         choice = (data.get("choices") or [{}])[0]
         message = choice.get("message") or {}
         meta = {
@@ -449,8 +464,18 @@ class OpenAICompatModel:
 def _backoff(response: Any, attempt: int) -> float:
     try:
         return min(float(response.headers["retry-after"]), MAX_BACKOFF_S)
-    except (KeyError, ValueError):
+    except (AttributeError, KeyError, ValueError):
         return min(2.0 ** (attempt - 1), MAX_BACKOFF_S)
+
+
+def _host_failed(data: dict) -> bool:
+    choice = (data.get("choices") or [{}])[0]
+    return choice.get("finish_reason") == "error" or bool(choice.get("error"))
+
+
+def _host_error(data: dict) -> str:
+    error = (data.get("choices") or [{}])[0].get("error") or {}
+    return str(error.get("message") if isinstance(error, dict) else error)[:300]
 
 
 def _function(name: str, description: str, parameters: dict) -> dict:
@@ -548,4 +573,5 @@ def load_model(key: str, path: Path | None = None) -> Model:
                               api_key=api_key)
     return OpenAICompatModel(name=entry["model"], base_url=entry["base_url"],
                              api_key=api_key, temperature=entry.get("temperature"),
-                             params=entry.get("params"), provider=entry["provider"])
+                             params=entry.get("params"), provider=entry["provider"],
+                             timeout=entry.get("timeout_s", 300.0))
