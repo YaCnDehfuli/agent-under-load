@@ -18,6 +18,7 @@ import hashlib
 import json
 import sys
 import time
+from collections import Counter
 from pathlib import Path
 
 from agent import corpus
@@ -183,9 +184,11 @@ def _usage(log: AuditLog) -> dict:
         "cached_input_tokens": _sum(turns, "cached_input_tokens", all_or_nothing=False),
         "output_tokens": _sum(turns, "output_tokens", all_or_nothing=True),
         "reasoning_tokens": _sum(turns, "reasoning_tokens", all_or_nothing=False),
+        "reported_cost_usd": _sum(turns, "reported_cost_usd", all_or_nothing=True),
         "turns": len(turns),
         "latency_s": round(sum(t.get("latency_s") or 0.0 for t in turns), 3),
         "served_models": sorted({t["served_model"] for t in turns if t.get("served_model")}),
+        "served_by": sorted({t["served_by"] for t in turns if t.get("served_by")}),
     }
 
 
@@ -286,7 +289,10 @@ def run_agent(
             "case_id": case.case_id, "repeat": repeat, "truth": case.truth,
             "predicted": label, "outcome": outcome, "rejections": rejections,
             "error": error, "tool_calls": tool_calls, **usage,
-            "cost_usd": cost_usd(usage, price),
+            # what the provider billed when it says, otherwise tokens × price table
+            "cost_usd": (usage["reported_cost_usd"]
+                         if usage["reported_cost_usd"] is not None
+                         else cost_usd(usage, price)),
             "audit_head": log.head, "trajectory": path.name,
             "rule_id": case.rule.id, "capture": case.capture.id,
         })
@@ -330,6 +336,7 @@ def run_agent(
             "pricing_source": (price or {}).get("source"),
         },
         "reports": reports,
+        "errors": dict(Counter(r["error"] for r in latest if r["outcome"] == ERROR)),
     })
     rundir.write_meta(meta)
     return meta
@@ -353,11 +360,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--run-dir", default="",
                         help="agent only: run directory, resumed if it exists")
     parser.add_argument("--out", default="", help="baseline artefact path")
+    parser.add_argument("--env-file", default="",
+                        help="agent only: file with API keys (default: .env in the repo)")
     args = parser.parse_args(argv)
     controls = _controls(args.controls)
 
     if args.predictor == "agent":
         from agent import models
+        models.load_env(Path(args.env_file) if args.env_file else None)
         if not args.model:
             raise SystemExit("--predictor agent needs --model: a key in models.yml")
         model = models.load_model(args.model)
@@ -373,6 +383,8 @@ def main(argv: list[str] | None = None) -> int:
         except (ValueError, BudgetExceeded) as exc:
             raise SystemExit(str(exc))
         print(json.dumps({k: meta[k] for k in ("totals", "budget")}, indent=1))
+        for message, count in list(meta["errors"].items())[:3]:
+            print(f"  error x{count}: {message}", file=sys.stderr)
         print(f"\nrun directory: {run_dir}", file=sys.stderr)
         return 0
 

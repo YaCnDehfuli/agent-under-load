@@ -320,6 +320,7 @@ def main(argv: list[str] | None = None) -> int:
     from score.run import _controls
 
     controls = _controls(args.controls)
+    models.load_env()
     model = models.load_model(args.model)
     started = time.time()
     if args.objective == "suppression":

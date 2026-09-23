@@ -8,6 +8,7 @@ check is the smoke run against each provider.
 from __future__ import annotations
 
 import json
+import os
 
 import httpx
 import pytest
@@ -22,6 +23,7 @@ from agent.models import (
     OpenAICompatModel,
     ToolCall,
     ToolSpec,
+    load_env,
     load_model,
 )
 
@@ -262,3 +264,39 @@ def test_the_committed_registry_parses_and_names_its_credentials():
         assert "price" in entry, key
         if entry["provider"] != "ollama":
             assert entry["api_key_env"], key
+
+
+def test_openrouter_reports_the_cost_and_the_host_that_served_it():
+    usage = {"prompt_tokens": 1500, "completion_tokens": 300, "cost": 0.00042,
+             "prompt_tokens_details": {"cached_tokens": 1024}}
+    body = dict(_completion({"tool_calls": [_tool_call("lookup_rule", {})]},
+                            usage=usage), provider="SomeHost")
+    reply = _respond(_model([(200, body, {})]))
+    assert reply.usage.reported_cost_usd == 0.00042
+    assert reply.served_by == "SomeHost"
+
+
+# -- .env ------------------------------------------------------------------
+
+
+def test_env_files_with_spaces_quotes_and_comments_load(tmp_path, monkeypatch):
+    for key in ("A_KEY", "B_KEY", "C_KEY"):
+        monkeypatch.delenv(key, raising=False)
+    path = tmp_path / ".env"
+    path.write_text('# keys\nA_KEY = plain\nB_KEY="quoted value"\n\nexport C_KEY=\'x=y\'\n')
+    load_env(path)
+    assert os.environ["A_KEY"] == "plain"
+    assert os.environ["B_KEY"] == "quoted value"
+    assert os.environ["C_KEY"] == "x=y"
+
+
+def test_a_key_already_in_the_environment_wins(tmp_path, monkeypatch):
+    monkeypatch.setenv("A_KEY", "from-shell")
+    path = tmp_path / ".env"
+    path.write_text("A_KEY = from-file\n")
+    load_env(path)
+    assert os.environ["A_KEY"] == "from-shell"
+
+
+def test_a_missing_env_file_is_not_an_error(tmp_path):
+    load_env(tmp_path / "absent")

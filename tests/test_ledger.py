@@ -293,3 +293,30 @@ def test_registry_entries_survive_the_trip_through_run_json():
 
     for key, entry in registry().items():
         assert json.loads(json.dumps(entry, default=str)) == entry, key
+
+
+# -- provider-reported cost and errors ----------------------------------------------
+
+
+class ReportingModel(CountingModel):
+    """Like CountingModel, but each turn arrives with the cost the provider billed."""
+
+    def _reply(self, messages):
+        reply = super()._reply(messages)
+        reply.usage = Usage(input_tokens=1000, cached_input_tokens=0, output_tokens=100,
+                            reported_cost_usd=0.0001)
+        reply.served_by = "SomeHost"
+        return reply
+
+
+def test_a_cost_the_provider_reports_is_used_over_the_price_table(tmp_path):
+    _run(tmp_path, ReportingModel(), _cases(tmp_path, 1))
+    record = next(RunDir(tmp_path / "run").records())
+    assert record["cost_usd"] == pytest.approx(0.0002)  # two turns, not 0.0028
+    assert record["served_by"] == ["SomeHost"]
+
+
+def test_run_json_lists_the_errors_it_saw(tmp_path):
+    meta = _run(tmp_path, CountingModel(fail_on={"rule-case0", "rule-case1"}),
+                _cases(tmp_path))
+    assert meta["errors"] == {"ModelError: provider returned 503 after 6 attempt(s)": 2}

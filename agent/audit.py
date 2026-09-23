@@ -95,8 +95,10 @@ class AuditLog:
             cached_input_tokens=getattr(usage, "cached_input_tokens", None),
             output_tokens=getattr(usage, "output_tokens", None),
             reasoning_tokens=getattr(usage, "reasoning_tokens", None),
+            reported_cost_usd=getattr(usage, "reported_cost_usd", None),
             latency_s=getattr(reply, "latency_s", None),
             served_model=getattr(reply, "served_model", ""),
+            served_by=getattr(reply, "served_by", ""),
             finish_reason=getattr(reply, "finish_reason", ""),
             attempts=getattr(reply, "attempts", 1),
         )

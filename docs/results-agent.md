@@ -24,8 +24,9 @@ python -m score.run --model qwen3-4b    --task miss   --predictor agent
 Model keys are defined in `models.yml`, with the endpoint, generation parameters
 and credential variable of each.
 
-Running it: keys live in a `.env` file next to the repo (ignored by git) and are
-loaded into the shell with `set -a; source .env; set +a`. Each run writes a
+Running it: keys live in a `.env` file at the repo root (ignored by git), which
+agent runs read on start-up; `--env-file` points elsewhere, and a key already
+exported in the shell takes precedence. Each run writes a
 directory under `runs/` and resumes it if run again. Spending is capped twice:
 `--budget-usd` for the run, and the model's `budget_usd` in `models.yml` across
 every run of that model. DeepSeek runs go outside its peak hours (01:00-04:00

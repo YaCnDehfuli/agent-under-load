@@ -15,8 +15,9 @@
 # upper bound: OpenAI entries use standard rates although Flex bills about half.
 #
 # `budget_usd` is a lifetime cap for the model, counted across every run
-# directory under runs/. The caps plus smoke runs ($1), the adversarial phase
-# ($6) and a reserve ($9) add up to the study's $50.
+# directory under runs/, smoke runs included. The OpenRouter caps (20b + 120b)
+# and the OpenAI caps (Luna + Sol) each fit inside $10 of credit; DeepSeek draws
+# on its own account. Later phases spend from the same caps.
 
 qwen3-4b:
   provider: ollama
@@ -29,45 +30,59 @@ qwen3-4b:
   budget_usd: 0
 
 gpt-oss-20b:
-  provider: groq
-  base_url: https://api.groq.com/openai/v1
-  api_key_env: GROQ_API_KEY
+  provider: openrouter
+  base_url: https://openrouter.ai/api/v1
+  api_key_env: OPENROUTER_API_KEY
   model: openai/gpt-oss-20b
   temperature: 0
-  params: {max_completion_tokens: 4096, reasoning_effort: low}
-  price: {input: 0.075, cached_input: 0.0375, output: 0.30, source: https://www.layer3labs.io/guides/groq-pricing, checked: "2026-09-23"}
-  budget_usd: 4
+  # only hosts that honour tools and the reasoning setting, cheapest first;
+  # the host that served each call is recorded as served_by
+  params:
+    max_tokens: 4096
+    reasoning: {effort: low}
+    usage: {include: true}
+    provider: {require_parameters: true, sort: price}
+  # OpenRouter reports what each call cost and that figure is what gets recorded.
+  # These rates are the fallback: an upper bound, since hosts on OpenRouter start
+  # around $0.018 / $0.09
+  price: {input: 0.075, cached_input: 0.0375, output: 0.30, source: https://openrouter.ai/openai/gpt-oss-20b, checked: "2026-09-23"}
+  budget_usd: 3
 
 gpt-oss-120b:
-  provider: groq
-  base_url: https://api.groq.com/openai/v1
-  api_key_env: GROQ_API_KEY
+  provider: openrouter
+  base_url: https://openrouter.ai/api/v1
+  api_key_env: OPENROUTER_API_KEY
   model: openai/gpt-oss-120b
   temperature: 0
-  params: {max_completion_tokens: 4096, reasoning_effort: low}
-  price: {input: 0.15, cached_input: 0.075, output: 0.60, source: https://www.layer3labs.io/guides/groq-pricing, checked: "2026-09-23"}
-  budget_usd: 7
+  params:
+    max_tokens: 4096
+    reasoning: {effort: low}
+    usage: {include: true}
+    provider: {require_parameters: true, sort: price}
+  # fallback rates as above; hosts start around $0.03 / $0.17
+  price: {input: 0.15, cached_input: 0.075, output: 0.60, source: https://openrouter.ai/openai/gpt-oss-120b, checked: "2026-09-23"}
+  budget_usd: 6
 
 gpt-6-luna:
   provider: openai
   base_url: https://api.openai.com/v1
-  api_key_env: OPENAI_API_KEY
+  api_key_env: OPENAI_API_KEY_LUNA
   model: gpt-6-luna
   temperature: null
   # tool calls over Chat Completions need reasoning_effort=none on this family
   params: {max_completion_tokens: 4096, reasoning_effort: none, service_tier: flex}
   price: {input: 0.10, cached_input: 0.01, output: 0.50, source: https://www.digitalapplied.com/blog/gpt-6-sol-luna-launch-pricing-benchmarks-2026, checked: "2026-09-23"}
-  budget_usd: 4
+  budget_usd: 3
 
 gpt-6-sol:
   provider: openai
   base_url: https://api.openai.com/v1
-  api_key_env: OPENAI_API_KEY
+  api_key_env: OPENAI_API_KEY_LUNA
   model: gpt-6-sol
   temperature: null
   params: {max_completion_tokens: 4096, reasoning_effort: none, service_tier: flex}
   price: {input: 2.00, cached_input: 0.20, output: 10.00, source: https://www.digitalapplied.com/blog/gpt-6-sol-luna-launch-pricing-benchmarks-2026, checked: "2026-09-23"}
-  budget_usd: 7
+  budget_usd: 6.5
 
 deepseek-v4-pro:
   provider: deepseek

@@ -87,6 +87,8 @@ class Usage:
     cached_input_tokens: int | None = None
     output_tokens: int | None = None
     reasoning_tokens: int | None = None
+    #: What the provider says the call cost, where it says so (OpenRouter).
+    reported_cost_usd: float | None = None
 
 
 #: What a reply that neither called a tool nor answered becomes. Without it the
@@ -110,6 +112,8 @@ class ModelReply:
     #: The model id the provider says served the request, which can differ from
     #: the one asked for when an alias resolves to a snapshot.
     served_model: str = ""
+    #: The host behind a router such as OpenRouter; empty when there is none.
+    served_by: str = ""
     finish_reason: str = ""
     attempts: int = 1
 
@@ -392,6 +396,7 @@ class OpenAICompatModel:
             "usage": _openai_usage(data.get("usage") or {}),
             "latency_s": latency,
             "served_model": data.get("model", ""),
+            "served_by": data.get("provider") or "",
             "finish_reason": choice.get("finish_reason") or "",
             "attempts": attempts,
         }
@@ -482,7 +487,8 @@ def _openai_usage(usage: dict) -> Usage:
     return Usage(input_tokens=usage.get("prompt_tokens"),
                  cached_input_tokens=cached,
                  output_tokens=usage.get("completion_tokens"),
-                 reasoning_tokens=completion.get("reasoning_tokens"))
+                 reasoning_tokens=completion.get("reasoning_tokens"),
+                 reported_cost_usd=usage.get("cost"))  # OpenRouter's field
 
 
 # ---------------------------------------------------------------------------
@@ -490,6 +496,29 @@ def _openai_usage(usage: dict) -> Usage:
 # ---------------------------------------------------------------------------
 
 REGISTRY = Path(__file__).resolve().parent.parent / "models.yml"
+ENV_FILE = REGISTRY.parent / ".env"
+
+
+def load_env(path: Path | None = None) -> None:
+    """Put the keys from a .env file into the environment.
+
+    Accepts `KEY=value` and `KEY = value`, quoted or not, with # comments.
+    A variable that is already set wins, so a key exported in the shell is
+    never replaced by the file.
+    """
+    path = Path(path or ENV_FILE)
+    if not path.exists():
+        return
+    for line in path.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = (part.strip() for part in line.split("=", 1))
+        key = key.removeprefix("export ").strip()
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in "'\"":
+            value = value[1:-1]
+        if key and key not in os.environ:
+            os.environ[key] = value
 
 
 def registry(path: Path | None = None) -> dict[str, dict]:
