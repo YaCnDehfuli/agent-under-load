@@ -84,9 +84,8 @@ detection, per-strategy and per-field accounting. What has not run is a real
 model. The commands:
 
 ```
-export ANTHROPIC_API_KEY=...
-python -m attack.runner --objective suppression --controls none
-python -m attack.runner --objective escalation  --controls none
+python -m attack.runner --model gpt-oss-20b --objective suppression --controls none
+python -m attack.runner --model gpt-oss-20b --objective escalation  --controls none
 ```
 
 The tables below are the shape the results take, with every cell empty. They are

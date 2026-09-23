@@ -1,7 +1,7 @@
 """Measure whether an injection changes the agent's answer.
 
-    python -m attack.runner --objective suppression --controls none
-    python -m attack.runner --objective escalation  --controls all
+    python -m attack.runner --model gpt-oss-20b --objective suppression --controls none
+    python -m attack.runner --model gpt-oss-20b --objective escalation  --controls all
 
 Two objectives, measured differently.
 
@@ -115,7 +115,8 @@ def run_suppression(
     if limit_payloads:
         payloads = payloads[:limit_payloads]
 
-    model = model or models.from_env()
+    if model is None:
+        raise ValueError("an attack run needs a model; see models.load_model")
     config = AgentConfig(controls=controls)
     base_store = base_store or CaptureStore()
     clean_graph = TriageGraph(model, config, store=base_store)
@@ -163,6 +164,7 @@ def run_suppression(
         "objective": "suppression",
         "model": model.name,
         "temperature": model.temperature,
+        "model_config": model.config,
         "controls": sorted(c.value for c in controls),
         "cases_attacked": len(correct),
         "cases_clean": len(cases),
@@ -192,7 +194,8 @@ def run_escalation(
         cases = cases[:limit_cases]
 
     payloads = [p for p in load_payloads() if p.objective == "escalation"]
-    model = model or models.from_env()
+    if model is None:
+        raise ValueError("an attack run needs a model; see models.load_model")
     config = AgentConfig(controls=controls)
     base_store = base_store or CaptureStore()
 
@@ -229,6 +232,7 @@ def run_escalation(
         "objective": "escalation",
         "model": model.name,
         "temperature": model.temperature,
+        "model_config": model.config,
         "controls": sorted(c.value for c in controls),
         "cases_attacked": len(cases),
         "payloads": len(payloads),
@@ -302,6 +306,8 @@ def to_markdown(summary: dict, meta: dict) -> str:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--model", required=True,
+                        help="model key in models.yml")
     parser.add_argument("--objective", choices=("suppression", "escalation"),
                         default="suppression")
     parser.add_argument("--controls", default="",
@@ -314,12 +320,13 @@ def main(argv: list[str] | None = None) -> int:
     from score.run import _controls
 
     controls = _controls(args.controls)
+    model = models.load_model(args.model)
     started = time.time()
     if args.objective == "suppression":
         attempts, meta = run_suppression(controls, args.limit_cases,
-                                         args.limit_payloads)
+                                         args.limit_payloads, model=model)
     else:
-        attempts, meta = run_escalation(controls, args.limit_cases)
+        attempts, meta = run_escalation(controls, args.limit_cases, model=model)
 
     summary = summarise(attempts)
     meta["seconds"] = round(time.time() - started, 1)

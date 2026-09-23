@@ -23,7 +23,7 @@ import json
 from agent.audit import GENESIS, AuditLog
 from agent.contracts import EvidenceCitation, TriageVerdict, Verdict
 from agent.graph import AgentConfig, Control, TriageGraph
-from agent.models import ModelReply, ScriptedModel, ToolCall
+from agent.models import ModelReply, ScriptedModel, ToolCall, Usage
 from attack.inject import InjectedStore, Injection, load_payloads
 from tests.support import FakeStore, synthetic_triage_case, write_rule
 
@@ -142,6 +142,33 @@ def test_a_rejected_citation_is_recorded_as_a_signal(tmp_path):
 
     assert graph.audit.of_kind("citation_rejected")
     assert graph.audit.verify() == []
+
+
+def test_a_model_turn_records_usage_and_timing():
+    log = AuditLog()
+    log.model_turn(turn=0, reply=ModelReply(
+        tool_calls=[ToolCall(name="lookup_rule", arguments={}, call_id="c1")],
+        usage=Usage(input_tokens=1200, cached_input_tokens=1024,
+                    output_tokens=80, reasoning_tokens=40),
+        latency_s=0.42, served_model="served-snapshot", finish_reason="tool_calls",
+        attempts=2))
+    payload = log.of_kind("model_turn")[0].payload
+    assert payload["input_tokens"] == 1200
+    assert payload["cached_input_tokens"] == 1024
+    assert payload["output_tokens"] == 80
+    assert payload["reasoning_tokens"] == 40
+    assert payload["latency_s"] == 0.42
+    assert payload["served_model"] == "served-snapshot"
+    assert payload["attempts"] == 2
+
+
+def test_a_provider_that_reports_no_usage_is_recorded_as_unknown():
+    log = AuditLog()
+    log.model_turn(turn=0, reply=ModelReply(tool_calls=[
+        ToolCall(name="lookup_rule", arguments={})]))
+    payload = log.of_kind("model_turn")[0].payload
+    assert payload["input_tokens"] is None
+    assert payload["output_tokens"] is None
 
 
 # -- integrity ------------------------------------------------------------

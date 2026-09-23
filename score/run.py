@@ -1,10 +1,10 @@
 """Score a predictor against the corpus and write the artefact.
 
     python -m score.run --predictor baseline --task miss
-    python -m score.run --predictor agent --task triage --controls all
+    python -m score.run --predictor agent --model gpt-oss-20b --task triage
 
 Every run writes a JSON artefact under `runs/` carrying the predictor, the model
-and temperature where there is one, the control set, and the per-case
+configuration where there is one, the control set, and the per-case
 predictions. Docs quote artefacts; nothing in `docs/` is typed by hand.
 """
 
@@ -64,6 +64,7 @@ def run(
     predictor: str,
     controls: frozenset[Control] = frozenset(),
     limit: int | None = None,
+    model_key: str = "",
 ) -> tuple[Report, list[dict]]:
     evaluation = corpus.evaluation_set()
     cases = evaluation.triage if task == "triage" else evaluation.miss
@@ -79,14 +80,17 @@ def run(
                   else MissBaseline(store=store))
         name = engine.name
         predict = engine.predict
-        model_name, temperature = "", None
+        model_name, temperature, model_config = "", None, {}
     elif predictor == "agent":
         from agent import models
-        model = models.from_env()
+        if not model_key:
+            raise SystemExit("--predictor agent needs --model: a key in models.yml")
+        model = models.load_model(model_key)
         graph = TriageGraph(model, AgentConfig(controls=controls), store=store)
-        name = f"agent[{model.name}]"
+        name = f"agent[{model_key}]"
         predict = graph.run
         model_name, temperature = model.name, model.temperature
+        model_config = model.config
     else:
         raise SystemExit(f"unknown predictor {predictor!r}: use baseline or agent")
 
@@ -119,6 +123,7 @@ def run(
         "predictor": name,
         "model": model_name,
         "temperature": temperature,
+        "model_config": model_config,
         "controls": sorted(c.value for c in controls),
         "cases": len(cases),
         "limited": bool(limit),
@@ -134,6 +139,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--task", choices=("triage", "miss"), required=True)
     parser.add_argument("--predictor", choices=("baseline", "agent"),
                         default="baseline")
+    parser.add_argument("--model", default="",
+                        help="model key in models.yml, required for --predictor agent")
     parser.add_argument("--controls", default="",
                         help="none | all | comma-separated control names")
     parser.add_argument("--limit", type=int, default=None,
@@ -142,7 +149,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     report, artefact = run(args.task, args.predictor, _controls(args.controls),
-                           args.limit)
+                           args.limit, args.model)
 
     print(report.to_markdown())
 

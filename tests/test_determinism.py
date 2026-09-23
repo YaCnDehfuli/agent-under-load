@@ -75,6 +75,24 @@ def test_the_prompt_is_byte_identical_across_runs(tmp_path):
             == [(m.role, m.content) for m in messages_b]
 
 
+def test_the_transcript_only_grows(tmp_path):
+    """Each turn's prompt extends the previous one, so prompt caching applies."""
+    _, _, model = _run(tmp_path)
+    for (_, earlier), (_, later) in zip(model.seen, model.seen[1:]):
+        assert later[:len(earlier)] == earlier
+        assert len(later) > len(earlier)
+
+
+def test_assistant_turns_carry_the_calls_they_made(tmp_path):
+    """A native tool-calling provider needs each call next to its result."""
+    _, _, model = _run(tmp_path)
+    final = model.seen[-1][1]
+    assistant = [m for m in final if m.role == "assistant"]
+    assert [[c.call_id for c in m.tool_calls] for m in assistant] == [["c1"], ["c2"]]
+    results = [m.tool_call_id for m in final if m.role == "tool"]
+    assert results == ["c1", "c2"]
+
+
 def test_the_node_sequence_is_stable(tmp_path):
     _, graph, _ = _run(tmp_path)
     kinds = [e.kind for e in graph.audit]
@@ -120,8 +138,8 @@ def test_the_run_records_what_produced_it(tmp_path):
 
 
 @pytest.mark.model
-@pytest.mark.skipif(not os.environ.get("ANTHROPIC_API_KEY"),
-                    reason="needs a configured model")
+@pytest.mark.skipif(not os.environ.get("AGENT_MODEL_KEY"),
+                    reason="needs AGENT_MODEL_KEY naming a model in models.yml")
 def test_model_repeatability_is_measured_not_assumed(tmp_path):
     """Runs the same case three times and reports agreement.
 
@@ -135,7 +153,8 @@ def test_model_repeatability_is_measured_not_assumed(tmp_path):
     case = evaluation.triage[0]
     labels = []
     for _ in range(3):
-        graph = TriageGraph(models.from_env(), AgentConfig())
+        graph = TriageGraph(models.load_model(os.environ["AGENT_MODEL_KEY"]),
+                            AgentConfig())
         labels.append(graph.run(case).label)
     agreement = labels.count(max(set(labels), key=labels.count)) / len(labels)
     print(f"\nrepeatability on {case.case_id}: {labels} -> {agreement:.0%}")

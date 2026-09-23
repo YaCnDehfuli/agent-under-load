@@ -63,9 +63,8 @@ claim that needs a measured rate, and there is nothing to substitute for one.
 Rows are configurations; columns are strategies. Run with:
 
 ```
-export ANTHROPIC_API_KEY=...
 for c in none provenance_tags structured_ingestion enforced_citation all; do
-  python -m attack.runner --objective suppression --controls $c
+  python -m attack.runner --model gpt-oss-20b --objective suppression --controls $c
 done
 ```
 

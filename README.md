@@ -80,10 +80,10 @@ complete and the commands below populate the tables; nothing above claims a
 result that a model produced, because none has.
 
 ```bash
-export ANTHROPIC_API_KEY=...                # or AGENT_MODEL=ollama
-python -m score.run   --task triage --predictor agent
-python -m attack.runner --objective suppression --controls none
-python -m attack.runner --objective suppression --controls all
+export GROQ_API_KEY=...          # each models.yml entry names the key it reads
+python -m score.run     --model gpt-oss-20b --task triage --predictor agent
+python -m attack.runner --model gpt-oss-20b --objective suppression --controls none
+python -m attack.runner --model gpt-oss-20b --objective suppression --controls all
 ```
 
 An unconfigured run raises rather than falling back to a stub, so no table here

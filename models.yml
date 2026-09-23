@@ -1,0 +1,74 @@
+# Models the study can run, by key: `python -m score.run --model <key> ...`
+#
+# `params` are merged into the request body verbatim, so each entry records
+# exactly what was sent. `temperature: null` means the field is omitted, for
+# models that reject it. Reasoning effort is fixed per model and never varied
+# between conditions.
+#
+# Prices are USD per million tokens, copied from the provider's pricing page with
+# the page and the date it was checked. A null price means cost is recorded as
+# unknown rather than estimated. Check ids and prices against the provider
+# before a run.
+
+qwen3-4b:
+  provider: ollama
+  base_url: http://127.0.0.1:11434/v1
+  api_key_env: ""
+  model: qwen3:4b
+  temperature: 0
+  params: {max_tokens: 4096}
+  price: {input: 0, cached_input: 0, output: 0, source: local, checked: null}
+
+gpt-oss-20b:
+  provider: groq
+  base_url: https://api.groq.com/openai/v1
+  api_key_env: GROQ_API_KEY
+  model: openai/gpt-oss-20b
+  temperature: 0
+  params: {max_completion_tokens: 4096, reasoning_effort: low}
+  price: {input: null, cached_input: null, output: null, source: null, checked: null}
+
+gpt-oss-120b:
+  provider: groq
+  base_url: https://api.groq.com/openai/v1
+  api_key_env: GROQ_API_KEY
+  model: openai/gpt-oss-120b
+  temperature: 0
+  params: {max_completion_tokens: 4096, reasoning_effort: low}
+  price: {input: null, cached_input: null, output: null, source: null, checked: null}
+
+gpt-6-luna:
+  provider: openai
+  base_url: https://api.openai.com/v1
+  api_key_env: OPENAI_API_KEY
+  model: gpt-6-luna
+  temperature: null
+  # tool calls over Chat Completions need reasoning_effort=none on this family
+  params: {max_completion_tokens: 4096, reasoning_effort: none, service_tier: flex}
+  price: {input: null, cached_input: null, output: null, source: null, checked: null}
+
+gpt-6-sol:
+  provider: openai
+  base_url: https://api.openai.com/v1
+  api_key_env: OPENAI_API_KEY
+  model: gpt-6-sol
+  temperature: null
+  params: {max_completion_tokens: 4096, reasoning_effort: none, service_tier: flex}
+  price: {input: null, cached_input: null, output: null, source: null, checked: null}
+
+deepseek-v4-pro:
+  provider: deepseek
+  base_url: https://api.deepseek.com
+  api_key_env: DEEPSEEK_API_KEY
+  model: deepseek-v4-pro
+  temperature: 0
+  params: {max_tokens: 4096}
+  # off-peak rates; peak hours are billed at double
+  price: {input: null, cached_input: null, output: null, source: null, checked: null}
+
+claude-sonnet-5:
+  provider: anthropic
+  api_key_env: ANTHROPIC_API_KEY
+  model: claude-sonnet-5
+  temperature: 0
+  price: {input: null, cached_input: null, output: null, source: null, checked: null}

@@ -125,10 +125,19 @@ knowingly.
 
 ## The model is an interface, and an unconfigured run fails loudly
 
-Three implementations: a hosted Anthropic path (the default), a local
-open-weights path over an Ollama-compatible HTTP API (so the results
-reproduce without a paid API), and a scripted deterministic model used by the
-test suite.
+Three implementations: an OpenAI-compatible Chat Completions client with native
+tool calling, an Anthropic Messages client, and a scripted deterministic model
+used by the test suite. The first covers every provider in the study — OpenAI,
+Groq, DeepSeek — and local open weights served by Ollama or vLLM, so the
+results reproduce without a paid API through the same code as the hosted runs.
+
+Models are named by key in `models.yml`. Provider differences that are only
+request fields (`max_completion_tokens` versus `max_tokens`, reasoning effort,
+service tier) are entries in that file rather than branches in the client, and
+they are sent verbatim, so a run's record of what it asked for is exact.
+Reasoning effort is fixed per model and never varied between conditions: a
+condition that also changed how hard the model thinks would measure two things
+at once.
 
 The scripted model exists for tests only and is never scored. A stub cannot be
 prompt-injected in any meaningful sense, so a number produced against it would

@@ -13,13 +13,16 @@ Every figure below is read out of those files.
 ## The state of this document
 
 The baseline numbers are real and reproducible with no API key. **The agent
-column is not populated, because no model credential was available in the
-environment this was built in.** The harness is complete and the command is:
+column is not populated: no model run has been made yet.** The harness is
+complete and the command is:
 
 ```
-AGENT_MODEL=anthropic ANTHROPIC_API_KEY=... python -m score.run --task triage --predictor agent
-AGENT_MODEL=ollama                          python -m score.run --task miss    --predictor agent
+python -m score.run --model gpt-oss-20b --task triage --predictor agent
+python -m score.run --model qwen3-4b    --task miss   --predictor agent
 ```
+
+Model keys are defined in `models.yml`, with the endpoint, generation parameters
+and credential variable of each.
 
 An unconfigured run raises rather than falling back to a stub, so there is no way
 for this table to fill itself with something that was never a language model.

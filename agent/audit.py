@@ -83,6 +83,7 @@ class AuditLog:
         self._append("run_started", **payload)
 
     def model_turn(self, turn: int, reply: Any) -> None:
+        usage = getattr(reply, "usage", None)
         self._append(
             "model_turn",
             turn=turn,
@@ -90,6 +91,14 @@ class AuditLog:
             answered=getattr(reply, "answer", None) is not None,
             invalid=getattr(reply, "invalid", ""),
             text_bytes=len(getattr(reply, "raw_text", "") or ""),
+            input_tokens=getattr(usage, "input_tokens", None),
+            cached_input_tokens=getattr(usage, "cached_input_tokens", None),
+            output_tokens=getattr(usage, "output_tokens", None),
+            reasoning_tokens=getattr(usage, "reasoning_tokens", None),
+            latency_s=getattr(reply, "latency_s", None),
+            served_model=getattr(reply, "served_model", ""),
+            finish_reason=getattr(reply, "finish_reason", ""),
+            attempts=getattr(reply, "attempts", 1),
         )
 
     def tool_call(self, call: Any, result: Any) -> None:

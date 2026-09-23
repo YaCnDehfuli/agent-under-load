@@ -232,8 +232,8 @@ class TriageGraph:
         tool_calls = state.get("tool_calls", 0)
 
         if reply.wants_tools:
-            if reply.raw_text:
-                messages.append(Message(role="assistant", content=reply.raw_text))
+            messages.append(Message(role="assistant", content=reply.raw_text,
+                                    tool_calls=list(reply.tool_calls)))
             for call in reply.tool_calls:
                 before = len(self._toolbox.requests)
                 result = self._toolbox.call(call.name, call.arguments)
@@ -381,6 +381,7 @@ class TriageGraph:
         self._audit.started(case_id=case.case_id, task=task,
                             model=self.model.name,
                             temperature=self.model.temperature,
+                            model_config=self.model.config,
                             controls=sorted(c.value for c in self.config.controls),
                             rule_id=case.rule.id, capture_id=case.capture.id)
 
