@@ -42,7 +42,7 @@ gpt-oss-20b:
   # of 27 generations in the smoke run and is left out.
   params:
     max_tokens: 4096
-    reasoning: {effort: low}
+    reasoning: {effort: medium}  # the model's default, fixed before any results
     usage: {include: true}
     provider: {require_parameters: true, sort: price, ignore: [Darkbloom]}
   # OpenRouter reports what each call cost and that figure is what gets recorded.
@@ -59,7 +59,7 @@ gpt-oss-120b:
   temperature: 0
   params:
     max_tokens: 4096
-    reasoning: {effort: low}
+    reasoning: {effort: medium}  # the model's default, fixed before any results
     usage: {include: true}
     provider: {require_parameters: true, sort: price}
   # fallback rates as above; hosts start around $0.03 / $0.17
@@ -97,7 +97,8 @@ deepseek-v4-pro:
   # off-peak rates: run it outside 01:00-04:00 and 06:00-10:00 UTC on weekdays,
   # when every rate doubles
   price: {input: 0.66, cached_input: 0.022, output: 1.98, source: https://www.morphllm.com/deepseek-api, checked: "2026-09-23"}
-  budget_usd: 12
+  # the smoke run measured $0.0117 a trajectory, so $14 for the full matrix
+  budget_usd: 16
 
 claude-sonnet-5:
   provider: anthropic

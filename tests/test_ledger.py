@@ -320,3 +320,30 @@ def test_run_json_lists_the_errors_it_saw(tmp_path):
     meta = _run(tmp_path, CountingModel(fail_on={"rule-case0", "rule-case1"}),
                 _cases(tmp_path))
     assert meta["errors"] == {"ModelError: provider returned 503 after 6 attempt(s)": 2}
+
+
+# -- parallel workers ------------------------------------------------------------
+
+
+def test_workers_produce_one_record_per_trajectory(tmp_path):
+    cases = _cases(tmp_path, 6)
+    meta = _run(tmp_path, CountingModel(), cases, repeats=2, workers=3)
+    records = list(RunDir(tmp_path / "run").records())
+    assert len(records) == 12
+    assert {(r["case_id"], r["repeat"]) for r in records} == \
+        {(c.case_id, n) for c in cases for n in (1, 2)}
+    assert meta["totals"]["answered"] == 12
+    for r in records:
+        lines = (tmp_path / "run" / "trajectories" / r["trajectory"]).read_text().splitlines()
+        assert json.loads(lines[-1])["digest"] == r["audit_head"]
+
+
+def test_the_cap_counts_trajectories_still_running(tmp_path):
+    # 0.0028 each. Nothing is measured at the start, so two go out unguarded;
+    # after that a third fits under 0.0085, but a fourth started alongside it
+    # would not. Ignoring the one in flight would have spent 0.0112.
+    meta = _run(tmp_path, CountingModel(), _cases(tmp_path, 5),
+                model_cap_usd=0.0085, workers=2)
+    assert meta["totals"]["trajectories"] == 3
+    assert meta["budget"]["model_spent_usd"] == pytest.approx(3 * 0.0028)
+    assert meta["budget"]["budget_stop"] is True

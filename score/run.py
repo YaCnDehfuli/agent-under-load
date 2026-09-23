@@ -17,8 +17,10 @@ import dataclasses
 import hashlib
 import json
 import sys
+import threading
 import time
 from collections import Counter
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from pathlib import Path
 
 from agent import corpus
@@ -204,6 +206,7 @@ def run_agent(
     budget_usd: float | None = None,
     model_cap_usd: float | None = None,
     store: CaptureStore | None = None,
+    workers: int = 1,
 ) -> dict:
     """Run the agent over cases × repeats into a run directory, resuming if it exists.
 
@@ -259,29 +262,23 @@ def run_agent(
           + (f"projected ${projected:.2f} more" if projected is not None
              else "no cost measured yet"), file=sys.stderr)
 
-    graph = TriageGraph(model, config, store=store or CaptureStore())
-    budget_stop = False
-    for index, (case, repeat) in enumerate(pending, start=1):
-        next_cost, spent = mean(), rundir.spent()
-        over = [f"the ${cap:.2f} {name} cap" for name, cap, total in (
-                    ("run", budget_usd, spent),
-                    (f"{model_key} model", model_cap_usd, elsewhere + spent))
-                if cap is not None and next_cost is not None and total + next_cost > cap]
-        if over:
-            budget_stop = True
-            print(f"  stopping before trajectory {index}: the next one would pass "
-                  + " and ".join(over), file=sys.stderr)
-            break
+    local = threading.local()
 
+    def trajectory(case) -> tuple:
+        # one graph per thread: a graph holds the toolbox and audit log of the
+        # run in progress, so two threads cannot share one
+        if not hasattr(local, "graph"):
+            local.graph = TriageGraph(model, config, store=store or CaptureStore())
         log = AuditLog()
-        label, rejections, tool_calls, error = None, [], 0, ""
         try:
-            result = graph.run(case, audit=log)
-            label, rejections, tool_calls = result.label, result.rejections, result.tool_calls
-            outcome = "answered" if label is not None else "unanswered"
+            result = local.graph.run(case, audit=log)
         except Exception as exc:  # recorded and retried on resume, never dropped
-            outcome, error = ERROR, f"{type(exc).__name__}: {exc}"
+            return None, [], 0, ERROR, f"{type(exc).__name__}: {exc}", log
+        outcome = "answered" if result.label is not None else "unanswered"
+        return result.label, result.rejections, result.tool_calls, outcome, "", log
 
+    def record(case, repeat, finished: tuple) -> None:
+        label, rejections, tool_calls, outcome, error, log = finished
         usage = _usage(log)
         path = rundir.trajectory_path(case.case_id, repeat)
         path.write_text(log.to_jsonl() + "\n")
@@ -296,8 +293,41 @@ def run_agent(
             "audit_head": log.head, "trajectory": path.name,
             "rule_id": case.rule.id, "capture": case.capture.id,
         })
-        if index % 10 == 0 or index == len(pending):
-            print(f"  {index}/{len(pending)} trajectories", file=sys.stderr)
+
+    def over_cap(in_flight: int) -> list[str]:
+        """Caps the next trajectory would pass, counting those still running."""
+        next_cost, spent = mean(), rundir.spent()
+        if next_cost is None:
+            return []
+        return [f"the ${cap:.2f} {name} cap" for name, cap, total in (
+                    ("run", budget_usd, spent),
+                    (f"{model_key} model", model_cap_usd, elsewhere + spent))
+                if cap is not None and total + next_cost * (in_flight + 1) > cap]
+
+    # only the main thread writes to the run directory and checks the caps
+    budget_stop = False
+    queue, running, finished_count = list(pending), {}, 0
+    with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
+        while queue or running:
+            while queue and len(running) < max(1, workers):
+                over = over_cap(len(running))
+                if over:
+                    budget_stop = True
+                    print(f"  stopping with {len(queue)} trajectories left: the next "
+                          "one would pass " + " and ".join(over), file=sys.stderr)
+                    queue.clear()
+                    break
+                case, repeat = queue.pop(0)
+                running[pool.submit(trajectory, case)] = (case, repeat)
+            if not running:
+                break
+            done, _ = wait(running, return_when=FIRST_COMPLETED)
+            for future in done:
+                case, repeat = running.pop(future)
+                record(case, repeat, future.result())
+                finished_count += 1
+                if finished_count % 10 == 0 or not (queue or running):
+                    print(f"  {finished_count}/{len(pending)} trajectories", file=sys.stderr)
 
     latest = list(rundir.latest().values())
     classes = TRIAGE_CLASSES if task == "triage" else MISS_CLASSES
@@ -357,6 +387,8 @@ def main(argv: list[str] | None = None) -> int:
                         help="agent only: runs per case")
     parser.add_argument("--budget-usd", type=float, default=None,
                         help="agent only: stop before spending more than this")
+    parser.add_argument("--workers", type=int, default=1,
+                        help="agent only: trajectories run at once")
     parser.add_argument("--run-dir", default="",
                         help="agent only: run directory, resumed if it exists")
     parser.add_argument("--out", default="", help="baseline artefact path")
@@ -379,7 +411,8 @@ def main(argv: list[str] | None = None) -> int:
                              models.registry()[args.model], run_dir, task=args.task,
                              config=AgentConfig(controls=controls),
                              repeats=args.repeats, budget_usd=args.budget_usd,
-                             model_cap_usd=models.registry()[args.model].get("budget_usd"))
+                             model_cap_usd=models.registry()[args.model].get("budget_usd"),
+                             workers=args.workers)
         except (ValueError, BudgetExceeded) as exc:
             raise SystemExit(str(exc))
         print(json.dumps({k: meta[k] for k in ("totals", "budget")}, indent=1))
