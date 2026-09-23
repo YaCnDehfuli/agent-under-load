@@ -89,6 +89,21 @@ def test_query_events_survives_a_nonsense_limit(toolbox):
     assert not toolbox.call("query_events", {"limit": "lots"}).error
 
 
+@pytest.mark.parametrize("tool", ["query_events", "count_events"])
+@pytest.mark.parametrize("arguments", [
+    {"event_id": [10, 1]},          # a list where the schema says integer
+    {"field_present": "TargetImage"},
+    {"field_contains": ["lsass"]},
+])
+def test_malformed_filters_are_errors_the_model_can_recover_from(toolbox, tool, arguments):
+    result = toolbox.call(tool, arguments)
+    assert result.error and "must " in result.error
+
+
+def test_a_numeric_string_event_id_is_still_accepted(toolbox):
+    assert toolbox.call("count_events", {"event_id": "10"}).output == "2 events match"
+
+
 def test_ingestion_mode_changes_what_a_query_returns(tmp_path, synthetic_capture):
     raws = [{"EventID": 1, "Channel": "Sysmon", "CommandLine": "whoami",
              "Image": "C:\\x.exe", "Message": "Process Create:\r\nrendered blob"}]

@@ -304,9 +304,33 @@ CONTRACTS: tuple[ToolContract, ...] = (
 # ---------------------------------------------------------------------------
 
 
+def _filters(arguments: dict) -> dict[str, Any]:
+    """The event filter, checked against its declared types.
+
+    A model that passes a list where the schema says integer gets told so as the
+    tool's result, the same as any other malformed call, instead of the case
+    dying on a TypeError.
+    """
+    event_id = arguments.get("event_id")
+    if event_id is not None:
+        try:
+            event_id = int(event_id)
+        except (TypeError, ValueError):
+            raise ToolError(f"event_id must be a single integer, got {event_id!r}")
+    field_present = arguments.get("field_present")
+    if field_present is not None and not isinstance(field_present, list):
+        raise ToolError(f"field_present must be a list of field names, got {field_present!r}")
+    field_contains = arguments.get("field_contains")
+    if field_contains is not None and not isinstance(field_contains, dict):
+        raise ToolError("field_contains must map field names to text, "
+                        f"got {field_contains!r}")
+    return {"event_id": event_id, "field_present": field_present,
+            "field_contains": field_contains}
+
+
 def _matches(event: Event, *, event_id=None, field_present=None,
              field_contains=None) -> bool:
-    if event_id is not None and event.event_id != int(event_id):
+    if event_id is not None and event.event_id != event_id:
         return False
     for field in field_present or ():
         if not event.present(str(field)):
@@ -435,13 +459,9 @@ class Toolbox:
                           returned=len(histogram), matched=len(events))
 
     def _count_events(self, arguments: dict) -> ToolResult:
+        filters = _filters(arguments)
         events = self.store.load(self.capture)
-        count = sum(1 for e in events if _matches(
-            e,
-            event_id=arguments.get("event_id"),
-            field_present=arguments.get("field_present"),
-            field_contains=arguments.get("field_contains"),
-        ))
+        count = sum(1 for e in events if _matches(e, **filters))
         return ToolResult(name=COUNT_EVENTS.name,
                           output=f"{count} events match",
                           provenance_ceiling=COUNT_EVENTS.provenance_ceiling,
@@ -454,14 +474,12 @@ class Toolbox:
         except (TypeError, ValueError):
             limit = DEFAULT_QUERY_LIMIT
 
+        filters = _filters(arguments)
         events = self.store.load(self.capture)
         hits: list[Event] = []
         matched = 0
         for event in events:
-            if _matches(event,
-                        event_id=arguments.get("event_id"),
-                        field_present=arguments.get("field_present"),
-                        field_contains=arguments.get("field_contains")):
+            if _matches(event, **filters):
                 matched += 1
                 if len(hits) < limit:
                     hits.append(event)
