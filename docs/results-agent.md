@@ -143,7 +143,7 @@ captures. Cases are ordered by capture so each archive is parsed once.
   17 captures. A macro-F1 difference of a few points is not resolvable here.
 - **Two labs, one technique.** Every true positive is T1003.001. The agent is not
   shown to generalise to other techniques, because nothing here tests that.
-- **Fire counts on the false-positive side are per-rule, not per-pair.** The
-  sibling publishes a rule's total fires across the benign corpus rather than
-  per capture, so an FP case's `fire_count` is that total. It is an input a real
-  alert would carry more precisely.
+- **The alert's match count comes from this repo's matcher.** Both labels are
+  recounted per capture by `python -m score.fire_counts` with the same
+  approximate matcher, into `benchmark/fire-counts.json`. Where it disagrees with
+  the sibling's labelling, the file lists the case under `no_match`.

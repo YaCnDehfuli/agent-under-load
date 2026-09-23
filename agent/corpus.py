@@ -41,6 +41,8 @@ from agent.pseudonymise import capture_handle
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 CORPUS_ROOT = REPO_ROOT / "corpus"
+#: Per-case match counts, recomputed by `python -m score.fire_counts`.
+FIRE_COUNTS = REPO_ROOT / "benchmark" / "fire-counts.json"
 SECURITY_DATASETS = CORPUS_ROOT / "security-datasets"
 SIGMA = CORPUS_ROOT / "sigma"
 EXTRACT_ROOT = CORPUS_ROOT / "extracted"
@@ -129,15 +131,20 @@ class Absence:
 class TriageCase:
     """A detection fired. Is it a true positive?
 
-    `fire_count` is the number of events the rule matched. It stays in the
-    inputs because a real alert carries it, and it is present on both sides of
-    the label, so it cannot act as a shortcut for one class.
+    `fire_count` is the number of events the rule matched in this capture, as a
+    real alert would carry it. It comes from `benchmark/fire-counts.json`, and is
+    None until that file has been generated.
+
+    It used to be taken from the sibling's results, which publish a true
+    positive's count per capture but a false positive's only as the rule's total
+    across the benign corpus. That difference alone separated 75 of 80 cases;
+    see docs/decisions.md.
     """
 
     case_id: str
     rule: RuleRef
     capture: CaptureRef
-    fire_count: int
+    fire_count: int | None
     truth: TriageTruth
 
     def inputs(self) -> dict:
@@ -221,6 +228,18 @@ def _detection_file(name: str) -> Path:
 def load_results() -> dict:
     with open(_detection_file("benchmark/results.json")) as fh:
         return json.load(fh)
+
+
+def load_fire_counts() -> dict[str, int]:
+    if not FIRE_COUNTS.exists():
+        return {}
+    return json.loads(FIRE_COUNTS.read_text())["counts"]
+
+
+def fire_counts_digest() -> str | None:
+    if not FIRE_COUNTS.exists():
+        return None
+    return hashlib.sha256(FIRE_COUNTS.read_bytes()).hexdigest()
 
 
 def manifest_digest() -> str:
@@ -338,6 +357,7 @@ def benign_captures(
 def evaluation_set(results: dict | None = None) -> EvaluationSet:
     """Build both scored sets, with an explicit absence for anything missing."""
     results = results or load_results()
+    counts = load_fire_counts()
     rule_index, absences = rules(results)
     campaigns, campaign_absences = campaign_captures(results)
     benign, benign_absences = benign_captures(results)
@@ -363,7 +383,8 @@ def evaluation_set(results: dict | None = None) -> EvaluationSet:
                 triage.append(TriageCase(
                     case_id=f"tp:{rule_id}@{capture_id}",
                     rule=rule, capture=capture,
-                    fire_count=info["matched"], truth="true_positive",
+                    fire_count=counts.get(f"tp:{rule_id}@{capture_id}"),
+                    truth="true_positive",
                 ))
             miss.append(MissCase(
                 case_id=f"miss:{rule_id}@{capture_id}",
@@ -386,9 +407,8 @@ def evaluation_set(results: dict | None = None) -> EvaluationSet:
             triage.append(TriageCase(
                 case_id=f"fp:{rule_id}@{capture_id}",
                 rule=rule, capture=capture,
-                # per-capture fire counts are not published per pair, so the
-                # alert carries the rule's total across the benign corpus
-                fire_count=info["fires"], truth="false_positive",
+                fire_count=counts.get(f"fp:{rule_id}@{capture_id}"),
+                truth="false_positive",
             ))
 
     return EvaluationSet(triage=triage, miss=miss, absences=absences)

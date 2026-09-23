@@ -276,6 +276,19 @@ def _and_spine(node: Any) -> list[Requirement]:
 # ---------------------------------------------------------------------------
 
 
+def count_matches(analysis: RuleAnalysis, events) -> int:
+    """Events that pass the prefilter and satisfy every requirement.
+
+    The same rule MissBaseline counts by. It follows the AND spine only, so it
+    is an approximation of the rule, not a Sigma implementation.
+    """
+    requirements = analysis.detection_requirements
+    if not requirements:
+        return 0
+    return sum(1 for event in events if analysis.prefilters(event)
+               and all(r.satisfied_by(event) for r in requirements))
+
+
 class MissBaseline:
     """Re-derives the four-way label from the rule and the telemetry."""
 

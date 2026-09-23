@@ -303,3 +303,25 @@ So the fix is two-sided, and both halves are load-bearing:
 Assets still come from the capture and never from the request, which was always
 the mechanism. What changed is that the scope set and the agent's vocabulary are
 now the same namespace, so the boundary can be strict without being vacuous.
+
+## The alert's match count was a label in disguise
+
+Every triage alert shows how many events the rule matched. For a true positive
+that number came from the sibling's per-capture results: 1 to 3, one outlier at
+19. For a false positive the sibling publishes nothing per capture, only the
+rule's total over the whole benign corpus, so the alert carried that: 2 to 232.
+A single cut, "6 or more means false positive", gets 75 of the 80 cases right
+without reading an event.
+
+The inputs looked symmetric (both labels had a count), which is why the leakage
+test that checks input shape passed. It was only visible by comparing the
+values per label, which is now part of generating them.
+
+The count is now recomputed for both labels, per capture, by the same matcher
+(`python -m score.fire_counts`), and committed as `benchmark/fire-counts.json`.
+The script prints the per-label distribution and the best single threshold, and
+the file's digest is part of every agent run's identity, so a run can't resume
+under a different set of counts. Agent runs refuse to start until the file
+exists. The heuristic baseline never read the field, so its 0.60 is unaffected;
+no agent result had been produced when this was found.
+
