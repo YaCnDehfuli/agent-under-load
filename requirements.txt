@@ -17,6 +17,9 @@ PyYAML==6.0.3
 pySigma==1.4.0
 pysigma-pipeline-sysmon==2.0.0
 pysigma-pipeline-windows==2.0.0
+# pySigma leaves this open. 3.3.3 breaks its condition parsing, and
+# analyse_rule records that as a parse error rather than raising
+pyparsing==3.3.2
 
 # hosted model path (default). optional at runtime: an unconfigured run fails
 # loudly rather than quietly producing numbers
