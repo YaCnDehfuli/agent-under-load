@@ -24,6 +24,13 @@ python -m score.run --model qwen3-4b    --task miss   --predictor agent
 Model keys are defined in `models.yml`, with the endpoint, generation parameters
 and credential variable of each.
 
+Running it: keys live in a `.env` file next to the repo (ignored by git) and are
+loaded into the shell with `set -a; source .env; set +a`. Each run writes a
+directory under `runs/` and resumes it if run again. Spending is capped twice:
+`--budget-usd` for the run, and the model's `budget_usd` in `models.yml` across
+every run of that model. DeepSeek runs go outside its peak hours (01:00-04:00
+and 06:00-10:00 UTC on weekdays), when its rates double.
+
 An unconfigured run raises rather than falling back to a stub, so there is no way
 for this table to fill itself with something that was never a language model.
 Nothing here is an estimate of what the agent would score.

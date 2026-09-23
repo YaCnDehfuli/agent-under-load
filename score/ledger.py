@@ -59,6 +59,22 @@ def check_budget(budget: float | None, spent: float, mean: float | None,
     return remaining
 
 
+def _model_dirs(runs_root: Path, model_key: str) -> list[RunDir]:
+    return [RunDir(meta.parent) for meta in sorted(Path(runs_root).glob("*/run.json"))
+            if json.loads(meta.read_text()).get("model_key") == model_key]
+
+
+def model_spend(runs_root: Path, model_key: str) -> float:
+    """What a model has cost across every run directory under runs_root."""
+    return sum(d.spent() for d in _model_dirs(runs_root, model_key))
+
+
+def model_mean_cost(runs_root: Path, model_key: str) -> float | None:
+    """Mean cost of a trajectory for this model across all its run directories."""
+    costs = [c for d in _model_dirs(runs_root, model_key) for c in d.costs()]
+    return sum(costs) / len(costs) if costs else None
+
+
 class RunDir:
     def __init__(self, path: Path):
         self.path = Path(path)
@@ -87,9 +103,12 @@ class RunDir:
     def spent(self) -> float:
         return sum(r["cost_usd"] or 0.0 for r in self.records())
 
+    def costs(self) -> list[float]:
+        return [r["cost_usd"] for r in self.records()
+                if r["outcome"] != ERROR and r["cost_usd"] is not None]
+
     def mean_cost(self) -> float | None:
-        costs = [r["cost_usd"] for r in self.records()
-                 if r["outcome"] != ERROR and r["cost_usd"] is not None]
+        costs = self.costs()
         return sum(costs) / len(costs) if costs else None
 
     def append(self, record: dict) -> None:

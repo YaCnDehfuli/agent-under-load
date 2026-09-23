@@ -25,7 +25,15 @@ from agent.audit import AuditLog
 from agent.baseline import MissBaseline, TriageBaseline
 from agent.graph import ALL_CONTROLS, AgentConfig, Control, TriageGraph, system_prompt
 from agent.tools import CaptureStore
-from score.ledger import ERROR, BudgetExceeded, RunDir, check_budget, cost_usd
+from score.ledger import (
+    ERROR,
+    BudgetExceeded,
+    RunDir,
+    check_budget,
+    cost_usd,
+    model_mean_cost,
+    model_spend,
+)
 from score.metrics import Prediction, Report, score
 
 RUNS = Path(__file__).resolve().parent.parent / "runs"
@@ -191,13 +199,18 @@ def run_agent(
     config: AgentConfig | None = None,
     repeats: int = 1,
     budget_usd: float | None = None,
+    model_cap_usd: float | None = None,
     store: CaptureStore | None = None,
 ) -> dict:
-    """Run the agent over cases × repeats into a run directory, resuming if it exists."""
+    """Run the agent over cases × repeats into a run directory, resuming if it exists.
+
+    Two caps: `budget_usd` for this run directory, and `model_cap_usd` for
+    everything this model has cost across the run directories next to it.
+    """
     config = config or AgentConfig()
     price = model_entry.get("price")
-    if budget_usd is not None and cost_usd({"input_tokens": 0, "output_tokens": 0},
-                                           price) is None:
+    capped = budget_usd is not None or model_cap_usd is not None
+    if capped and cost_usd({"input_tokens": 0, "output_tokens": 0}, price) is None:
         raise ValueError(f"{model_key} has no price in models.yml, so a spending "
                          "cap cannot be enforced")
 
@@ -228,7 +241,17 @@ def run_agent(
     done = rundir.completed()
     pending = [(case, repeat) for repeat in range(1, repeats + 1) for case in cases
                if (case.case_id, repeat) not in done]
-    projected = check_budget(budget_usd, rundir.spent(), rundir.mean_cost(), len(pending))
+    # what this model cost in other run directories; constant for this run
+    elsewhere = model_spend(rundir.path.parent, model_key) - rundir.spent()
+
+    def mean() -> float | None:
+        # this run's own mean once it has one; until then the model's mean from
+        # its other runs, so a fresh run directory can still be projected
+        own = rundir.mean_cost()
+        return own if own is not None else model_mean_cost(rundir.path.parent, model_key)
+
+    projected = check_budget(budget_usd, rundir.spent(), mean(), len(pending))
+    check_budget(model_cap_usd, elsewhere + rundir.spent(), mean(), len(pending))
     print(f"  {len(pending)} trajectories to run, {len(done)} already done; "
           + (f"projected ${projected:.2f} more" if projected is not None
              else "no cost measured yet"), file=sys.stderr)
@@ -236,12 +259,15 @@ def run_agent(
     graph = TriageGraph(model, config, store=store or CaptureStore())
     budget_stop = False
     for index, (case, repeat) in enumerate(pending, start=1):
-        mean = rundir.mean_cost()
-        if budget_usd is not None and mean is not None \
-                and rundir.spent() + mean > budget_usd:
+        next_cost, spent = mean(), rundir.spent()
+        over = [f"the ${cap:.2f} {name} cap" for name, cap, total in (
+                    ("run", budget_usd, spent),
+                    (f"{model_key} model", model_cap_usd, elsewhere + spent))
+                if cap is not None and next_cost is not None and total + next_cost > cap]
+        if over:
             budget_stop = True
-            print(f"  stopping before trajectory {index}: the next one would "
-                  f"pass the ${budget_usd:.2f} cap", file=sys.stderr)
+            print(f"  stopping before trajectory {index}: the next one would pass "
+                  + " and ".join(over), file=sys.stderr)
             break
 
         log = AuditLog()
@@ -281,7 +307,7 @@ def run_agent(
     completed = rundir.completed()
     remaining = sum((case.case_id, repeat) not in completed
                     for case in cases for repeat in range(1, repeats + 1))
-    mean = rundir.mean_cost()
+    per_trajectory = mean()
     meta.update({
         "updated": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
         "repeats": max(repeats, meta.get("repeats", 0)),
@@ -296,9 +322,11 @@ def run_agent(
         "budget": {
             "budget_usd": budget_usd,
             "actual_cost_usd": round(spent, 6),
-            "projected_remaining_cost_usd": (round(mean * remaining, 6)
-                                             if mean is not None else None),
+            "projected_remaining_cost_usd": (round(per_trajectory * remaining, 6)
+                                             if per_trajectory is not None else None),
             "budget_stop": budget_stop,
+            "model_cap_usd": model_cap_usd,
+            "model_spent_usd": round(elsewhere + spent, 6),
             "pricing_source": (price or {}).get("source"),
         },
         "reports": reports,
@@ -340,7 +368,8 @@ def main(argv: list[str] | None = None) -> int:
             meta = run_agent(_cases(args.task, args.limit), model, args.model,
                              models.registry()[args.model], run_dir, task=args.task,
                              config=AgentConfig(controls=controls),
-                             repeats=args.repeats, budget_usd=args.budget_usd)
+                             repeats=args.repeats, budget_usd=args.budget_usd,
+                             model_cap_usd=models.registry()[args.model].get("budget_usd"))
         except (ValueError, BudgetExceeded) as exc:
             raise SystemExit(str(exc))
         print(json.dumps({k: meta[k] for k in ("totals", "budget")}, indent=1))

@@ -10,3 +10,6 @@ corpus/
 
 # run artefacts. committed results live in benchmark/, not here
 runs/
+
+# API keys; never committed
+.env

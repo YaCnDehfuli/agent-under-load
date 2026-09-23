@@ -14,7 +14,7 @@ import pytest
 from agent.contracts import EvidenceCitation, TriageVerdict, Verdict
 from agent.models import ModelError, ModelReply, ScriptedModel, ToolCall, Usage
 from score import run as score_run
-from score.ledger import BudgetExceeded, RunDir, check_budget, cost_usd
+from score.ledger import BudgetExceeded, RunDir, check_budget, cost_usd, model_spend
 from score.run import run_agent
 from tests.support import FakeStore, synthetic_triage_case, write_rule
 
@@ -235,3 +235,61 @@ def test_the_projection_is_the_measured_mean_times_what_is_left():
     assert check_budget(5.0, 1.0, 0.25, 8) == pytest.approx(2.0)
     with pytest.raises(BudgetExceeded):
         check_budget(5.0, 1.0, 0.25, 20)
+
+
+# -- the per-model cap --------------------------------------------------------------
+
+
+def _run_in(tmp_path, name, model, cases, key="scripted", **kwargs):
+    return run_agent(cases, model, key, ENTRY, run_dir=tmp_path / name,
+                     store=FakeStore(), **kwargs)
+
+
+def test_spending_in_other_run_directories_counts_against_the_model_cap(tmp_path):
+    # 0.0028 a trajectory; two already spent elsewhere leave room for one more
+    _run_in(tmp_path, "smoke", CountingModel(), _cases(tmp_path, 2))
+    assert model_spend(tmp_path, "scripted") == pytest.approx(2 * 0.0028)
+
+    meta = _run_in(tmp_path, "matrix", CountingModel(), _cases(tmp_path, 1),
+                   model_cap_usd=0.0085)
+    assert meta["budget"]["model_spent_usd"] == pytest.approx(3 * 0.0028)
+
+    with pytest.raises(BudgetExceeded):
+        _run_in(tmp_path, "more", CountingModel(), _cases(tmp_path, 3),
+                model_cap_usd=0.0085)
+
+
+def test_another_models_spending_does_not_count(tmp_path):
+    _run_in(tmp_path, "other", CountingModel(), _cases(tmp_path, 3), key="other")
+    meta = _run_in(tmp_path, "mine", CountingModel(), _cases(tmp_path, 1),
+                   model_cap_usd=0.003)
+    assert meta["totals"]["trajectories"] == 1
+    assert meta["budget"]["model_spent_usd"] == pytest.approx(0.0028)
+
+
+def test_a_model_cap_needs_prices(tmp_path):
+    with pytest.raises(ValueError, match="no price"):
+        run_agent(_cases(tmp_path, 1), CountingModel(), "scripted", UNPRICED,
+                  run_dir=tmp_path / "run", store=FakeStore(), model_cap_usd=1.0)
+
+
+# -- the committed registry --------------------------------------------------------
+
+
+def test_every_paid_model_has_a_price_and_a_cap():
+    from agent.models import registry
+
+    for key, entry in registry().items():
+        if entry["provider"] in ("ollama", "anthropic"):
+            continue
+        price = entry["price"]
+        assert price["input"] and price["output"] and price["source"], key
+        assert entry["budget_usd"] > 0, key
+
+
+def test_registry_entries_survive_the_trip_through_run_json():
+    """Resume compares the entry with the copy in run.json, so it must round-trip."""
+    from agent.models import registry
+
+    for key, entry in registry().items():
+        assert json.loads(json.dumps(entry, default=str)) == entry, key
