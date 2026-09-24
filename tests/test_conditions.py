@@ -12,6 +12,7 @@ from agent import corpus
 from agent.baseline import ConstantBaseline, RulePriorBaseline
 from agent.contracts import (
     EvidenceCitation,
+    ForcedTriageVerdict,
     TriageVerdict,
     UncitedTriageVerdict,
     Verdict,
@@ -25,7 +26,7 @@ from agent.graph import (
     TriageGraph,
     system_prompt,
 )
-from agent.models import ModelReply, ScriptedModel, ToolCall
+from agent.models import ModelReply, ScriptedModel, ToolCall, _schema_of
 from agent.pseudonymise import capture_handle
 from agent.tools import CaptureStore
 from score.pairing import donors
@@ -140,6 +141,51 @@ def test_the_uncited_schema_is_only_the_citation_rule_relaxed():
         TriageVerdict(verdict="true_positive", confidence=0.5, rationale="x")
     with pytest.raises(ValueError):  # the rest of the contract still holds
         UncitedTriageVerdict(verdict="maybe", confidence=0.5, rationale="x")
+
+
+# -- the forced-choice probe -------------------------------------------------------
+
+
+def test_the_forced_probe_has_no_tools_and_no_inconclusive(tmp_path):
+    model = Recording([ModelReply(answer=ForcedTriageVerdict(
+        verdict=Verdict.FALSE_POSITIVE, confidence=0.6, rationale="x"))])
+    graph = TriageGraph(model, AgentConfig(condition=Condition.ALERT_ONLY_FORCED),
+                        store=FakeStore())
+    result = graph.run(synthetic_triage_case(write_rule(tmp_path)))
+    assert model.tools[0] == []
+    assert model.schemas[0] is ForcedTriageVerdict
+    assert result.label == "false_positive"
+
+
+def test_the_forced_schema_offers_only_the_two_labels():
+    offered = _schema_of(ForcedTriageVerdict)["properties"]["verdict"]["enum"]
+    assert sorted(offered) == ["false_positive", "true_positive"]
+    assert ForcedTriageVerdict(verdict="true_positive", confidence=0.5, rationale="x")
+    with pytest.raises(ValueError):
+        ForcedTriageVerdict(verdict="inconclusive", confidence=0.5, rationale="x")
+
+
+def test_an_inconclusive_in_the_forced_probe_is_rejected_and_repaired(tmp_path):
+    bad = ModelReply(invalid="verdict: input should be 'true_positive' or "
+                             "'false_positive'")
+    good = ModelReply(answer=ForcedTriageVerdict(
+        verdict=Verdict.TRUE_POSITIVE, confidence=0.5, rationale="x"))
+    graph = TriageGraph(ScriptedModel([bad, good]),
+                        AgentConfig(condition=Condition.ALERT_ONLY_FORCED),
+                        store=FakeStore())
+    result = graph.run(synthetic_triage_case(write_rule(tmp_path)))
+    assert result.label == "true_positive"
+    assert result.rejections
+
+
+def test_the_forced_prompt_differs_from_alert_only_in_one_line():
+    plain = system_prompt("triage_verdict",
+                          AgentConfig(condition=Condition.ALERT_ONLY)).splitlines()
+    forced = system_prompt("triage_verdict",
+                           AgentConfig(condition=Condition.ALERT_ONLY_FORCED)).splitlines()
+    changed = [b for a, b in zip(plain, forced) if a != b]
+    assert len(plain) == len(forced) and len(changed) == 1
+    assert "Inconclusive is not available" in changed[0]
 
 
 # -- mismatched evidence -----------------------------------------------------------

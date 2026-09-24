@@ -31,6 +31,7 @@ from agent import corpus
 from agent.audit import AuditLog
 from agent.authz import Capability
 from agent.contracts import (
+    ForcedTriageVerdict,
     MissVerdict,
     TASK_SCHEMAS,
     TriageResult,
@@ -72,6 +73,9 @@ class Condition(str, enum.Enum):
     REFERENCE = "reference"
     #: No tools: the alert and nothing else.
     ALERT_ONLY = "alert-only"
+    #: The alert and nothing else, with `inconclusive` not allowed: a probe of
+    #: what the model makes of the rule alone, not one of the evidence cells.
+    ALERT_ONLY_FORCED = "alert-only-forced"
     #: The rule text, but none of the capture's events.
     RULE_ONLY = "rule-only"
     #: All tools, with the events of a capture that has the other label.
@@ -85,12 +89,14 @@ class Condition(str, enum.Enum):
 
     @property
     def sees_events(self) -> bool:
-        return self not in (Condition.ALERT_ONLY, Condition.RULE_ONLY)
+        return self not in (Condition.ALERT_ONLY, Condition.ALERT_ONLY_FORCED,
+                            Condition.RULE_ONLY)
 
 
 #: Tools each condition may call; None means all of them.
 CONDITION_TOOLS: dict[Condition, frozenset[str] | None] = {
     Condition.ALERT_ONLY: frozenset(),
+    Condition.ALERT_ONLY_FORCED: frozenset(),
     Condition.RULE_ONLY: frozenset({"lookup_rule", "lookup_attack_technique"}),
 }
 
@@ -182,6 +188,10 @@ _WITHOUT_EVENTS = {
     Condition.ALERT_ONLY: (
         "No tools are available in this session. Decide from the alert as given.",
         "There are no events to cite, so leave the evidence empty."),
+    Condition.ALERT_ONLY_FORCED: (
+        "No tools are available in this session. Decide from the alert as given.",
+        "There are no events to cite, so leave the evidence empty. Inconclusive "
+        "is not available in this session; give your best judgement."),
     Condition.RULE_ONLY: (
         "The capture's events are not available in this session. Use the tools "
         "to read the rule, and decide from the rule and the alert.",
@@ -290,7 +300,9 @@ class TriageGraph:
     def _investigate(self, state: TriageState) -> dict[str, Any]:
         schema = TASK_SCHEMAS[state["task"]]
         if schema is TriageVerdict and not self.config.condition.sees_events:
-            schema = UncitedTriageVerdict
+            schema = (ForcedTriageVerdict
+                      if self.config.condition is Condition.ALERT_ONLY_FORCED
+                      else UncitedTriageVerdict)
         reply = self.model.respond(
             system=state["system"],
             messages=state["messages"],

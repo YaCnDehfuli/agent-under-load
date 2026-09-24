@@ -91,6 +91,18 @@ class UncitedTriageVerdict(TriageVerdict):
         return self
 
 
+class ForcedTriageVerdict(UncitedTriageVerdict):
+    """An uncited verdict with `inconclusive` taken away.
+
+    Only for the alert-only-forced probe. Given nothing but the alert, models
+    mostly abstain, which says they won't guess but not what they would guess;
+    this asks for the guess. It changes the answer space, so it sits outside
+    the evidence comparison.
+    """
+
+    verdict: Literal[Verdict.TRUE_POSITIVE, Verdict.FALSE_POSITIVE]
+
+
 class MissVerdict(BaseModel):
     """Why a rule did not fire on a capture."""
 
@@ -153,7 +165,7 @@ class TriageResult(BaseModel):
     case_id: str
     # both listed: stored as TriageVerdict alone, an uncited verdict would be
     # revalidated against the citation rule it exists to drop
-    verdict: UncitedTriageVerdict | TriageVerdict | None = None
+    verdict: ForcedTriageVerdict | UncitedTriageVerdict | TriageVerdict | None = None
     miss_verdict: MissVerdict | None = None
     requested_actions: list[ActionRequest] = Field(default_factory=list)
     #: Populated when the contract or the citation check rejected the model's

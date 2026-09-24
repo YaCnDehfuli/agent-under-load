@@ -361,7 +361,7 @@ answer `inconclusive`, which would measure the contract rather than the model.
 The two conditions without telemetry use the same verdict schema minus the
 citation rule (`UncitedTriageVerdict`).
 
-In a mismatched run the alert keeps its rule, severity and match count; the
+In a mismatched run the alert keeps its rule and severity; the
 capture handle and every tool result come from the donor, and citations are
 checked against the donor. The label is constant per capture, so donors are
 paired at capture level, from a seeded shuffle handed out least-used first,
@@ -370,4 +370,14 @@ Each record keeps the donor, its label and whether the alert's rule matches
 anything in it; the donor's label never reaches the model. Same-label swaps are
 the control for cross-label ones: a verdict that flips when the evidence is
 wrong but points the same way is reacting to the swap, not to the content.
+
+One more condition sits outside that comparison. In the first smoke run, GPT-OSS
+120B answered `inconclusive` to 9 of 10 alerts it was given without events. That
+is a reasonable answer and it is reported as an abstention rate, but it leaves
+open what the model would have guessed from the rule alone. `alert-only-forced`
+asks for that guess: no tools, as in alert-only, and a schema
+(`ForcedTriageVerdict`) with `inconclusive` removed, with one sentence of the
+prompt saying so. Because it changes the answer space as well as the evidence,
+it is read as a probe of the model's prior, next to the rule-prior baseline,
+and never as one of the evidence cells.
 
