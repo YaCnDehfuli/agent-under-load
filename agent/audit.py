@@ -118,6 +118,8 @@ class AuditLog:
             matched=result.matched,
             returned=result.returned,
             error=result.error,
+            **({"repeat_of": result.repeat_of}
+               if getattr(result, "repeat_of", None) is not None else {}),
         )
 
     def citation_rejected(self, problems: list[str]) -> None:

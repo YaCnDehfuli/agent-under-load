@@ -22,6 +22,7 @@ than others.
 from __future__ import annotations
 
 import dataclasses
+import json
 from collections import Counter, OrderedDict
 from typing import Any, Callable, Iterable
 
@@ -39,7 +40,7 @@ from agent.pseudonymise import HOST_PSEUDONYM, Pseudonymiser, capture_handle
 #: is a memory ceiling rather than a performance knob.
 CACHE_SIZE = 2
 
-MAX_QUERY_LIMIT = 20
+MAX_QUERY_LIMIT = 10
 DEFAULT_QUERY_LIMIT = 5
 
 
@@ -86,6 +87,8 @@ class ToolResult:
     returned: int = 0
     matched: int = 0
     error: str = ""
+    #: The earlier call in this session this one repeated word for word.
+    repeat_of: int | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -346,6 +349,11 @@ def _matches(event: Event, *, event_id=None, field_present=None,
     return True
 
 
+#: Read-only tools whose answer can't change within a session, so a repeated
+#: call is answered with a pointer to the first one instead of the same output.
+REPEATABLE = frozenset({"query_events", "count_events", "describe_capture"})
+
+
 class Toolbox:
     """The tools bound to one case.
 
@@ -371,6 +379,8 @@ class Toolbox:
         self.allowed = ({c.name for c in CONTRACTS} if allowed is None
                         else set(allowed))
         self.calls: list[ToolResult] = []
+        #: (tool, arguments) -> the 1-based number of the call that first ran it
+        self._seen: dict[tuple[str, str], int] = {}
         #: The grant this session holds. Minted outside, never widened inside.
         self.capability = capability
         self.authz_enforced = authz_enforced
@@ -412,6 +422,20 @@ class Toolbox:
                                 error=f"no such tool: {name}")
             self.calls.append(result)
             return result
+        key = (name, json.dumps(arguments or {}, sort_keys=True, default=str))
+        first = self._seen.get(key) if name in REPEATABLE else None
+        if first is not None:
+            # the earlier output is already in the transcript; sending it again
+            # only makes every later turn more expensive
+            earlier = self.calls[first - 1]
+            result = ToolResult(
+                name=name,
+                output=f"identical to call {first} above, which already returned "
+                       "this result; nothing new",
+                provenance_ceiling=Provenance.OS,
+                matched=earlier.matched, repeat_of=first)
+            self.calls.append(result)
+            return result
         try:
             result = handler(arguments or {})
         except ToolError as exc:
@@ -419,6 +443,8 @@ class Toolbox:
                                 provenance_ceiling=self.contract(name).provenance_ceiling,
                                 error=str(exc))
         self.calls.append(result)
+        if name in REPEATABLE and not result.error:
+            self._seen[key] = len(self.calls)
         return result
 
     # -- handlers ---------------------------------------------------------

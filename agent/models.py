@@ -328,7 +328,7 @@ def _to_anthropic(messages: Sequence[Message]) -> list[dict]:
 #: Worth retrying: rate limits and transient server failures. Anything else in
 #: the 4xx range is a malformed request, and retrying it would only spend money.
 RETRYABLE = frozenset({429, 500, 502, 503, 504})
-MAX_ATTEMPTS = 6
+MAX_ATTEMPTS = 8
 MAX_BACKOFF_S = 60.0
 #: Extra tries when a routed host fails mid-generation behind a 200 response.
 HOST_ERROR_RETRIES = 2

@@ -209,9 +209,10 @@ def test_a_bad_request_is_not_retried():
 
 def test_persistent_server_errors_raise_after_the_last_attempt():
     sleeps: list[float] = []
-    with pytest.raises(ModelError, match="503 after 6 attempt"):
-        _respond(_model([(503, {}, {})] * 6, sleeps=sleeps))
-    assert sleeps == [1.0, 2.0, 4.0, 8.0, 16.0]
+    with pytest.raises(ModelError, match="503 after 8 attempt"):
+        _respond(_model([(503, {}, {})] * 8, sleeps=sleeps))
+    # doubling, capped: long enough for an upstream rate limit to clear
+    assert sleeps == [1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 60.0]
 
 
 # -- registry --------------------------------------------------------------

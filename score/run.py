@@ -175,12 +175,13 @@ NO_EVIDENCE_BASELINES = {"constant-tp": "true_positive",
 #: was started with: mixing two configurations inside one run would make its
 #: numbers describe neither.
 IDENTITY = ("task", "model_key", "model_entry", "controls", "condition", "seed",
-            "pairing_sha256", "system_prompt_sha256", "case_prompt_version")
+            "pairing_sha256", "system_prompt_sha256", "harness_version")
 
 
-#: Bumped when the alert header the model reads changes shape. 2: the match
-#: count line is gone.
-CASE_PROMPT_VERSION = 2
+#: Bumped when what the model reads changes outside the system prompt: the alert
+#: header or the tool output. 2: no match count in the alert. 3: queries return
+#: at most 10 events, and a repeated query points back at the first one.
+HARNESS_VERSION = 3
 
 
 def _git_revision() -> dict:
@@ -270,7 +271,7 @@ def run_agent(
         "seed": seed if condition.mismatched else None,
         "pairing_sha256": pairing_digest(pairing) if pairing else None,
         "system_prompt_sha256": hashlib.sha256(system.encode()).hexdigest(),
-        "case_prompt_version": CASE_PROMPT_VERSION,
+        "harness_version": HARNESS_VERSION,
     }
     rundir = RunDir(run_dir)
     meta = rundir.read_meta()

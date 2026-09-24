@@ -12,7 +12,9 @@ import pytest
 
 from agent.events import Ingestion
 from agent.provenance import Provenance
-from agent.tools import CONTRACTS, Toolbox
+from agent.audit import AuditLog
+from agent.models import ToolCall
+from agent.tools import CONTRACTS, MAX_QUERY_LIMIT, Toolbox
 from tests.support import FakeStore, write_rule
 
 
@@ -80,9 +82,13 @@ def test_query_events_returns_content_and_is_tainted(toolbox):
     assert result.provenance_ceiling is Provenance.WRITABLE
 
 
-def test_query_events_caps_the_limit(toolbox):
-    result = toolbox.call("query_events", {"limit": 10_000})
-    assert result.returned <= 20
+def test_query_events_caps_the_limit(tmp_path, synthetic_capture):
+    raws = [{"EventID": 1, "Channel": "Sysmon", "Image": f"C:\\{i}.exe"}
+            for i in range(30)]
+    box = Toolbox(rule=write_rule(tmp_path), capture=synthetic_capture,
+                  store=FakeStore(raws))
+    result = box.call("query_events", {"limit": 10_000})
+    assert (result.returned, result.matched) == (MAX_QUERY_LIMIT, 30) == (10, 30)
 
 
 def test_query_events_survives_a_nonsense_limit(toolbox):
@@ -136,6 +142,48 @@ def test_every_call_is_recorded_for_the_audit(toolbox):
     toolbox.call("count_events", {})
     toolbox.call("query_events", {})
     assert [c.name for c in toolbox.calls] == ["count_events", "query_events"]
+
+
+def test_a_repeated_query_points_back_instead_of_returning_it_again(toolbox):
+    first = toolbox.call("query_events", {"event_id": 10, "limit": 5})
+    again = toolbox.call("query_events", {"limit": 5, "event_id": 10})
+    assert first.returned and first.repeat_of is None
+    assert again.repeat_of == 1 and again.returned == 0
+    assert again.matched == first.matched
+    assert "identical to call 1" in again.output
+    assert len(again.output) < 100
+
+
+def test_different_arguments_or_tools_are_not_repeats(toolbox):
+    toolbox.call("query_events", {"event_id": 10})
+    assert toolbox.call("query_events", {"event_id": 1}).repeat_of is None
+    assert toolbox.call("count_events", {"event_id": 10}).repeat_of is None
+
+
+def test_a_failed_call_can_be_retried_for_real(toolbox):
+    assert toolbox.call("query_events", {"field_present": "Image"}).error
+    assert toolbox.call("query_events", {"field_present": "Image"}).repeat_of is None
+
+
+def test_rule_lookups_are_never_folded(toolbox):
+    toolbox.call("lookup_rule", {})
+    assert toolbox.call("lookup_rule", {}).repeat_of is None
+
+
+def test_repeats_do_not_carry_across_sessions(tmp_path, synthetic_capture):
+    rule = write_rule(tmp_path)
+    for _ in range(2):
+        box = Toolbox(rule=rule, capture=synthetic_capture, store=FakeStore())
+        assert box.call("query_events", {}).repeat_of is None
+
+
+def test_the_audit_marks_a_repeat(toolbox):
+    log = AuditLog()
+    for _ in range(2):
+        call = ToolCall(name="count_events", arguments={})
+        log.tool_call(call, toolbox.call(call.name, call.arguments))
+    first, second = (e.payload for e in log.of_kind("tool_call"))
+    assert "repeat_of" not in first and second["repeat_of"] == 1
 
 
 # -- citation checking ----------------------------------------------------
