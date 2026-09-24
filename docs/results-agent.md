@@ -33,6 +33,14 @@ every run of that model; with `--workers N` the cap also counts trajectories
 still in flight. DeepSeek runs go outside its peak hours (01:00-04:00
 and 06:00-10:00 UTC on weekdays), when its rates double.
 
+`python -m score.analysis --model <key>` turns a model's run directories, one
+per condition, into the tables quoted here: macro-F1 per condition with 95%
+intervals from resampling captures (7 true-positive and 17 false-positive
+captures, resampled separately), retention and exact McNemar tests against the
+reference on the same cases, abstention and turn-limit rates, and for the
+mismatch conditions whether the verdict followed the swapped-in evidence or the
+alert. `--sample N` gives a smoke run both labels; `--limit` doesn't.
+
 An unconfigured run raises rather than falling back to a stub, so there is no way
 for this table to fill itself with something that was never a language model.
 Nothing here is an estimate of what the agent would score.
