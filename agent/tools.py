@@ -354,6 +354,27 @@ def _matches(event: Event, *, event_id=None, field_present=None,
 REPEATABLE = frozenset({"query_events", "count_events", "describe_capture"})
 
 
+def _query_limit(arguments: dict) -> int:
+    try:
+        return max(1, min(MAX_QUERY_LIMIT,
+                          int(arguments.get("limit", DEFAULT_QUERY_LIMIT))))
+    except (TypeError, ValueError):
+        return DEFAULT_QUERY_LIMIT
+
+
+def _repeat_key(name: str, arguments: dict) -> tuple[tuple[str, str], int]:
+    """What makes two calls the same question, and how many rows the call asks for.
+
+    Field lists are compared as sets, and the limit is split off: a query asking
+    for no more rows than an earlier one with the same filters can't show
+    anything new.
+    """
+    rest = {k: sorted(v, key=str) if isinstance(v, list) else v
+            for k, v in arguments.items() if k != "limit"}
+    limit = _query_limit(arguments) if name == "query_events" else 0
+    return (name, json.dumps(rest, sort_keys=True, default=str)), limit
+
+
 class Toolbox:
     """The tools bound to one case.
 
@@ -379,8 +400,9 @@ class Toolbox:
         self.allowed = ({c.name for c in CONTRACTS} if allowed is None
                         else set(allowed))
         self.calls: list[ToolResult] = []
-        #: (tool, arguments) -> the 1-based number of the call that first ran it
-        self._seen: dict[tuple[str, str], int] = {}
+        #: (tool, arguments without limit) -> (1-based number of the call that
+        #: ran it, the limit it ran with)
+        self._seen: dict[tuple[str, str], tuple[int, int]] = {}
         #: The grant this session holds. Minted outside, never widened inside.
         self.capability = capability
         self.authz_enforced = authz_enforced
@@ -422,18 +444,18 @@ class Toolbox:
                                 error=f"no such tool: {name}")
             self.calls.append(result)
             return result
-        key = (name, json.dumps(arguments or {}, sort_keys=True, default=str))
-        first = self._seen.get(key) if name in REPEATABLE else None
-        if first is not None:
+        key, limit = _repeat_key(name, arguments or {})
+        seen = self._seen.get(key) if name in REPEATABLE else None
+        if seen is not None and limit <= seen[1]:
             # the earlier output is already in the transcript; sending it again
             # only makes every later turn more expensive
-            earlier = self.calls[first - 1]
+            first = seen[0]
             result = ToolResult(
                 name=name,
-                output=f"identical to call {first} above, which already returned "
-                       "this result; nothing new",
+                output=f"already answered by call {first} above, which returned "
+                       "these results; nothing new",
                 provenance_ceiling=Provenance.OS,
-                matched=earlier.matched, repeat_of=first)
+                matched=self.calls[first - 1].matched, repeat_of=first)
             self.calls.append(result)
             return result
         try:
@@ -444,7 +466,7 @@ class Toolbox:
                                 error=str(exc))
         self.calls.append(result)
         if name in REPEATABLE and not result.error:
-            self._seen[key] = len(self.calls)
+            self._seen[key] = (len(self.calls), limit)
         return result
 
     # -- handlers ---------------------------------------------------------
@@ -494,11 +516,7 @@ class Toolbox:
                           returned=0, matched=count)
 
     def _query_events(self, arguments: dict) -> ToolResult:
-        limit = arguments.get("limit", DEFAULT_QUERY_LIMIT)
-        try:
-            limit = max(1, min(MAX_QUERY_LIMIT, int(limit)))
-        except (TypeError, ValueError):
-            limit = DEFAULT_QUERY_LIMIT
+        limit = _query_limit(arguments)
 
         filters = _filters(arguments)
         events = self.store.load(self.capture)

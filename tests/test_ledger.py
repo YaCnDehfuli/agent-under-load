@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import dataclasses
 import json
+from collections import Counter
 
 import pytest
 
@@ -15,7 +16,7 @@ from agent.contracts import EvidenceCitation, TriageVerdict, Verdict
 from agent.models import ModelError, ModelReply, ScriptedModel, ToolCall, Usage
 from score import run as score_run
 from score.ledger import BudgetExceeded, RunDir, check_budget, cost_usd, model_spend
-from score.run import run_agent
+from score.run import balanced_sample, run_agent
 from tests.support import FakeStore, synthetic_triage_case, write_rule
 
 PRICE = {"input": 1.0, "cached_input": 0.1, "output": 4.0, "source": "test"}
@@ -347,3 +348,40 @@ def test_the_cap_counts_trajectories_still_running(tmp_path):
     assert meta["totals"]["trajectories"] == 3
     assert meta["budget"]["model_spent_usd"] == pytest.approx(3 * 0.0028)
     assert meta["budget"]["budget_stop"] is True
+
+
+# -- a balanced smoke sample ------------------------------------------------
+
+
+def _labelled_cases(tmp_path):
+    base = synthetic_triage_case(write_rule(tmp_path))
+    layout = {"tp1": ("true_positive", 4), "tp2": ("true_positive", 3),
+              "fp1": ("false_positive", 2), "fp2": ("false_positive", 2),
+              "fp3": ("false_positive", 2)}
+    cases = []
+    for cid, (label, n) in layout.items():
+        capture = dataclasses.replace(base.capture, id=cid)
+        cases += [dataclasses.replace(base, case_id=f"{cid}:{i}", capture=capture,
+                                      truth=label) for i in range(n)]
+    return cases
+
+
+def test_a_sample_alternates_labels_and_spreads_over_captures(tmp_path):
+    picked = balanced_sample(_labelled_cases(tmp_path), 6, seed=0)
+    labels = Counter(c.truth for c in picked)
+    assert labels == {"true_positive": 3, "false_positive": 3}
+    fp_captures = {c.capture.id for c in picked if c.truth == "false_positive"}
+    assert fp_captures == {"fp1", "fp2", "fp3"}  # one each before any repeats
+    assert {c.capture.id for c in picked if c.truth == "true_positive"} == {"tp1", "tp2"}
+
+
+def test_a_sample_is_seeded(tmp_path):
+    cases = _labelled_cases(tmp_path)
+    ids = lambda seed: [c.case_id for c in balanced_sample(cases, 5, seed)]
+    assert ids(0) == ids(0)
+    assert len({tuple(ids(s)) for s in range(6)}) > 1
+
+
+def test_a_sample_larger_than_the_set_takes_everything(tmp_path):
+    cases = _labelled_cases(tmp_path)
+    assert len(balanced_sample(cases, 100)) == len(cases)

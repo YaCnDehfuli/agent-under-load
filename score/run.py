@@ -16,6 +16,7 @@ import argparse
 import dataclasses
 import hashlib
 import json
+import random
 import sys
 import threading
 import time
@@ -153,11 +154,45 @@ def run(
     return report, artefact
 
 
-def _cases(task: str, limit: int | None):
+def _cases(task: str, limit: int | None, sample: int | None = None, seed: int = 0):
     evaluation = corpus.evaluation_set()
     cases = _sorted_by_capture(evaluation.triage if task == "triage"
                                else evaluation.miss)
+    if sample:
+        return _sorted_by_capture(balanced_sample(cases, sample, seed))
     return cases[:limit] if limit else cases
+
+
+def balanced_sample(cases, n: int, seed: int = 0) -> list:
+    """N cases spread over labels and captures, for a smoke run that sees both.
+
+    --limit takes the first N in capture order, which for triage is all true
+    positives from one or two captures. This alternates labels and, within a
+    label, takes one case per capture before any capture gives a second.
+    """
+    # nosec B311: a seeded pick for a reproducible smoke run, not a secret
+    rng = random.Random(f"sample:{seed}")  # nosec B311
+    per_label: dict[str, list] = {}
+    for label in sorted({c.truth for c in cases}):
+        by_capture: dict[str, list] = {}
+        for case in cases:
+            if case.truth == label:
+                by_capture.setdefault(case.capture.id, []).append(case)
+        queues = [rng.sample(group, len(group))
+                  for _, group in sorted(by_capture.items())]
+        rng.shuffle(queues)
+        order = []
+        while any(queues):
+            for queue in queues:
+                if queue:
+                    order.append(queue.pop(0))
+        per_label[label] = order
+    picked = []
+    while len(picked) < min(n, len(cases)):
+        for order in per_label.values():
+            if order and len(picked) < n:
+                picked.append(order.pop(0))
+    return picked
 
 
 # ---------------------------------------------------------------------------
@@ -180,8 +215,9 @@ IDENTITY = ("task", "model_key", "model_entry", "controls", "condition", "seed",
 
 #: Bumped when what the model reads changes outside the system prompt: the alert
 #: header or the tool output. 2: no match count in the alert. 3: queries return
-#: at most 10 events, and a repeated query points back at the first one.
-HARNESS_VERSION = 3
+#: at most 10 events, and a repeated query points back at the first one. 4: field
+#: lists are compared as sets, and asking for fewer rows counts as a repeat.
+HARNESS_VERSION = 4
 
 
 def _git_revision() -> dict:
@@ -445,6 +481,9 @@ def main(argv: list[str] | None = None) -> int:
                         help="agent only: donor pairing for the mismatch conditions")
     parser.add_argument("--limit", type=int, default=None,
                         help="score only the first N cases, for a smoke run")
+    parser.add_argument("--sample", type=int, default=None,
+                        help="agent only: N cases balanced over labels and "
+                             "captures, for a smoke run (seeded by --seed)")
     parser.add_argument("--repeats", type=int, default=1,
                         help="agent only: runs per case")
     parser.add_argument("--budget-usd", type=float, default=None,
@@ -457,6 +496,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--env-file", default="",
                         help="agent only: file with API keys (default: .env in the repo)")
     args = parser.parse_args(argv)
+    if args.limit and args.sample:
+        parser.error("--limit and --sample pick cases differently; give one")
     controls = _controls(args.controls)
 
     if args.predictor == "agent":
@@ -469,7 +510,8 @@ def main(argv: list[str] | None = None) -> int:
         run_dir = (Path(args.run_dir) if args.run_dir
                    else RUNS / f"{args.task}-{args.model}-{args.condition}-{config.label}")
         try:
-            meta = run_agent(_cases(args.task, args.limit), model, args.model,
+            meta = run_agent(_cases(args.task, args.limit, args.sample, args.seed),
+                             model, args.model,
                              models.registry()[args.model], run_dir, task=args.task,
                              config=config, seed=args.seed,
                              population=_cases(args.task, None),

@@ -150,8 +150,23 @@ def test_a_repeated_query_points_back_instead_of_returning_it_again(toolbox):
     assert first.returned and first.repeat_of is None
     assert again.repeat_of == 1 and again.returned == 0
     assert again.matched == first.matched
-    assert "identical to call 1" in again.output
+    assert "already answered by call 1" in again.output
     assert len(again.output) < 100
+
+
+def test_reordered_field_lists_are_the_same_question(toolbox):
+    toolbox.call("query_events", {"field_present": ["Image", "EventID"]})
+    again = toolbox.call("query_events", {"field_present": ["EventID", "Image"]})
+    assert again.repeat_of == 1
+
+
+def test_asking_for_fewer_rows_folds_but_more_rows_runs(toolbox):
+    toolbox.call("query_events", {"event_id": 10, "limit": 5})
+    assert toolbox.call("query_events", {"event_id": 10, "limit": 2}).repeat_of == 1
+    bigger = toolbox.call("query_events", {"event_id": 10, "limit": 10})
+    assert bigger.repeat_of is None
+    # the bigger call is now the one later repeats point back to
+    assert toolbox.call("query_events", {"event_id": 10, "limit": 7}).repeat_of == 3
 
 
 def test_different_arguments_or_tools_are_not_repeats(toolbox):
