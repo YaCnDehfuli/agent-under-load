@@ -217,6 +217,10 @@ def condition_row(condition: str, cases: dict[str, CaseRuns], records: list[dict
         "errors": len(records) - len(scored),
         "macro_f1": round(macro_f1(runs), 4),
         "macro_f1_ci": _round(cluster_bootstrap(captures, f1_of)),
+        # an unanswered case scores as wrong; these two say whether a low
+        # macro-F1 comes from not answering or from answering badly
+        "decided": _share(runs, lambda c: c.majority in CLASSES),
+        "macro_f1_decided": round(macro_f1([c for c in runs if c.majority in CLASSES]), 4),
         "abstained": _share(scored, lambda r: r["predicted"] == INCONCLUSIVE),
         "unanswered": _share(scored, lambda r: r["predicted"] is None),
         "hit_turn_limit": _share(scored, lambda r: any(
@@ -268,11 +272,18 @@ def paired(runs: list[CaseRuns], reference: dict[str, CaseRuns]) -> dict:
     }
 
 
-def mismatch_row(condition: str, cases: dict[str, CaseRuns]) -> dict:
+def mismatch_row(condition: str, cases: dict[str, CaseRuns],
+                 reference: dict[str, CaseRuns] | None = None) -> dict:
     """Did the verdict follow the swapped-in evidence or the alert?
 
     In the cross-label cell the two point opposite ways. In the same-label cell
     they coincide, so the one number there is how often the verdict held.
+
+    A model that leans to one label "follows the evidence" on every case whose
+    donor has that label, without reading anything. So the cross cell is also
+    split by the case's true label, and each half is set against how often the
+    reference run gave the donor's label on the same cases: the shift is what
+    the swapped evidence added on top of the lean.
     """
     runs = list(cases.values())
 
@@ -289,7 +300,21 @@ def mismatch_row(condition: str, cases: dict[str, CaseRuns]) -> dict:
             del out["follows_evidence"]
         return out
 
-    row = {"condition": condition, **rates(runs), "by_rule_fires_on_donor": {}}
+    row = {"condition": condition, **rates(runs), "by_truth": {},
+           "by_rule_fires_on_donor": {}}
+    for label in CLASSES:
+        subset = [c for c in runs if c.truth == label]
+        if not subset:
+            continue
+        split = rates(subset)
+        if condition == "mismatch-cross" and reference:
+            paired = [c for c in subset if c.case_id in reference]
+            before = _share(paired, lambda c: reference[c.case_id].majority == c.donor_truth)
+            after = _share(paired, lambda c: c.majority == c.donor_truth)
+            if before is not None:
+                split["donor_label_in_reference"] = before
+                split["shift_toward_evidence"] = round(after - before, 4)
+        row["by_truth"][label] = split
     for fires in (True, False, None):
         subset = [c for c in runs if c.rule_fires_on_donor is fires]
         if subset:
@@ -337,7 +362,8 @@ def analyse(runs_root: Path, model_key: str, benchmark: Path = BENCHMARK) -> dic
         "bootstrap": {"samples": BOOTSTRAP_SAMPLES, "seed": BOOTSTRAP_SEED,
                       "unit": "capture"},
         "conditions": [condition_row(c, cases[c], records[c], reference) for c in order],
-        "mismatch": [mismatch_row(c, cases[c]) for c in order if c.startswith("mismatch")],
+        "mismatch": [mismatch_row(c, cases[c], reference)
+                     for c in order if c.startswith("mismatch")],
         "baselines": baselines(benchmark),
     }
     if "alert-only-forced" in cases:
@@ -356,8 +382,9 @@ def to_markdown(result: dict) -> str:
         f"{result['bootstrap']['samples']} resamples of captures.",
         "",
         "| condition | cases | macro-F1 [95% CI] | retention [95% CI] | McNemar p "
-        "| abstained | unanswered | turn limit | repeats agree | turns | $/traj |",
-        "|---|---|---|---|---|---|---|---|---|---|---|",
+        "| decided | F1 when decided | abstained | unanswered | turn limit "
+        "| repeats agree | turns | $/traj |",
+        "|---|---|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for row in result["conditions"]:
         retention = (f"{row['retention']:.2f} {_ci(row.get('retention_ci'))}"
@@ -365,7 +392,8 @@ def to_markdown(result: dict) -> str:
         lines.append(
             f"| {row['condition']} | {row['cases']} "
             f"| {row['macro_f1']:.2f} {_ci(row['macro_f1_ci'])} | {retention} "
-            f"| {_num(row.get('mcnemar_p'), 3)} | {_pct(row['abstained'])} "
+            f"| {_num(row.get('mcnemar_p'), 3)} | {_pct(row.get('decided'))} "
+            f"| {_num(row.get('macro_f1_decided'), 2)} | {_pct(row['abstained'])} "
             f"| {_pct(row['unanswered'])} | {_pct(row['hit_turn_limit'])} "
             f"| {_pct(row['repeats_agree'])} | {_num(row['mean_turns'], 1)} "
             f"| {_num(row['mean_cost_usd'], 4)} |")
@@ -378,6 +406,18 @@ def to_markdown(result: dict) -> str:
                 f"| {_pct(row.get('follows_evidence'))} "
                 f"| {_pct(row.get('follows_alert', row.get('held')))} "
                 f"| {_pct(row['abstained'])} | {_pct(row['unanswered'])} |")
+        cross = next((r for r in result["mismatch"]
+                      if r["condition"] == "mismatch-cross"), None)
+        shifts = {label: split for label, split in (cross or {}).get("by_truth", {}).items()
+                  if "shift_toward_evidence" in split}
+        if shifts:
+            lines += ["", "| mismatch-cross, by true label | cases | gives the donor's "
+                          "label | same cases, reference | shift |", "|---|---|---|---|---|"]
+            for label, split in shifts.items():
+                lines.append(
+                    f"| {label} | {split['cases']} | {_pct(split['follows_evidence'])} "
+                    f"| {_pct(split['donor_label_in_reference'])} "
+                    f"| {split['shift_toward_evidence']:+.0%} |")
         lines.append("")
         lines.append("_Split by whether the alert's rule matches anything in the "
                      "donor capture is in the JSON; that matcher is approximate._")

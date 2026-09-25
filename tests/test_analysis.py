@@ -196,3 +196,32 @@ def test_runs_from_an_earlier_harness_are_skipped_not_refused(tmp_path, capsys):
     cases, _ = load(tmp_path, "m")
     assert list(cases) == ["reference"]
     assert "skipped smoke-old" in capsys.readouterr().err
+
+
+def test_a_model_that_always_says_tp_gains_no_evidence_shift(tmp_path):
+    # it "follows the evidence" on every FP case (TP donor) without reading it
+    rows = _reference_rows()
+    _write_run(tmp_path, "ref", "reference",
+               [(cid, cap, truth, [TP]) for cid, cap, truth, _ in rows])
+    other = {TP: FP, FP: TP}
+    _write_run(tmp_path, "cross", "mismatch-cross",
+               [(cid, cap, truth, [TP], {"donor_truth": other[truth]})
+                for cid, cap, truth, _ in rows])
+    cross = analyse(tmp_path, "m", benchmark=tmp_path)["mismatch"][0]
+    fp_half = cross["by_truth"][FP]
+    assert fp_half["follows_evidence"] == 1.0
+    assert fp_half["donor_label_in_reference"] == 1.0
+    assert fp_half["shift_toward_evidence"] == 0.0
+    assert cross["by_truth"][TP]["shift_toward_evidence"] == 0.0
+
+
+def test_unanswered_cases_are_separated_from_wrong_ones(tmp_path):
+    rows = _reference_rows()
+    # half the cases unanswered, the other half all right
+    _write_run(tmp_path, "ref", "reference",
+               [(cid, cap, truth, [truth if cid.endswith(":0") else None])
+                for cid, cap, truth, _ in rows])
+    ref = analyse(tmp_path, "m", benchmark=tmp_path)["conditions"][0]
+    assert ref["decided"] == 0.5
+    assert ref["macro_f1_decided"] == 1.0
+    assert ref["macro_f1"] < 1.0
