@@ -184,6 +184,14 @@ def test_a_run_directory_is_not_reused_for_another_configuration(tmp_path):
         _run(tmp_path, CountingModel(), cases, model_entry=other)
 
 
+def test_raising_a_model_s_cap_does_not_strand_its_run(tmp_path):
+    cases = _cases(tmp_path, 2)
+    _run(tmp_path, CountingModel(), cases[:1], model_entry=dict(ENTRY, budget_usd=1))
+    again = CountingModel()
+    _run(tmp_path, again, cases, model_entry=dict(ENTRY, budget_usd=5))
+    assert again.calls > 0
+
+
 # -- cost and the cap ------------------------------------------------------------
 
 

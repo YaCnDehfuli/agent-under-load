@@ -220,6 +220,17 @@ IDENTITY = ("task", "model_key", "model_entry", "controls", "condition", "seed",
 HARNESS_VERSION = 4
 
 
+def _comparable(key: str, value):
+    """An identity value with what can't change a trajectory taken out.
+
+    A model's spending cap decides when a run stops, not what the model sees,
+    so raising it mustn't strand a run directory halfway through.
+    """
+    if key == "model_entry" and isinstance(value, dict):
+        return {k: v for k, v in value.items() if k != "budget_usd"}
+    return value
+
+
 def _git_revision() -> dict:
     try:
         sha = corpus._run(["git", "rev-parse", "HEAD"], cwd=RUNS.parent)
@@ -312,7 +323,8 @@ def run_agent(
     rundir = RunDir(run_dir)
     meta = rundir.read_meta()
     if meta is not None:
-        changed = [k for k in IDENTITY if meta.get(k) != identity[k]]
+        changed = [k for k in IDENTITY if _comparable(k, meta.get(k))
+                   != _comparable(k, identity[k])]
         if changed:
             raise ValueError(f"{run_dir} was started with a different "
                              f"{', '.join(changed)}; use a new --run-dir")

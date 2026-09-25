@@ -36,7 +36,7 @@ from typing import Callable
 from agent.contracts import Verdict
 from score.ledger import ERROR, RunDir
 from score.metrics import Prediction, score
-from score.run import IDENTITY, RUNS
+from score.run import HARNESS_VERSION, IDENTITY, RUNS
 
 CLASSES = (Verdict.TRUE_POSITIVE.value, Verdict.FALSE_POSITIVE.value)
 INCONCLUSIVE = Verdict.INCONCLUSIVE.value
@@ -94,6 +94,12 @@ def load(runs_root: Path, model_key: str) -> tuple[dict[str, dict[str, CaseRuns]
     for meta_path in sorted(Path(runs_root).glob("*/run.json")):
         meta = json.loads(meta_path.read_text())
         if meta.get("model_key") != model_key or meta.get("controls"):
+            continue
+        if meta.get("harness_version") != HARNESS_VERSION:
+            # an earlier harness showed the model something different; its
+            # spending still counts against the model's cap, its answers don't
+            print(f"skipped {meta_path.parent.name}: harness version "
+                  f"{meta.get('harness_version')}, not {HARNESS_VERSION}", file=sys.stderr)
             continue
         condition = meta.get("condition", "reference")
         if condition in found:

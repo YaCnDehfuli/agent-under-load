@@ -17,7 +17,9 @@
 # `budget_usd` is a lifetime cap for the model, counted across every run
 # directory under runs/, smoke runs included. The OpenRouter caps (20b + 120b)
 # and the OpenAI caps (Luna + Sol) each fit inside $10 of credit; DeepSeek draws
-# on its own account. Later phases spend from the same caps.
+# on its own account, and its cap was raised to $20 from the reserve when its
+# measured cost put the full matrix at ~$18. Later phases spend from the same
+# caps.
 
 qwen3-4b:
   provider: ollama
@@ -99,8 +101,9 @@ deepseek-v4-pro:
   # off-peak rates: run it outside 01:00-04:00 and 06:00-10:00 UTC on weekdays,
   # when every rate doubles
   price: {input: 0.66, cached_input: 0.022, output: 1.98, source: https://www.morphllm.com/deepseek-api, checked: "2026-09-23"}
-  # the smoke run measured $0.0117 a trajectory, so $14 for the full matrix
-  budget_usd: 16
+  # reference runs measured $0.013 a trajectory and mismatch runs cost about
+  # twice that, so ~$18 for the full matrix
+  budget_usd: 20
 
 claude-sonnet-5:
   provider: anthropic

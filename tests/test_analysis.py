@@ -16,6 +16,7 @@ from score.analysis import (
     mcnemar,
     to_markdown,
 )
+from score.run import HARNESS_VERSION
 
 TP, FP = "true_positive", "false_positive"
 
@@ -26,7 +27,7 @@ def _write_run(root, name, condition, rows, model_key="m", **meta):
     path.mkdir(parents=True)
     (path / "run.json").write_text(json.dumps(
         {"model_key": model_key, "controls": [], "condition": condition,
-         "task": "triage", **meta}))
+         "task": "triage", "harness_version": HARNESS_VERSION, **meta}))
     with open(path / "cases.jsonl", "w") as fh:
         for case_id, capture, truth, answers, *extra in rows:
             for repeat, answer in enumerate(answers, start=1):
@@ -184,3 +185,14 @@ def test_the_markdown_carries_every_condition(tmp_path):
     text = to_markdown(analyse(tmp_path, "m", benchmark=tmp_path))
     assert "| reference |" in text and "| rule-only |" in text
     assert "class prior (random)" in text
+
+
+def test_runs_from_an_earlier_harness_are_skipped_not_refused(tmp_path, capsys):
+    _write_run(tmp_path, "ref", "reference", _reference_rows())
+    old = _write_run(tmp_path, "smoke-old", "reference", _reference_rows())
+    meta = json.loads((old / "run.json").read_text())
+    del meta["harness_version"], meta["condition"]
+    (old / "run.json").write_text(json.dumps(meta))
+    cases, _ = load(tmp_path, "m")
+    assert list(cases) == ["reference"]
+    assert "skipped smoke-old" in capsys.readouterr().err
