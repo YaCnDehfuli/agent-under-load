@@ -17,6 +17,8 @@
     0.3415,
     0.5783
    ],
+   "decided": 0.8375,
+   "macro_f1_decided": 0.5035,
    "abstained": 0.0,
    "unanswered": 0.1458,
    "hit_turn_limit": 0.1375,
@@ -36,6 +38,8 @@
     0.0,
     0.0
    ],
+   "decided": 0.0,
+   "macro_f1_decided": 0.0,
    "abstained": 1.0,
    "unanswered": 0.0,
    "hit_turn_limit": 0.0,
@@ -69,6 +73,8 @@
     0.4963,
     0.6432
    ],
+   "decided": 1.0,
+   "macro_f1_decided": 0.5747,
    "abstained": 0.0,
    "unanswered": 0.0,
    "hit_turn_limit": 0.0,
@@ -102,6 +108,8 @@
     0.0,
     0.0
    ],
+   "decided": 0.0125,
+   "macro_f1_decided": 0.0,
    "abstained": 0.9333,
    "unanswered": 0.0,
    "hit_turn_limit": 0.0,
@@ -135,6 +143,8 @@
     0.0764,
     0.2638
    ],
+   "decided": 0.625,
+   "macro_f1_decided": 0.22,
    "abstained": 0.0125,
    "unanswered": 0.3583,
    "hit_turn_limit": 0.2583,
@@ -168,6 +178,8 @@
     0.2926,
     0.4705
    ],
+   "decided": 0.6,
+   "macro_f1_decided": 0.5104,
    "abstained": 0.0,
    "unanswered": 0.4042,
    "hit_turn_limit": 0.2792,
@@ -199,6 +211,26 @@
    "follows_alert": 0.15,
    "abstained": 0.0125,
    "unanswered": 0.3625,
+   "by_truth": {
+    "true_positive": {
+     "cases": 44,
+     "follows_evidence": 0.6818,
+     "follows_alert": 0.0455,
+     "abstained": 0.0,
+     "unanswered": 0.2727,
+     "donor_label_in_reference": 0.0909,
+     "shift_toward_evidence": 0.5909
+    },
+    "false_positive": {
+     "cases": 36,
+     "follows_evidence": 0.2222,
+     "follows_alert": 0.2778,
+     "abstained": 0.0278,
+     "unanswered": 0.4722,
+     "donor_label_in_reference": 0.6944,
+     "shift_toward_evidence": -0.4722
+    }
+   },
    "by_rule_fires_on_donor": {
     "true": {
      "cases": 16,
@@ -222,6 +254,20 @@
    "abstained": 0.0,
    "unanswered": 0.4,
    "held": 0.3125,
+   "by_truth": {
+    "true_positive": {
+     "cases": 44,
+     "abstained": 0.0,
+     "unanswered": 0.4091,
+     "held": 0.2045
+    },
+    "false_positive": {
+     "cases": 36,
+     "abstained": 0.0,
+     "unanswered": 0.3889,
+     "held": 0.4444
+    }
+   },
    "by_rule_fires_on_donor": {
     "true": {
      "cases": 20,
