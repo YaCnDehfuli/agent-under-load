@@ -4,21 +4,13 @@ The loop, the tools, and where untrusted text enters.
 
 ## The loop
 
-```mermaid
-flowchart TD
-    prepare[prepare<br/>build system prompt and case context]
-    investigate[investigate<br/>the only node that talks to the model]
-    tools{{tool call?}}
-    validate[validate<br/>contract, then citations]
-    finish[finish<br/>assemble the result]
+![The LangGraph investigation loop, tool boundary, validation path, evaluation scale and measured within-rule result](assets/agent-cover.png)
 
-    prepare --> investigate
-    investigate --> tools
-    tools -- yes --> exec[execute tool, append result] --> investigate
-    tools -- no, or turn limit --> validate
-    validate -- rejected, repair left --> investigate
-    validate -- settled or out of repairs --> finish
-```
+The forward route is `prepare → investigate → validate → finish`. A tool request
+executes inside `investigate`, appends its result and returns to the next model
+turn. A response without another tool call, or the 12-turn limit, sends the
+state to `validate`. If validation rejects a verdict, one repair turn can return
+to `investigate`; otherwise `finish` assembles the result.
 
 `investigate` is the only node with model access. Tool execution happens inside
 it, so every result the model sees passes one place that can label and log it.

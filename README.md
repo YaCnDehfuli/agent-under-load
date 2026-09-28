@@ -14,7 +14,7 @@ Agent Under Load is a LangGraph triage agent and an evaluation harness built aro
 [![LangGraph](https://img.shields.io/badge/LangGraph-1.2.10-34546D)](agent/graph.py)
 [![Research report](https://img.shields.io/badge/Report-illustrated-0B6E75)](https://yasindehfouli.com/reports/agent-under-load/)
 
-![The LangGraph investigation loop, tool trust boundary and measured outcomes](docs/assets/agent-loop.svg)
+![Agent Under Load cover showing the LangGraph investigation and tool loops, four evaluated models, four configurable controls, 32,122 provider requests, and the within-rule result](docs/assets/agent-cover.png)
 
 </div>
 
@@ -44,6 +44,8 @@ A separate review upheld all 17 false-positive capture labels. It also found a m
 `agent/graph.py` defines a LangGraph `StateGraph`: `prepare → investigate ↺ → validate → finish`. `investigate` is the only node that calls the model. It can use `lookup_rule`, `describe_capture`, `count_events`, `query_events`, and a local ATT&CK lookup. Only `query_events` can return free text written by an adversary. The final verdict must fit a schema and cite an event index, field and verbatim quote. Citation enforcement is a configurable control; a failed verdict remains visible as unanswered rather than disappearing from the score.
 
 The graph state holds messages, turn and tool counts, the last reply, validation rejections and repair count. A run allows 12 turns and one repair after a rejected answer. A common native tool-calling adapter handles the study's providers; repeated event queries return a pointer to the first result, and transient provider failures are retried. The runner records model identity, prompt and harness digests, token and cost data, tool output provenance, citations and failures. Run directories resume only when their identity matches. Both per-run and per-model spending caps include queued work. The append-only audit log hash-chains entries; this detects modification of a forwarded record, not an attacker who can rewrite the entire log.
+
+Across the primary four-model, six-condition matrix, the audit traces contain **5,760 trajectories, 25,893 model turns and 32,122 provider requests including retries**. This count excludes smoke runs, the later wording check and the unfinished control study. The [request accounting](benchmark/model-request-accounting.json) records each model and condition; [the counting script](score/request_accounting.py) checks the final audit trace for every case repeat.
 
 Four optional controls share the same code path: provenance labels, structured event ingestion, enforced citations and action capability scope. They are implemented, but **their effect against prompt injection has not been measured**. The attack runner and payload corpus are ready for a separate study. The model-free feasibility check found **248 mountable placements among 1,892 candidates (13.1%)**. A payload can enter only an adversary-writable field already present in an event the rule matched. [Architecture](docs/architecture.md) · [Mountability](benchmark/attack-mountability.json)
 

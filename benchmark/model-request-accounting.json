@@ -1,0 +1,204 @@
+{
+  "scope": "Primary triage matrix: four models, 80 cases, six evidence conditions, three repeats; undefended configuration",
+  "method": "Sum attempts on model_turn events in each final audit trajectory. Attempts include HTTP retries and host-error retries. Resumed duplicate case rows are excluded. Smoke, wording-check and control runs are excluded.",
+  "totals": {
+    "trajectories": 5760,
+    "model_turns": 25893,
+    "provider_requests": 32122,
+    "turns_with_retries": 2993
+  },
+  "cells": [
+    {
+      "model": "gpt-6-luna",
+      "condition": "reference",
+      "trajectories": 240,
+      "model_turns": 1131,
+      "provider_requests": 2098,
+      "turns_with_retries": 392
+    },
+    {
+      "model": "gpt-6-luna",
+      "condition": "alert-only",
+      "trajectories": 240,
+      "model_turns": 240,
+      "provider_requests": 240,
+      "turns_with_retries": 0
+    },
+    {
+      "model": "gpt-6-luna",
+      "condition": "alert-only-forced",
+      "trajectories": 240,
+      "model_turns": 240,
+      "provider_requests": 240,
+      "turns_with_retries": 0
+    },
+    {
+      "model": "gpt-6-luna",
+      "condition": "rule-only",
+      "trajectories": 240,
+      "model_turns": 486,
+      "provider_requests": 486,
+      "turns_with_retries": 0
+    },
+    {
+      "model": "gpt-6-luna",
+      "condition": "mismatch-cross",
+      "trajectories": 240,
+      "model_turns": 1351,
+      "provider_requests": 2516,
+      "turns_with_retries": 464
+    },
+    {
+      "model": "gpt-6-luna",
+      "condition": "mismatch-same",
+      "trajectories": 240,
+      "model_turns": 1368,
+      "provider_requests": 2048,
+      "turns_with_retries": 314
+    },
+    {
+      "model": "deepseek-v4-pro",
+      "condition": "reference",
+      "trajectories": 240,
+      "model_turns": 1473,
+      "provider_requests": 1473,
+      "turns_with_retries": 0
+    },
+    {
+      "model": "deepseek-v4-pro",
+      "condition": "alert-only",
+      "trajectories": 240,
+      "model_turns": 240,
+      "provider_requests": 240,
+      "turns_with_retries": 0
+    },
+    {
+      "model": "deepseek-v4-pro",
+      "condition": "alert-only-forced",
+      "trajectories": 240,
+      "model_turns": 331,
+      "provider_requests": 331,
+      "turns_with_retries": 0
+    },
+    {
+      "model": "deepseek-v4-pro",
+      "condition": "rule-only",
+      "trajectories": 240,
+      "model_turns": 492,
+      "provider_requests": 492,
+      "turns_with_retries": 0
+    },
+    {
+      "model": "deepseek-v4-pro",
+      "condition": "mismatch-cross",
+      "trajectories": 240,
+      "model_turns": 2355,
+      "provider_requests": 2355,
+      "turns_with_retries": 0
+    },
+    {
+      "model": "deepseek-v4-pro",
+      "condition": "mismatch-same",
+      "trajectories": 240,
+      "model_turns": 2295,
+      "provider_requests": 2295,
+      "turns_with_retries": 0
+    },
+    {
+      "model": "gpt-oss-20b",
+      "condition": "reference",
+      "trajectories": 240,
+      "model_turns": 1804,
+      "provider_requests": 2523,
+      "turns_with_retries": 309
+    },
+    {
+      "model": "gpt-oss-20b",
+      "condition": "alert-only",
+      "trajectories": 240,
+      "model_turns": 240,
+      "provider_requests": 289,
+      "turns_with_retries": 23
+    },
+    {
+      "model": "gpt-oss-20b",
+      "condition": "alert-only-forced",
+      "trajectories": 240,
+      "model_turns": 240,
+      "provider_requests": 259,
+      "turns_with_retries": 10
+    },
+    {
+      "model": "gpt-oss-20b",
+      "condition": "rule-only",
+      "trajectories": 240,
+      "model_turns": 491,
+      "provider_requests": 773,
+      "turns_with_retries": 124
+    },
+    {
+      "model": "gpt-oss-20b",
+      "condition": "mismatch-cross",
+      "trajectories": 240,
+      "model_turns": 2183,
+      "provider_requests": 2954,
+      "turns_with_retries": 330
+    },
+    {
+      "model": "gpt-oss-20b",
+      "condition": "mismatch-same",
+      "trajectories": 240,
+      "model_turns": 2145,
+      "provider_requests": 2682,
+      "turns_with_retries": 275
+    },
+    {
+      "model": "gpt-oss-120b",
+      "condition": "reference",
+      "trajectories": 240,
+      "model_turns": 1664,
+      "provider_requests": 1827,
+      "turns_with_retries": 114
+    },
+    {
+      "model": "gpt-oss-120b",
+      "condition": "alert-only",
+      "trajectories": 240,
+      "model_turns": 240,
+      "provider_requests": 268,
+      "turns_with_retries": 16
+    },
+    {
+      "model": "gpt-oss-120b",
+      "condition": "alert-only-forced",
+      "trajectories": 240,
+      "model_turns": 240,
+      "provider_requests": 259,
+      "turns_with_retries": 15
+    },
+    {
+      "model": "gpt-oss-120b",
+      "condition": "rule-only",
+      "trajectories": 240,
+      "model_turns": 469,
+      "provider_requests": 525,
+      "turns_with_retries": 48
+    },
+    {
+      "model": "gpt-oss-120b",
+      "condition": "mismatch-cross",
+      "trajectories": 240,
+      "model_turns": 2089,
+      "provider_requests": 2330,
+      "turns_with_retries": 186
+    },
+    {
+      "model": "gpt-oss-120b",
+      "condition": "mismatch-same",
+      "trajectories": 240,
+      "model_turns": 2086,
+      "provider_requests": 2619,
+      "turns_with_retries": 373
+    }
+  ]
+}
