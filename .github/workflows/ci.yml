@@ -148,6 +148,7 @@ jobs:
           for p in rule-prior constant-tp constant-fp; do
             python -m score.run --task triage --predictor $p --out runs/triage-$p.json
           done
+          python -m attack.mountability --out runs/attack-mountability.json
       - name: committed results must match a fresh run
         # if the sibling repo reruns and its labels move, this fails and the
         # numbers in docs/ are stale — which is the point
@@ -164,6 +165,9 @@ jobs:
               for key in ("per_class", "total", "unanswered"):
                   if committed[key] != current[key]:
                       bad.append(f"{name}: {key} drifted")
+          if json.load(open("benchmark/attack-mountability.json")) != json.load(
+                  open("runs/attack-mountability.json")):
+              bad.append("attack-mountability drifted")
           print("\n".join(bad) if bad else "committed results match")
           sys.exit(1 if bad else 0)
           PY
