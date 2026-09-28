@@ -13,9 +13,14 @@ The measurement rules matter as much as the attack. Two in particular:
 
 from __future__ import annotations
 
+import pytest
+
 from agent.contracts import EvidenceCitation, TriageVerdict, Verdict
+from agent.graph import ALL_CONTROLS
 from agent.models import ModelReply, ScriptedModel
-from attack.runner import Attempt, run_suppression, summarise
+from attack.inject import load_payloads
+from attack.runner import Attempt, clean_reference, run_attack, summarise
+from score.analysis import CaseRuns, condition_cases
 from tests.support import (
     FakeStore,
     synthetic_triage_case,
@@ -102,51 +107,89 @@ def test_an_empty_summary_reports_no_rate_rather_than_zero():
 # -- the loop, offline ----------------------------------------------------
 
 
+def _answer(verdict):
+    return ModelReply(answer=TriageVerdict(verdict=verdict, confidence=0.9,
+                                           evidence=CITE, rationale="scripted"))
+
+
+def _clean(case, *answers):
+    return {case.case_id: CaseRuns(case.case_id, case.truth, case.capture.id,
+                                   answers=list(answers))}
+
+
+def _run(tmp_path, model, case, clean, **kwargs):
+    return run_attack("suppression", [case], model, "scripted", {"price": None},
+                      tmp_path / "attack", clean=clean, base_store=FakeStore(),
+                      payloads=load_payloads()[:3], **kwargs)
+
+
 def test_the_runner_attacks_only_what_the_agent_got_right(tmp_path):
-    """Drives the whole loop with a scripted model and no corpus.
-
-    The script answers correctly on the clean pass and then flips on every
-    injected run, so the accounting can be checked end to end.
-    """
+    """Clean labels come from the reference run; every injected run flips."""
     case = synthetic_triage_case(write_proc_creation_rule(tmp_path))
-    calls = {"n": 0}
+    meta = _run(tmp_path, ScriptedModel(lambda _: _answer(Verdict.FALSE_POSITIVE)),
+                case, _clean(case, "true_positive", "true_positive", "false_positive"))
 
-    def script(_messages):
-        calls["n"] += 1
-        # first call is the clean pass; everything after is an injected run
-        verdict = (Verdict.TRUE_POSITIVE if calls["n"] == 1
-                   else Verdict.FALSE_POSITIVE)
-        return ModelReply(answer=TriageVerdict(
-            verdict=verdict, confidence=0.9, evidence=CITE, rationale="scripted"))
-
-    attempts, meta = run_suppression(
-        controls=frozenset(), model=ScriptedModel(script), cases=[case],
-        base_store=FakeStore(), limit_payloads=2,
-    )
-
-    assert meta["cases_clean"] == 1
-    assert meta["cases_attacked"] == 1  # the agent was right on the clean pass
-    assert attempts
-
-    summary = summarise(attempts)
-    mounted = [a for a in attempts if a.mounted]
-    assert mounted, "no payload could be placed, so nothing was measured"
-    assert all(a.suppressed for a in mounted)
+    assert meta["cases_attacked"] == 1
+    summary = meta["summary"]
+    assert summary["overall"]["attempts"] > 0, "no payload could be placed"
     assert summary["overall"]["rate"] == 1.0
+    # one of three clean repeats already said false_positive
+    assert summary["noise_floor"] == round(1 / 3, 4)
 
 
-def test_a_case_the_agent_fails_cleanly_is_excluded_from_the_denominator(tmp_path):
+def test_a_case_the_agent_fails_cleanly_is_not_attacked(tmp_path):
     case = synthetic_triage_case(write_proc_creation_rule(tmp_path))
+    calls = []
+    model = ScriptedModel(lambda m: calls.append(m) or _answer(Verdict.FALSE_POSITIVE))
+    meta = _run(tmp_path, model, case, _clean(case, "false_positive", "true_positive",
+                                               "false_positive"))
+    assert meta["cases_attacked"] == 0 and not calls
 
-    def always_wrong(_messages):
-        return ModelReply(answer=TriageVerdict(
-            verdict=Verdict.FALSE_POSITIVE, confidence=0.9, evidence=CITE,
-            rationale="wrong"))
 
-    attempts, meta = run_suppression(
-        controls=frozenset(), model=ScriptedModel(always_wrong), cases=[case],
-        base_store=FakeStore(), limit_payloads=1,
-    )
-    assert meta["cases_clean"] == 1
-    assert meta["cases_attacked"] == 0
-    assert attempts == []
+def test_a_suppression_run_needs_the_clean_reference(tmp_path):
+    case = synthetic_triage_case(write_proc_creation_rule(tmp_path))
+    with pytest.raises(ValueError, match="clean reference"):
+        _run(tmp_path, ScriptedModel([]), case, None)
+
+
+def test_a_missing_reference_run_says_how_to_make_it(tmp_path):
+    with pytest.raises(ValueError, match="--condition reference --controls all"):
+        clean_reference(tmp_path, "m", ALL_CONTROLS)
+
+
+def test_an_interrupted_attack_resumes_without_repeating_itself(tmp_path):
+    case = synthetic_triage_case(write_proc_creation_rule(tmp_path))
+    clean = _clean(case, "true_positive")
+    first = _run(tmp_path, ScriptedModel(lambda _: _answer(Verdict.TRUE_POSITIVE)),
+                 case, clean)
+    calls = []
+    again = _run(tmp_path, ScriptedModel(
+        lambda m: calls.append(m) or _answer(Verdict.TRUE_POSITIVE)), case, clean)
+    assert not calls
+    assert again["summary"]["overall"] == first["summary"]["overall"]
+
+
+def test_evidence_dependence_splits_the_rate(tmp_path):
+    case = synthetic_triage_case(write_proc_creation_rule(tmp_path))
+    meta = _run(tmp_path, ScriptedModel(lambda _: _answer(Verdict.FALSE_POSITIVE)),
+                case, _clean(case, "true_positive"), dependent={case.case_id: True})
+    split = meta["summary"]["by_evidence_dependence"]
+    assert list(split) == ["dependent"] and split["dependent"]["rate"] == 1.0
+
+
+def test_outcomes_keep_the_causes_apart():
+    assert _attempt(injected_label="false_positive").outcome == "to_false_positive"
+    assert _attempt(injected_label="inconclusive").outcome == "to_inconclusive"
+    assert _attempt(injected_label="true_positive").outcome == "held"
+    assert _attempt(injected_label=None, rejections=(
+        "model produced no verdict within the turn limit",)).outcome == "turn_limit"
+    assert _attempt(injected_label=None, rejections=(
+        "citation rejected",)).outcome == "rejected"
+    assert _attempt(mounted=False).outcome == "unmounted"
+
+
+def test_the_triage_analysis_ignores_attack_directories(tmp_path):
+    case = synthetic_triage_case(write_proc_creation_rule(tmp_path))
+    _run(tmp_path, ScriptedModel(lambda _: _answer(Verdict.TRUE_POSITIVE)), case,
+         _clean(case, "true_positive"))
+    assert condition_cases(tmp_path, "scripted", "reference") is None

@@ -87,13 +87,20 @@ class CaseRuns:
 # ---------------------------------------------------------------------------
 
 
-def load(runs_root: Path, model_key: str) -> tuple[dict[str, dict[str, CaseRuns]],
-                                                   dict[str, list[dict]]]:
-    """condition -> case_id -> CaseRuns, and condition -> every record incl. errors."""
+def _by_condition(runs_root: Path, model_key: str,
+                  controls: tuple[str, ...] = ()) -> dict[str, tuple[Path, dict]]:
+    """condition -> (run.json path, its contents), for one model and set of controls.
+
+    Only triage runs from the current harness. Two directories for one condition
+    are refused rather than one picked silently.
+    """
+    want = sorted(controls)
     found: dict[str, tuple[Path, dict]] = {}
     for meta_path in sorted(Path(runs_root).glob("*/run.json")):
         meta = json.loads(meta_path.read_text())
-        if meta.get("model_key") != model_key or meta.get("controls"):
+        if (meta.get("kind", "triage") != "triage"
+                or meta.get("model_key") != model_key
+                or sorted(meta.get("controls") or []) != want):
             continue
         if meta.get("harness_version") != HARNESS_VERSION:
             # an earlier harness showed the model something different; its
@@ -110,24 +117,40 @@ def load(runs_root: Path, model_key: str) -> tuple[dict[str, dict[str, CaseRuns]
             raise ValueError(f"two {condition} runs for {model_key} with {why}: "
                              f"{earlier.parent} and {meta_path.parent}; keep one")
         found[condition] = (meta_path, meta)
+    return found
 
+
+def _case_runs(run_dir: Path) -> tuple[dict[str, CaseRuns], list[dict]]:
+    latest = RunDir(run_dir).latest()
+    per_case: dict[str, CaseRuns] = {}
+    for (case_id, _), record in sorted(latest.items()):
+        if record["outcome"] == ERROR:
+            continue
+        runs = per_case.setdefault(case_id, CaseRuns(
+            case_id=case_id, truth=record["truth"], capture=record["capture"],
+            donor_truth=record.get("donor_truth"),
+            rule_fires_on_donor=record.get("rule_fires_on_donor")))
+        runs.answers.append(record["predicted"] or "unanswered")
+    return per_case, list(latest.values())
+
+
+def load(runs_root: Path, model_key: str) -> tuple[dict[str, dict[str, CaseRuns]],
+                                                   dict[str, list[dict]]]:
+    """condition -> case_id -> CaseRuns, and condition -> every record incl. errors."""
     cases: dict[str, dict[str, CaseRuns]] = {}
     records: dict[str, list[dict]] = {}
-    for condition, (meta_path, _) in found.items():
-        rundir = RunDir(meta_path.parent)
-        latest = rundir.latest()
-        records[condition] = list(latest.values())
-        per_case: dict[str, CaseRuns] = {}
-        for (case_id, _), record in sorted(latest.items()):
-            if record["outcome"] == ERROR:
-                continue
-            runs = per_case.setdefault(case_id, CaseRuns(
-                case_id=case_id, truth=record["truth"], capture=record["capture"],
-                donor_truth=record.get("donor_truth"),
-                rule_fires_on_donor=record.get("rule_fires_on_donor")))
-            runs.answers.append(record["predicted"] or "unanswered")
-        cases[condition] = per_case
+    for condition, (meta_path, _) in _by_condition(runs_root, model_key).items():
+        cases[condition], records[condition] = _case_runs(meta_path.parent)
     return cases, records
+
+
+def condition_cases(runs_root: Path, model_key: str, condition: str,
+                    controls: tuple[str, ...] = ()) -> tuple[Path, dict[str, CaseRuns]] | None:
+    """One condition's run directory and its cases, or None if it hasn't been run."""
+    found = _by_condition(runs_root, model_key, controls).get(condition)
+    if found is None:
+        return None
+    return found[0].parent, _case_runs(found[0].parent)[0]
 
 
 # ---------------------------------------------------------------------------

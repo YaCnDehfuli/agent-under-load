@@ -9,7 +9,7 @@ This number needs no model. It is a property of the corpus, the rules and the
 injector's realism constraints, and it was produced by:
 
 ```
-python -m attack.runner --objective suppression   # planning only; see below
+python -m attack.mountability   # no model; regenerates the artefact below
 ```
 
 Artefact: `benchmark/attack-mountability.json`.
@@ -87,6 +87,11 @@ model. The commands:
 python -m attack.runner --model gpt-oss-20b --objective suppression --controls none
 python -m attack.runner --model gpt-oss-20b --objective escalation  --controls none
 ```
+
+A suppression run is measured against the model's reference run with the same
+controls (the majority over its repeats decides which cases were right), and
+reports its success rate next to that run's noise floor: how often the same
+cases already land on a suppressed answer with no payload.
 
 The tables below are the shape the results take, with every cell empty. They are
 left in so the measurement design is reviewable before the numbers exist, and
