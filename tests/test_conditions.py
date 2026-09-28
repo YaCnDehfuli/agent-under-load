@@ -350,3 +350,32 @@ def test_the_rule_prior_falls_back_to_other_captures_when_the_rule_is_unseen(tmp
                                          ("y", "c2", "false_positive", "B"),
                                          ("z", "c3", "false_positive", "C")]]
     assert RulePriorBaseline(cases).predict(cases[0]).label == "false_positive"
+
+
+# -- the technique question --------------------------------------------------------
+
+
+def test_the_technique_question_changes_only_what_a_true_positive_is():
+    reference = system_prompt("triage_verdict", AgentConfig()).splitlines()
+    variant = system_prompt("triage_verdict",
+                            AgentConfig(condition=Condition.TECHNIQUE_QUESTION)).splitlines()
+    changed = [b for a, b in zip(reference, variant) if a != b]
+    assert len(reference) == len(variant) and len(changed) == 1
+    assert "T1003.001" in changed[0] and "T1003.001" not in "\n".join(reference)
+
+
+def test_the_technique_question_is_otherwise_a_reference_run(tmp_path):
+    model = Recording([ModelReply(answer=ANSWER)])
+    TriageGraph(model, AgentConfig(condition=Condition.TECHNIQUE_QUESTION),
+                store=FakeStore()).run(synthetic_triage_case(write_rule(tmp_path)))
+    assert {"query_events", "count_events", "describe_capture"} <= set(model.tools[0])
+    assert model.schemas[0] is TriageVerdict
+
+
+def test_the_log_records_what_an_accepted_verdict_cites(tmp_path):
+    graph = TriageGraph(ScriptedModel([ModelReply(answer=ANSWER)]), AgentConfig(),
+                        store=FakeStore())
+    graph.run(synthetic_triage_case(write_rule(tmp_path)))
+    (entry,) = graph.audit.of_kind("verdict_evidence")
+    assert entry.payload["cited"] == [
+        {"event_index": 0, "field": "CommandLine", "event_id": 1}]

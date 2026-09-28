@@ -137,6 +137,10 @@ class AuditLog:
             reason="" if decision is None else decision.reason,
         )
 
+    def verdict_evidence(self, cited: list[dict]) -> None:
+        """What the accepted verdict rests on: which events, which fields."""
+        self._append("verdict_evidence", cited=list(cited))
+
     def finished(self, result: Any) -> None:
         self._append(
             "run_finished",

@@ -82,6 +82,10 @@ class Condition(str, enum.Enum):
     MISMATCH_CROSS = "mismatch-cross"
     #: All tools, with the events of another capture that has the same label.
     MISMATCH_SAME = "mismatch-same"
+    #: The reference run with one change: a true positive is defined as the
+    #: technique the labels are about, not as "the activity the rule
+    #: describes". Checks how much of the score is the question's wording.
+    TECHNIQUE_QUESTION = "technique-question"
 
     @property
     def mismatched(self) -> bool:
@@ -166,14 +170,22 @@ You are a detection engineer triaging an alert from a security monitoring \
 pipeline.
 
 A detection rule fired against a recorded window of Windows host telemetry. \
-Decide whether the alert is a true positive (the activity the rule describes \
-really happened) or a false positive (the rule matched something that is not \
-that activity).
+Decide whether the alert is a true positive ({activity} really happened) or a \
+false positive (the rule matched something that is not that activity).
 
 {investigate}
 
 {cite} Submit your answer by calling submit_verdict exactly once.\
 """
+
+#: What a true positive is. The labels mean T1003.001 credential dumping, while
+#: the default wording asks whether the rule's activity happened, which for
+#: an LSASS-access rule on, say, a pass-the-hash capture it arguably did.
+_ACTIVITY = "the activity the rule describes"
+_ACTIVITY_BY_CONDITION = {
+    Condition.TECHNIQUE_QUESTION:
+        "credential theft from LSASS memory, ATT&CK T1003.001,",
+}
 
 _INVESTIGATE = (
     "Work from the telemetry. Use the tools to read the rule and to query the "
@@ -198,7 +210,8 @@ _WITHOUT_EVENTS = {
         "There are no events to cite, so leave the evidence empty."),
 }
 
-SYSTEM_TRIAGE = _TRIAGE_TEMPLATE.format(investigate=_INVESTIGATE, cite=_CITE)
+SYSTEM_TRIAGE = _TRIAGE_TEMPLATE.format(activity=_ACTIVITY, investigate=_INVESTIGATE,
+                                        cite=_CITE)
 
 SYSTEM_MISS = """\
 You are a detection engineer reviewing why a rule did not fire.
@@ -246,7 +259,12 @@ def system_prompt(task: str, config: AgentConfig) -> str:
         system = SYSTEM_MISS
     elif config.condition in _WITHOUT_EVENTS:
         investigate, cite = _WITHOUT_EVENTS[config.condition]
-        system = _TRIAGE_TEMPLATE.format(investigate=investigate, cite=cite)
+        system = _TRIAGE_TEMPLATE.format(activity=_ACTIVITY, investigate=investigate,
+                                         cite=cite)
+    elif config.condition in _ACTIVITY_BY_CONDITION:
+        system = _TRIAGE_TEMPLATE.format(
+            activity=_ACTIVITY_BY_CONDITION[config.condition],
+            investigate=_INVESTIGATE, cite=_CITE)
     else:
         system = SYSTEM_TRIAGE
     if config.has(Control.PROVENANCE_TAGS):
@@ -401,8 +419,19 @@ class TriageGraph:
             rejections=list(state.get("rejections", [])),
             tool_calls=state.get("tool_calls", 0),
         )
+        if result.verdict is not None and result.verdict.evidence:
+            self._audit.verdict_evidence(self._cited(result.verdict.evidence))
         self._audit.finished(result)
         return {"result": result}
+
+    def _cited(self, evidence) -> list[dict]:
+        # the event id of each cited record, so what a verdict leaned on can
+        # be told apart afterwards: the access the rule matched, or context
+        events = self._toolbox.store.load(self._toolbox.capture)
+        return [{"event_index": c.event_index, "field": c.field,
+                 "event_id": (events[c.event_index].event_id
+                              if 0 <= c.event_index < len(events) else None)}
+                for c in evidence]
 
     # -- routing ----------------------------------------------------------
 

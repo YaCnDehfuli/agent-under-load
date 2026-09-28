@@ -97,7 +97,7 @@ def test_the_node_sequence_is_stable(tmp_path):
     _, graph, _ = _run(tmp_path)
     kinds = [e.kind for e in graph.audit]
     assert kinds == ["run_started", "model_turn", "tool_call", "model_turn",
-                     "tool_call", "model_turn", "run_finished"]
+                     "tool_call", "model_turn", "verdict_evidence", "run_finished"]
 
 
 def test_turning_a_control_on_changes_the_prompt_and_nothing_else(tmp_path):
