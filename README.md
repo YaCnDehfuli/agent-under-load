@@ -8,7 +8,10 @@ Agent Under Load is a LangGraph triage agent and an evaluation harness built aro
 
 [Illustrated research report](docs/index.html) · [Detailed results](docs/results-agent.md) · [Architecture](docs/architecture.md) · [Threat model](docs/threat-model.md)
 
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-2ea44f.svg)](LICENSE)
 ![The LangGraph investigation loop, tool trust boundary and measured outcomes](docs/assets/agent-loop.svg)
+
 </div>
 ## What the study found
 
