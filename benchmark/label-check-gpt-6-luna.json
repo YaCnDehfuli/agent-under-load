@@ -1,0 +1,121 @@
+{
+ "model_key": "gpt-6-luna",
+ "review": {
+  "clear": [
+   "collection/msf_record_mic",
+   "credential_access/empire_over_pth_patch_lsass",
+   "defense_evasion/auditpol_system_user_auditpolicy_modification",
+   "defense_evasion/cmd_process_herpaderping_snippingtool",
+   "defense_evasion/empire_dllinjection_LoadLibrary_CreateRemoteThread",
+   "defense_evasion/empire_monologue_netntlm_downgrade",
+   "defense_evasion/empire_psinject_PEinjection",
+   "defense_evasion/purplesharp_pe_injection_createremotethread",
+   "lateral_movement/covenant_psremoting_command",
+   "lateral_movement/covenant_sharpsc_stop_dcerpc_smb_svcctl",
+   "lateral_movement/covenant_wmi_wbemcomn_dll_hijack",
+   "lateral_movement/empire_dcom_shellwindows_stager",
+   "lateral_movement/empire_smbexec_dcerpc_smb_svcctl",
+   "lateral_movement/mimikatz_CVE-2020-1472_Unauthenticated_NetrServerAuthenticate2",
+   "persistence/empire_persistence_registry_modification_run_keys_standard_user",
+   "persistence/empire_schtasks_creation_execution_elevated_user",
+   "persistence/empire_wmi_local_event_subscriptions_elevated_user"
+  ],
+  "ambiguous": []
+ },
+ "primary": {
+  "paired_cases": 80,
+  "difference": 0.1028,
+  "difference_ci": [
+   0.0065,
+   0.2261
+  ],
+  "retention": 1.1402,
+  "retention_ci": [
+   1.0088,
+   1.3388
+  ],
+  "only_reference_right": 4,
+  "only_this_right": 11,
+  "mcnemar_p": 0.1185
+ },
+ "reference": {
+  "tp_recall": {
+   "cases": 44,
+   "right": 40,
+   "rate": 0.9091
+  },
+  "fp_specificity_clear": {
+   "cases": 36,
+   "right": 20,
+   "rate": 0.5556
+  },
+  "fp_specificity_ambiguous": {
+   "cases": 0,
+   "right": 0,
+   "rate": null
+  }
+ },
+ "technique_question": {
+  "tp_recall": {
+   "cases": 44,
+   "right": 41,
+   "rate": 0.9318
+  },
+  "fp_specificity_clear": {
+   "cases": 36,
+   "right": 26,
+   "rate": 0.7222
+  },
+  "fp_specificity_ambiguous": {
+   "cases": 0,
+   "right": 0,
+   "rate": null
+  }
+ },
+ "rescored_without_ambiguous": {
+  "alert-only-forced": {
+   "all": 0.3652,
+   "without_ambiguous": 0.3652
+  },
+  "alert-only": {
+   "all": 0.0,
+   "without_ambiguous": 0.0
+  },
+  "mismatch-cross": {
+   "all": 0.21,
+   "without_ambiguous": 0.21
+  },
+  "mismatch-same": {
+   "all": 0.6286,
+   "without_ambiguous": 0.6286
+  },
+  "reference": {
+   "all": 0.7333,
+   "without_ambiguous": 0.7333
+  },
+  "rule-only": {
+   "all": 0.0,
+   "without_ambiguous": 0.0
+  },
+  "technique-question": {
+   "all": 0.8362,
+   "without_ambiguous": 0.8362
+  }
+ },
+ "citations": {
+  "true_positive called true_positive": {
+   "access event": 99,
+   "other events only": 20
+  },
+  "true_positive called false_positive": {
+   "access event": 12
+  },
+  "false_positive called false_positive": {
+   "access event": 66,
+   "other events only": 6
+  },
+  "false_positive called true_positive": {
+   "access event": 29
+  }
+ }
+}
