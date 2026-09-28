@@ -1,28 +1,77 @@
-# Measured result — the baseline, and the bar it sets
+# Triage results: the agents, and the baseline they're measured against
 
-Produced by:
+The baselines come from `python -m score.run --task triage --predictor baseline`
+(and `--task miss`), the agents from `python -m score.analysis --model <key>` and
+`python -m score.within_rule --model gpt-6-luna`. Every figure below is read out
+of the files those write in `benchmark/`.
 
-```
-python -m score.run --task triage --predictor baseline
-python -m score.run --task miss    --predictor baseline
-```
+## What the agents did
 
-Artefacts: `benchmark/triage-baseline.json`, `benchmark/miss-baseline.json`.
-Every figure below is read out of those files.
+Four models ran the full matrix: 80 cases, six conditions, three repeats each,
+about $20 in total. A case's answer is the majority over its repeats. Numbers
+come from `benchmark/analysis-<model>.json`, written by `score.analysis`.
 
-## The state of this document
+| | reference macro-F1 [95% CI] | its guess from the alert alone | answered | repeats agree |
+|---|---|---|---|---|
+| gpt-6-luna | 0.73 [0.60, 0.86] | 0.37 | 100% | 81% |
+| deepseek-v4-pro | 0.59 [0.46, 0.70] | 0.52 | 96% | 89% |
+| gpt-oss-20b | 0.57 [0.44, 0.71] | 0.54 | 76% | 38% |
+| gpt-oss-120b | 0.46 [0.34, 0.58] | 0.57 | 84% | 69% |
 
-The baseline numbers are real and reproducible with no API key. **The agent
-column is not populated: no model run has been made yet.** The harness is
-complete and the command is:
+Only Luna gets clearly more out of the investigation than out of the alert
+text. The other three do about as well guessing from the alert as they do with
+tools, and the gpt-oss models often run out of turns. Luna's 0.73 against the
+heuristic's 0.60 looks like a win but isn't one yet: on the same 80 cases it is
+right on 16 the heuristic misses and wrong on 10 the heuristic gets, McNemar
+p = 0.33.
 
-```
-python -m score.run --model gpt-oss-20b --task triage --predictor agent
-python -m score.run --model qwen3-4b    --task miss   --predictor agent
-```
+Given nothing but the alert, every model mostly answers `inconclusive`. That's
+reasonable, and it's why there is a forced variant that asks for the guess
+anyway.
 
-Model keys are defined in `models.yml`, with the endpoint, generation parameters
-and credential variable of each.
+### The evidence swaps measured something else than intended
+
+The swap conditions hand the agent another capture's events under the same
+alert. Every model did badly on them, but most of the donors don't contain
+anything the alert's rule fires on: the published detector fires on the donor
+in 19 of 80 cross-label swaps and 25 of 80 same-label swaps. An agent that looks
+for what the rule describes, doesn't find it, and calls the alert unsupported is
+doing the analyst's job. Splitting Luna's swaps by that
+(`benchmark/within-rule-gpt-6-luna.json`, exploratory):
+
+- same label, rule fires on the donor: verdict held in 16 of 16; rule doesn't
+  fire: held in 2 of 28
+- cross label, rule fires on the donor: followed the donor's label in 3 of 4
+  true-positive cases and 12 of 15 false-positive ones
+
+So when the evidence supports the alert, Luna's verdict mostly follows what the
+capture actually is, including calling a false-positive alert a true positive
+once real attack telemetry sits under it. The earlier reading, that no model
+would ever flip a false positive to a true positive, came from the donors that
+didn't support the alert. The swap results are kept as they are but read as
+sensitivity to whether the alert is supported, not as accuracy.
+
+### Within one rule, does the verdict follow the capture?
+
+That was the question the swaps were after, and it can be asked of the
+reference runs directly. Six rules fire on captures of both labels; for them the
+alert text is identical whichever capture it came from, so a verdict that
+differs between their captures can only come from the telemetry. The analysis
+was written down before it ran (`docs/prereg-within-rule.md`).
+
+On those 50 cases Luna scores 0.72 with the telemetry and 0.32 guessing from the
+alert, a difference of +0.40 [+0.27, +0.52], and the interval stays above zero
+with any one rule left out. By the rule set in advance, Luna uses the evidence.
+The heuristic gets 0.49 and rule-prior 0.41 on the same cases. It is uneven
+across rules: all 16 true/false-positive pairs right for one rule, none of 2 for
+another, and 33–80% for the rest.
+
+What that does and doesn't say: on this corpus, Luna's verdict depends on the
+capture's telemetry when the alert is held fixed. It says nothing about other
+techniques or environments, the base is 7 attack captures from two labs, Luna
+was picked after seeing the results, and some false-positive labels are
+arguable (several are simulations of other attacks that touch LSASS). Checking
+those labels and the wording of the question is the next step.
 
 Running it: keys live in a `.env` file at the repo root (ignored by git), which
 agent runs read on start-up; `--env-file` points elsewhere, and a key already
@@ -40,10 +89,6 @@ captures, resampled separately), retention and exact McNemar tests against the
 reference on the same cases, abstention and turn-limit rates, and for the
 mismatch conditions whether the verdict followed the swapped-in evidence or the
 alert. `--sample N` gives a smoke run both labels; `--limit` doesn't.
-
-An unconfigured run raises rather than falling back to a stub, so there is no way
-for this table to fill itself with something that was never a language model.
-Nothing here is an estimate of what the agent would score.
 
 ## Triage verdict — the informative comparison
 
@@ -155,7 +200,12 @@ captures. Cases are ordered by capture so each archive is parsed once.
 
 ## Limitations
 
-- **The agent is unmeasured.** Everything above is the bar, not the result.
+- **Luna was chosen after the results.** The within-rule analysis was written
+  down before it ran, but the model it ran on was picked because it did best.
+- **Labels are per technique.** "False positive" means not T1003.001 credential
+  dumping. Some of those captures still touch LSASS on purpose, and the prompt
+  asks whether "the activity the rule describes" happened, which for them it
+  arguably did.
 - **Residual confound: account names.** Host names and domains are pseudonymised
   (see `agent/pseudonymise.py`), which removed a perfect separator between the
   two triage classes. Account names are not. `pedro.gustavo` and `stevie.marie`

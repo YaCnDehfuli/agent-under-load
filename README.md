@@ -16,11 +16,17 @@ Miss classification on 581 rule/capture pairs: macro-F1 **0.93**. That label is 
 
 Mountable injection surface: **248 of 1892** placements (**13.1%**).
 
-**No language-model run has been measured.**
+Four models ran the full triage matrix. gpt-6-luna did best (0.73, not yet
+separable from the heuristic on this sample), and on the 50 cases where the
+alert's rule fires on both labels its verdict follows the capture's telemetry:
++0.40 over its own guess from the alert alone, from an analysis written down
+before it ran. The evidence-swap conditions turned out to measure whether the
+alert was supported rather than accuracy. Details in
+[`docs/results-agent.md`](docs/results-agent.md); label checks come next.
 
 ![Agent Under Load full plan](docs/assets/agent-under-load-full-plan.svg)
 
-**Research artifact.** v0.1.0 is a harness. This repository does not report a model-security result.
+**Research artifact.** No adversarial result yet; the attack runs are the next study.
 
 ## Quickstart
 
@@ -120,8 +126,9 @@ scanner:
 
 ## Limitations
 
-No language-model run has been measured, so this repository is not a
-model-security result. The miss-classification macro-F1 of 0.93 is a near-ceiling
-score by construction: the labels are a deterministic function of the rule and
-the telemetry, and the baseline re-derives them. The no-LLM triage bar (macro-F1
-0.60 on 80 cases) is the informative comparison. v0.1.0 is a harness.
+The triage results rest on 80 cases from 24 captures, seven of them attacks, all
+one technique; Luna was picked after the results came in, and some
+false-positive labels are arguable. No adversarial result is reported yet. The
+miss-classification macro-F1 of 0.93 is a near-ceiling score by construction:
+the labels are a deterministic function of the rule and the telemetry, and the
+baseline re-derives them.
