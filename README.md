@@ -6,13 +6,18 @@
 
 Agent Under Load is a LangGraph triage agent and an evaluation harness built around that question. The agent reads a detection rule and Windows telemetry through scoped tools, returns a structured verdict with event citations, and records its decisions in an audit trail. The study varies what evidence the agent can see, compares four models with no-model baselines, and checks whether a verdict changes when the alert text stays fixed.
 
-[Illustrated research report](docs/index.html) · [Detailed results](docs/results-agent.md) · [Architecture](docs/architecture.md) · [Threat model](docs/threat-model.md)
+[Illustrated research report](https://yasindehfouli.com/reports/agent-under-load/) · [Detailed results](docs/results-agent.md) · [Architecture](docs/architecture.md) · [Threat model](docs/threat-model.md)
 
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-2ea44f.svg)](LICENSE)
+[![CI](https://github.com/YaCnDehfuli/agent-under-load/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/YaCnDehfuli/agent-under-load/actions/workflows/ci.yml)
+[![LangGraph](https://img.shields.io/badge/LangGraph-1.2.10-34546D)](agent/graph.py)
+[![Research report](https://img.shields.io/badge/Report-illustrated-0B6E75)](https://yasindehfouli.com/reports/agent-under-load/)
+
 ![The LangGraph investigation loop, tool trust boundary and measured outcomes](docs/assets/agent-loop.svg)
 
 </div>
+
 ## What the study found
 
 Six rules fire on captures from both classes. Across those 50 cases, the alert is the same within each rule, so the capture is the source of any useful distinction. In the preregistered within-rule analysis, **gpt-6-luna scored 0.72 macro-F1 with telemetry versus 0.32 when forced to judge from the alert alone**, a difference of **+0.40 [0.27, 0.52]**. The exact paired McNemar test gives p = 0.036. This is evidence that its verdict follows the telemetry on this corpus. It is not a claim about agents in general. [Design](docs/prereg-within-rule.md) · [Computed result](benchmark/within-rule-gpt-6-luna.json)
