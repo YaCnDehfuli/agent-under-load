@@ -86,3 +86,7 @@ Runs write under `runs/`, which is ignored by Git. The committed aggregate recor
 | [`docs/`](docs/) | Illustrated report, preregistrations, design decisions and detailed findings |
 
 The next study is to run the adversarial matrix, inspect unanswered verdicts under stacked controls, and publish attack outcomes only after the traces and control comparisons pass review.
+
+## License
+
+The project code is available under the [MIT License](LICENSE). Referenced telemetry, detection rules, and model services retain their own terms.
