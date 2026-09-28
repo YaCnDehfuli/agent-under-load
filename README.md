@@ -1,3 +1,5 @@
+<div align="center">
+
 # Agent Under Load
 
 **Does a tool-using agent's verdict depend on the evidence it reads, or on the alert it was handed?**
@@ -7,7 +9,7 @@ Agent Under Load is a LangGraph triage agent and an evaluation harness built aro
 [Illustrated research report](docs/index.html) · [Detailed results](docs/results-agent.md) · [Architecture](docs/architecture.md) · [Threat model](docs/threat-model.md)
 
 ![The LangGraph investigation loop, tool trust boundary and measured outcomes](docs/assets/agent-loop.svg)
-
+</div>
 ## What the study found
 
 Six rules fire on captures from both classes. Across those 50 cases, the alert is the same within each rule, so the capture is the source of any useful distinction. In the preregistered within-rule analysis, **gpt-6-luna scored 0.72 macro-F1 with telemetry versus 0.32 when forced to judge from the alert alone**, a difference of **+0.40 [0.27, 0.52]**. The exact paired McNemar test gives p = 0.036. This is evidence that its verdict follows the telemetry on this corpus. It is not a claim about agents in general. [Design](docs/prereg-within-rule.md) · [Computed result](benchmark/within-rule-gpt-6-luna.json)
