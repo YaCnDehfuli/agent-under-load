@@ -1,9 +1,9 @@
 # Attack success before and after each control
 
-The table this repo exists to produce. It is not populated: no model credential
-was available in the environment this was built in, so no attack was run against
-a language model. What is here is the design, the mechanism of each control, and
-what each one can and cannot do on the evidence available without a model.
+The clean triage matrix has now run against four language models. The adversarial
+matrix has not. The table below remains unpopulated because there is no reviewed
+model-backed attack result or control comparison. What is here is the design,
+the mechanism of each control, and what can be checked without an attack run.
 
 ## The controls
 

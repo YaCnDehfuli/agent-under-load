@@ -74,14 +74,14 @@ attacker text" suggests.
 
 ## What is not measured: suppression and escalation rates
 
-**No model credential was available in the environment this was built in, so no
-attack succeeded or failed against a language model here. There are no rates to
-report.**
+The clean triage matrix has run against four language models. **The adversarial
+matrix has not produced a reviewed model-backed result. There are no attack
+success or failure rates to report.**
 
 The harness is complete and verified end to end against the real corpus with a
 scripted model — payload placement, delivery through the ordinary tool path, flip
-detection, per-strategy and per-field accounting. What has not run is a real
-model. The commands:
+detection, per-strategy and per-field accounting. What remains is a measured
+attack run against a real model. The commands:
 
 ```
 python -m attack.runner --model gpt-oss-20b --objective suppression --controls none
