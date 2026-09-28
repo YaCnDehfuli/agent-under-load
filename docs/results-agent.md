@@ -68,10 +68,37 @@ another, and 33–80% for the rest.
 
 What that does and doesn't say: on this corpus, Luna's verdict depends on the
 capture's telemetry when the alert is held fixed. It says nothing about other
-techniques or environments, the base is 7 attack captures from two labs, Luna
-was picked after seeing the results, and some false-positive labels are
-arguable (several are simulations of other attacks that touch LSASS). Checking
-those labels and the wording of the question is the next step.
+techniques or environments, the base is 7 attack captures from two labs, and
+Luna was picked after seeing the results.
+
+### Were the misses the labels, or the question?
+
+Luna still called 16 of the 36 false positives true positives, and it wasn't
+obvious those were mistakes: the labels mean "not T1003.001 credential
+dumping", while the prompt asks whether "the activity the rule describes"
+happened. Two checks, written down first (`docs/prereg-labels-and-question.md`).
+
+The labels held up. Going through all 17 false-positive captures from the
+dataset's own descriptions (`benchmark/label-review.yml`), none is credential
+theft from LSASS, and only over-pass-the-hash touches LSASS at all: it writes a
+key in rather than reading one out. The injection captures that looked
+suspicious inject into notepad.
+
+The question mattered, a little. The same reference run with only the
+definition of a true positive changed to "credential theft from LSASS memory,
+ATT&CK T1003.001" scored 0.84 against 0.73, a difference of +0.10 [+0.01,
++0.23] by the preregistered interval, though the per-case McNemar test doesn't
+reach significance (p = 0.12). The gain is on the false positives (specificity
+56% to 72%) without losing true positives (91% to 93%). So part of what looked
+like Luna misjudging benign captures was Luna answering a looser question than
+the one the labels ask. The 0.84 is not a result for Luna: the wording was
+chosen after seeing the misses, and the reference run stays the number to quote.
+
+This run also logged what each verdict cites. Almost all of them, right or
+wrong, cite the process-access event on LSASS itself (Sysmon EventID 10); only
+26 of 232 decisive verdicts rest on other events alone. Luna reads the access
+the rule is about, the handle and its rights, much more than the surrounding
+activity, which fits where its remaining false positives are.
 
 Running it: keys live in a `.env` file at the repo root (ignored by git), which
 agent runs read on start-up; `--env-file` points elsewhere, and a key already
@@ -202,10 +229,10 @@ captures. Cases are ordered by capture so each archive is parsed once.
 
 - **Luna was chosen after the results.** The within-rule analysis was written
   down before it ran, but the model it ran on was picked because it did best.
-- **Labels are per technique.** "False positive" means not T1003.001 credential
-  dumping. Some of those captures still touch LSASS on purpose, and the prompt
-  asks whether "the activity the rule describes" happened, which for them it
-  arguably did.
+- **The prompt's question is looser than the labels.** It asks whether the
+  rule's activity happened; the labels mean T1003.001 credential dumping.
+  Naming the technique moved Luna by about 10 points; the headline numbers
+  keep the original wording.
 - **Residual confound: account names.** Host names and domains are pseudonymised
   (see `agent/pseudonymise.py`), which removed a perfect separator between the
   two triage classes. Account names are not. `pedro.gustavo` and `stevie.marie`

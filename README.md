@@ -21,8 +21,10 @@ separable from the heuristic on this sample), and on the 50 cases where the
 alert's rule fires on both labels its verdict follows the capture's telemetry:
 +0.40 over its own guess from the alert alone, from an analysis written down
 before it ran. The evidence-swap conditions turned out to measure whether the
-alert was supported rather than accuracy. Details in
-[`docs/results-agent.md`](docs/results-agent.md); label checks come next.
+alert was supported rather than accuracy. A review of the false-positive
+labels found none wrong; part of Luna's remaining misses came from the prompt
+asking a looser question than the labels do. Details in
+[`docs/results-agent.md`](docs/results-agent.md).
 
 ![Agent Under Load full plan](docs/assets/agent-under-load-full-plan.svg)
 
