@@ -11,24 +11,18 @@
   body { font-family: "Avenir Next", "Helvetica Neue", Arial, sans-serif; }
   .poster {
     position: relative; width: 1800px; height: 900px; overflow: hidden;
-    background: #10232e; color: #f3f4ec;
-    background-image: radial-gradient(circle at 29% 55%, #1a3940 0, #10232e 46%, #0d1e29 100%);
+    background: #102832; color: #f1f2e9;
   }
-  .poster::before {
-    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .22;
-    background: repeating-linear-gradient(0deg, transparent 0 47px, #66869214 48px),
-                repeating-linear-gradient(90deg, transparent 0 47px, #66869214 48px);
-  }
-  .mast { position: absolute; left: 84px; top: 53px; font-size: 21px; font-weight: 800; letter-spacing: .24em; color: #91d6cf; }
-  .folio { position: absolute; right: 84px; top: 57px; font: 600 19px/1.2 ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .07em; color: #a9bdc1; }
-  h1 { position: absolute; left: 80px; top: 97px; margin: 0; font-size: 72px; line-height: 1.08; font-weight: 750; letter-spacing: -.054em; }
-  .subtitle { position: absolute; left: 84px; top: 186px; margin: 0; font-size: 26px; color: #b6ced0; letter-spacing: -.01em; }
+  .mast { position: absolute; left: 84px; top: 54px; font-size: 18px; font-weight: 650; letter-spacing: .09em; color: #91d6cf; }
+  .folio { position: absolute; right: 84px; top: 56px; font-size: 18px; color: #a9bdc1; }
+  h1 { position: absolute; left: 80px; top: 88px; margin: 0; font-size: 76px; line-height: 1.1; font-weight: 600; letter-spacing: -.052em; }
+  .subtitle { position: absolute; left: 84px; top: 184px; margin: 0; font-size: 25px; color: #b6ced0; letter-spacing: -.01em; }
   .top-rule { position: absolute; left: 84px; right: 84px; top: 249px; border-top: 1px solid #61808b9a; }
   .division { position: absolute; left: 1111px; top: 284px; height: 490px; border-left: 1px solid #61808b9a; }
-  .section-label { font: 700 19px/1.2 ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .16em; color: #9fc7c8; }
+  .section-label { font: 650 20px/1.2 "Avenir Next", "Helvetica Neue", Arial, sans-serif; letter-spacing: .005em; color: #a7ceca; }
   .graph-label { position: absolute; top: 282px; left: 85px; }
   .graph-note { position: absolute; top: 280px; left: 692px; font-size: 19px; color: #92aeb4; }
-  .repair-label { position: absolute; left: 659px; top: 354px; z-index: 2; padding: 2px 8px; background: #14303a; color: #b4c9c9; font-size: 17px; font-weight: 650; }
+  .repair-label { position: absolute; left: 659px; top: 354px; z-index: 2; padding: 2px 8px; background: #102832; color: #b4c9c9; font-size: 17px; font-weight: 600; }
   .routes { position: absolute; inset: 0 auto auto 0; width: 1100px; height: 800px; overflow: visible; }
   .route { fill: none; stroke: #6fbcba; stroke-width: 3.5; stroke-linecap: round; }
   .route.faint { stroke: #8da5ad; stroke-width: 2.4; }
@@ -37,60 +31,57 @@
   .flow-label { font: 600 17px/1.2 "Avenir Next", Arial, sans-serif; fill: #b4c9c9; }
   .flow-label.amber { fill: #edbe91; }
   .node { position: absolute; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-  .node .number { font: 700 16px/1 ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .15em; margin-bottom: 11px; }
-  .node .name { font-size: 29px; font-weight: 800; letter-spacing: -.035em; line-height: 1; }
+  .node .number { font: 600 16px/1 ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .06em; margin-bottom: 11px; }
+  .node .name { font-size: 29px; font-weight: 650; letter-spacing: -.035em; line-height: 1; }
   .node .detail { font-size: 17px; line-height: 1.25; margin-top: 10px; max-width: 190px; }
   .prepare { left: 109px; top: 409px; width: 154px; height: 154px; border: 2px solid #91c1c3; background: #16323d; }
   .prepare .number { color: #9bc9cc; } .prepare .detail { color: #b6cccf; }
-  .investigate { left: 335px; top: 336px; width: 278px; height: 278px; border: 2px solid #70d6c6; background: radial-gradient(circle at 40% 30%, #2b6b68, #164442 70%); box-shadow: 0 0 0 13px #70d6c623, 0 0 0 27px #70d6c60f; }
-  .investigate::before { content: ""; position: absolute; inset: 27px; border: 1px solid #a3e2d36b; border-radius: 50%; }
+  .investigate { left: 335px; top: 336px; width: 278px; height: 278px; border: 2px solid #70d6c6; background: #1f514f; }
   .investigate .number { color: #c4eee2; } .investigate .name { font-size: 38px; } .investigate .detail { color: #d0e6df; font-size: 18px; max-width: 210px; }
   .validate { left: 743px; top: 395px; width: 166px; height: 166px; border: 2px solid #9abec7; background: #193642; }
   .validate .number { color: #a5cbd2; } .validate .detail { color: #b4cbd1; }
   .finish { left: 806px; top: 640px; width: 128px; height: 128px; border: 2px solid #a8d8c1; background: #1b413d; }
   .finish .number { color: #b5e7cc; font-size: 14px; margin-bottom: 8px; } .finish .name { font-size: 26px; } .finish .detail { color: #c0dbd2; font-size: 15px; margin-top: 8px; }
   .tools { position: absolute; left: 316px; top: 663px; width: 346px; height: 100px; border-radius: 55% / 85%; border: 2px solid #d9a36d; background: #4b392f; text-align: center; padding-top: 12px; }
-  .tools .number { font: 700 16px/1 ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .12em; color: #efc59a; }
-  .tools .name { font-size: 25px; line-height: 1.15; font-weight: 750; margin-top: 5px; }
+  .tools .number { font: 600 16px/1 ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .04em; color: #efc59a; }
+  .tools .name { font-size: 25px; line-height: 1.15; font-weight: 650; margin-top: 5px; }
   .tools .detail { font-size: 17px; color: #f0c7a3; margin-top: 4px; }
   .tool-explain { position: absolute; left: 86px; top: 692px; width: 205px; color: #c4b4a7; font-size: 17px; line-height: 1.37; }
-  .tool-explain strong { color: #edbc8c; font-weight: 700; }
+  .tool-explain strong { color: #edbc8c; font-weight: 650; }
   .aside { position: absolute; top: 282px; left: 1162px; width: 555px; }
   .aside .section-label { display: block; }
-  .request-number { font-size: 94px; font-weight: 750; line-height: 1; letter-spacing: -.075em; margin-top: 8px; font-variant-numeric: tabular-nums; }
+  .request-number { font-size: 92px; font-weight: 600; line-height: 1; letter-spacing: -.075em; margin-top: 8px; font-variant-numeric: tabular-nums; }
   .request-caption { font-size: 22px; color: #f0f4eb; margin-top: 1px; }
   .request-detail { font-size: 18px; color: #a8c0c3; margin-top: 8px; line-height: 1.35; }
   .aside-rule { height: 1px; background: #5c7d8799; margin: 14px 0 11px; }
   .models { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 24px; margin-top: 11px; }
-  .model { display: flex; align-items: baseline; gap: 10px; color: #e3eeeb; font-size: 20px; font-weight: 650; letter-spacing: -.015em; white-space: nowrap; }
-  .model i { width: 10px; height: 10px; flex: none; border-radius: 50%; background: #75d4bf; }
-  .model:nth-child(2) i { background: #a7c5d5; } .model:nth-child(3) i { background: #e1b580; } .model:nth-child(4) i { background: #b9adce; }
+  .model { display: flex; align-items: baseline; gap: 10px; color: #e3eeeb; font-size: 20px; font-weight: 550; letter-spacing: -.015em; white-space: nowrap; }
+  .model i { width: 7px; height: 7px; flex: none; border-radius: 50%; background: #8eafb1; }
   .controls { display: grid; grid-template-columns: 1fr 1fr; column-gap: 28px; row-gap: 7px; margin-top: 11px; }
-  .control { font-size: 18px; line-height: 1.25; color: #e0ebe8; padding-left: 12px; border-left: 3px solid #77cdbb; white-space: nowrap; }
-  .control:nth-child(2) { border-color: #a5c3d0; } .control:nth-child(3) { border-color: #e0b47c; } .control:nth-child(4) { border-color: #b0a5c4; }
+  .control { font-size: 18px; line-height: 1.25; color: #e0ebe8; padding-left: 12px; border-left: 2px solid #85aaa9; white-space: nowrap; }
   .controls-note { color: #a8c0c3; font-size: 16px; margin-top: 9px; }
   .result { position: absolute; left: 0; right: 0; bottom: 0; height: 103px; background: #e9f2ec; color: #17343b; display: flex; align-items: center; padding: 0 84px; gap: 63px; }
   .result .context { width: 385px; flex: none; }
-  .result .context b { display: block; font: 800 18px/1.3 ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .11em; color: #28746f; }
+  .result .context b { display: block; font: 650 20px/1.3 "Avenir Next", "Helvetica Neue", Arial, sans-serif; color: #28746f; }
   .result .context span { display: block; font-size: 19px; margin-top: 4px; color: #5a7071; }
   .result .score { display: flex; flex-direction: column; min-width: 130px; }
-  .result .score b { font-size: 52px; font-weight: 800; line-height: 1; letter-spacing: -.06em; }
+  .result .score b { font-size: 52px; font-weight: 650; line-height: 1; letter-spacing: -.06em; }
   .result .score span { font-size: 18px; color: #587071; white-space: nowrap; }
   .result .arrow { font-size: 44px; font-weight: 300; color: #458c82; margin: 0 -10px; }
   .result .gain { margin-left: auto; display: flex; flex-direction: column; border-left: 1px solid #a5c5ba; padding-left: 38px; }
-  .result .gain b { font-size: 46px; line-height: 1; letter-spacing: -.055em; color: #13766f; }
+  .result .gain b { font-size: 46px; line-height: 1; letter-spacing: -.055em; color: #13766f; font-weight: 650; }
   .result .gain span { font-size: 18px; color: #587071; white-space: nowrap; }
 </style>
 </head>
 <body>
 <main class="poster" role="img" aria-label="Agent Under Load. A LangGraph agent prepares the case, investigates with a model, loops through five scoped tools, validates the verdict, permits one repair, and finishes. The primary four-model matrix contains 5,760 trajectories and 32,122 provider requests including retries. Four controls are implemented but their effect has not yet been measured. On 50 within-rule cases, gpt-6-luna scored 0.72 macro-F1 with telemetry versus 0.32 from a forced alert-only guess.">
-  <div class="mast">AGENT UNDER LOAD</div>
-  <div class="folio">SYSTEM / EVALUATION</div>
-  <h1>Does the verdict follow the evidence?</h1>
-  <p class="subtitle">A LangGraph triage agent, five scoped tools, and a paired test with the alert held fixed.</p>
+  <div class="mast">WINDOWS ALERT TRIAGE</div>
+  <div class="folio">Architecture and evaluation</div>
+  <h1>Agent Under Load</h1>
+  <p class="subtitle">A LangGraph investigation agent tested on whether verdicts follow retrieved evidence.</p>
   <div class="top-rule"></div>
-  <div class="section-label graph-label">THE RUNNING AGENT</div>
-  <div class="graph-note">StateGraph · 12-turn limit</div>
+  <div class="section-label graph-label">Agent graph</div>
+  <div class="graph-note">LangGraph StateGraph · 12-turn limit</div>
   <svg class="routes" viewBox="0 0 1100 800" aria-hidden="true">
     <defs>
       <marker id="mint-arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#6fbcba"/></marker>
@@ -111,33 +102,33 @@
   <div class="node validate"><span class="number">03</span><span class="name">Validate</span><span class="detail">schema · optional citation check</span></div>
   <div class="node finish"><span class="number">04</span><span class="name">Finish</span><span class="detail">assemble result</span></div>
   <div class="tools"><div class="number">TOOL LOOP</div><div class="name">5 scoped tools</div><div class="detail">query_events returns event text</div></div>
-  <div class="tool-explain"><strong>One exposed path.</strong><br>Event fields can contain attacker-written text.</div>
+  <div class="tool-explain"><strong>Trust boundary</strong><br>query_events can return attacker-written fields.</div>
   <div class="division"></div>
   <aside class="aside">
-    <span class="section-label">4 MODELS × 6 CONDITIONS</span>
+    <span class="section-label">Primary evaluation · 4 models × 6 conditions</span>
     <div class="request-number">32,122</div>
     <div class="request-caption">provider requests, retries included</div>
     <div class="request-detail">5,760 trajectories across 80 cases and three repeats<br>25,893 model turns in the audit traces</div>
     <div class="aside-rule"></div>
-    <span class="section-label">MODELS EVALUATED</span>
+    <span class="section-label">Models evaluated</span>
     <div class="models">
       <div class="model"><i></i>gpt-6-luna</div><div class="model"><i></i>deepseek-v4-pro</div>
       <div class="model"><i></i>gpt-oss-20b</div><div class="model"><i></i>gpt-oss-120b</div>
     </div>
     <div class="aside-rule"></div>
-    <span class="section-label">CONFIGURABLE CONTROLS</span>
+    <span class="section-label">Implemented controls</span>
     <div class="controls">
       <div class="control">Provenance tags</div><div class="control">Structured ingestion</div>
       <div class="control">Citation enforcement</div><div class="control">Capability scope</div>
     </div>
-    <div class="controls-note">Built into one code path; attack benefit is not yet measured.</div>
+    <div class="controls-note">Effect on attack outcomes has not yet been measured.</div>
   </aside>
   <div class="result">
-    <div class="context"><b>WITHIN SIX SHARED RULES</b><span>50 cases · gpt-6-luna · macro-F1</span></div>
+    <div class="context"><b>Within-rule test</b><span>50 cases · 6 shared rules · gpt-6-luna</span></div>
     <div class="score"><b>0.32</b><span>forced alert guess</span></div>
     <div class="arrow">→</div>
     <div class="score"><b>0.72</b><span>with telemetry</span></div>
-    <div class="gain"><b>+0.40</b><span>paired gain [0.27, 0.52]</span></div>
+    <div class="gain"><b>+0.40</b><span>macro-F1 gain [0.27, 0.52]</span></div>
   </div>
 </main>
 </body>
